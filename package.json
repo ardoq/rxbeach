@@ -1,8 +1,8 @@
 {
   "name": "ardoq-actions",
   "version": "0.0.1",
-  "description": "RXjs Stream action utils for Ardoq",
-  "company": "ardoq as",
+  "description": "Stream architecture for Ardoq",
+  "company": "Ardoq AS",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,13 +23,10 @@
     "eslint-import-resolver-webpack": "0.11.1",
     "eslint-plugin-import": "2.17.2",
     "eslint-plugin-prettier": "3.0.1",
-    "eslint-plugin-react": "7.12.4",
-    "eslint-plugin-react-hooks": "1.6.0",
     "eslint-plugin-sort-class-members": "1.4.0",
     "prettier": "1.17.0"
   },
   "dependencies": {
-    "rxjs": "6.5.2",
-    "flux-standard-action": "2.1.0"
+    "rxjs": "6.5.2"
   }
 }
