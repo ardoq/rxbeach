@@ -1,5 +1,4 @@
-import { Action } from "types";
-import { ActionCreator } from "actionCreator";
+import { ActionCreator } from "types";
 
 /**
  * Module with utils for creating and using reducers
@@ -7,7 +6,7 @@ import { ActionCreator } from "actionCreator";
 
 export type Reducer<State, Payload = void> = (
   previousState: State,
-  action: Action<Payload>
+  payload: Payload
 ) => State;
 
 export type ReducerMap<State> = Map<symbol, Reducer<State, any>>;

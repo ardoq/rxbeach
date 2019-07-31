@@ -1,25 +1,21 @@
-import { Observable, OperatorFunction, merge } from "rxjs";
-import { Action, ActionStream } from "types";
+import { OperatorFunction, merge } from "rxjs";
+import { ActionStream, AnyAction, ActionDispatcher } from "types";
+import { subscribeAndGuard } from "utils";
 
 /**
  * Module with utils for creating and using routines
  */
 
-type Routine = OperatorFunction<Action, unknown>;
-
-const subscribeAndGuard = (stream$: Observable<unknown>) =>
-  stream$.subscribe(
-    () => null,
-    (error: Error) => {
-      console.error("UNHANDLED ERROR IN ACTION$ ROUTINE", error);
-
-      // TODO is this needed? Inherited from ardoq subscribeAndGuard
-      subscribeAndGuard(stream$);
-    }
-  );
+export type Routine = (
+  dispatchAction: ActionDispatcher
+) => OperatorFunction<AnyAction, unknown>;
+export type RoutineSet = Set<Routine>;
 
 export const subscribeRoutines = (
   action$: ActionStream,
+  dispatchAction: ActionDispatcher,
   routines: Set<Routine>
 ) =>
-  subscribeAndGuard(merge([...routines].map(routine => action$.pipe(routine))));
+  subscribeAndGuard(
+    merge([...routines].map(routine => action$.pipe(routine(dispatchAction))))
+  );
