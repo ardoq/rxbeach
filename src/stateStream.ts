@@ -1,7 +1,12 @@
-import { OperatorFunction, pipe } from "rxjs";
+import { OperatorFunction, pipe, Observable } from "rxjs";
 import { scan, filter, startWith, shareReplay } from "rxjs/operators";
-import { Action, UnknownAction } from "types";
+import { Action, UnknownAction, ActionStream, ActionDispatcher } from "types";
 import { ReducerMap } from "reducer";
+import {
+  getQualifier,
+  createChildDispatcher,
+  createChildActionStream
+} from "qualifiers";
 
 /*
  * Module with utils for creating and using state streams.
@@ -56,3 +61,57 @@ export const reduceToStateStream = <StateShape>(
       refCount: true
     })
   );
+
+export interface StateStreamFactory<StateShape> {
+  seed: StateShape;
+
+  (action$: ActionStream, dispatchAction: ActionDispatcher): {
+    state$: Observable<StateShape>;
+    action$: ActionStream;
+    dispatchAction: ActionDispatcher;
+  };
+}
+
+const createQualifiedStateStream = <StateShape>(
+  debugName: string,
+  reducers: ReducerMap<StateShape>,
+  seed: StateShape,
+  action$: ActionStream,
+  dispatchAction: ActionDispatcher
+) => {
+  const qualifier = getQualifier();
+
+  const dispatchQualifiedAction = createChildDispatcher(
+    dispatchAction,
+    qualifier
+  );
+  const filteredAction$ = createChildActionStream(action$, qualifier);
+
+  const state$ = filteredAction$.pipe(
+    reduceToStateStream(debugName, reducers, seed)
+  );
+
+  return {
+    state$,
+    action$: filteredAction$,
+    dispatchAction: dispatchQualifiedAction
+  };
+};
+
+export const createStateStreamFactory = <StateShape>(
+  debugName: string,
+  reducers: ReducerMap<StateShape>,
+  seed: StateShape
+): StateStreamFactory<StateShape> => {
+  const factory = (action$: ActionStream, dispatchAction: ActionDispatcher) =>
+    createQualifiedStateStream(
+      debugName,
+      reducers,
+      seed,
+      action$,
+      dispatchAction
+    );
+  factory.seed = seed;
+
+  return factory;
+};
