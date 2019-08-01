@@ -1,4 +1,10 @@
-import { useRef, useEffect, useState } from "react";
+import {
+  useRef,
+  useEffect,
+  useState,
+  createElement,
+  ComponentType
+} from "react";
 import { StateStreamFactory } from "stateStream";
 import { ActionStream, ActionDispatcher, Action } from "types";
 import { OperatorFunction, Observable } from "rxjs";
@@ -40,4 +46,19 @@ export const connectHookCreator = <StateShape>(
 export type ActionStreamProps = {
   action$: ActionStream;
   dispatchAction: ActionDispatcher;
+};
+
+export const connectHOC = <StateShape>(
+  state$Factory: StateStreamFactory<StateShape>,
+  WrappedComponent: ComponentType<StateShape>
+) => {
+  const useViewModel = connectHookCreator<StateShape>(state$Factory);
+
+  return ({ action$, dispatchAction }: ActionStreamProps) => {
+    const [viewModel] = useViewModel(action$, dispatchAction);
+
+    // TODO - How do we pass down action$ and dispatchAction without requiring
+    // the wrapped component to accept them?
+    return createElement(WrappedComponent, viewModel);
+  };
 };
