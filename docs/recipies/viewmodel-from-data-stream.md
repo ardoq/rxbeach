@@ -1,0 +1,3 @@
+# ViewModel from data streams
+
+Often times a ViewModel will depend on data from data streams...
