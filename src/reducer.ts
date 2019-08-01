@@ -1,6 +1,6 @@
 import { ActionCreator } from "types";
 
-/**
+/*
  * Module with utils for creating and using reducers
  */
 

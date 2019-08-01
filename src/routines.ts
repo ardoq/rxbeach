@@ -2,7 +2,7 @@ import { OperatorFunction, merge } from "rxjs";
 import { ActionStream, AnyAction, ActionDispatcher } from "types";
 import { subscribeAndGuard } from "utils";
 
-/**
+/*
  * Module with utils for creating and using routines
  */
 
