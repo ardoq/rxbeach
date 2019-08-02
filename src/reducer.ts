@@ -1,4 +1,5 @@
 import { ActionCreator } from "types";
+import { createActionCreator } from "actionCreator";
 
 /*
  * Module with utils for creating and using reducers
@@ -13,7 +14,18 @@ export type ReducerMap<State> = Map<symbol, Reducer<State, any>>;
 
 type ReducerEntry<State, Payload> = [symbol, Reducer<State, Payload>];
 
+type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
+  reducer: ReducerEntry<State, Payload>;
+};
+
 export const reducer = <State, Payload = void>(
-  actionType: ActionCreator<Payload>,
   reducer: Reducer<State, Payload>
-): ReducerEntry<State, Payload> => [actionType.type, reducer];
+): ReducerDefinition<State, Payload> => {
+  const action: ActionCreator<Payload> = createActionCreator<Payload>("");
+  const reducerEntry: ReducerEntry<State, Payload> = [action.type, reducer];
+
+  return {
+    ...action,
+    reducer: reducerEntry
+  };
+};
