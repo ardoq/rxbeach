@@ -11,7 +11,7 @@ export type Reducer<State, Payload = void> = (
 
 export type ReducerMap<State> = Map<symbol, Reducer<State, any>>;
 
-type ReducerEntry<State, Payload = void> = [symbol, Reducer<State, Payload>];
+type ReducerEntry<State, Payload> = [symbol, Reducer<State, Payload>];
 
 export const reducer = <State, Payload = void>(
   actionType: ActionCreator<Payload>,
