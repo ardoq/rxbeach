@@ -4,7 +4,7 @@ type Meta = {
   qualifiers: symbol[];
 };
 
-type ActionWithoutPayload = {
+export type ActionWithoutPayload = {
   type: symbol;
   meta: Meta;
 };
