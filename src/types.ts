@@ -9,7 +9,7 @@ type ActionWithoutPayload = {
   meta: Meta;
 };
 
-type ActionWithPayload<Payload> = ActionWithoutPayload & {
+export type ActionWithPayload<Payload> = ActionWithoutPayload & {
   payload: Payload;
 };
 
