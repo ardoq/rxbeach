@@ -29,3 +29,7 @@ export const reducer = <State, Payload = void>(
     reducer: reducerEntry
   };
 };
+
+export const reducerMap = <State>(
+  reducers: ReducerEntry<State, any>[]
+): ReducerMap<State> => new Map(reducers);
