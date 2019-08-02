@@ -1,4 +1,4 @@
-# Action dispatching subscribers
+# Sagas
 
 This, yet unnamed pattern, deals with pipes on data streams or the action stream
 that dispatches actions.
