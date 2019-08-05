@@ -1,6 +1,7 @@
 import { reducer, reducerMap } from "../../src/reducer";
 import { action$ } from "../globalActionStream";
 import { reduceToStateStream } from "../../src/stateStream";
+import { sameReducerFn } from "utils";
 
 export type ComplexModel = {
   id: number;
@@ -8,55 +9,38 @@ export type ComplexModel = {
   data: string;
 };
 
-/**
- * Util to make sure we do not change the order of the collection
- *
- * @param collection The collection to sort
- */
-const sortCollection = (collection: CollectionState) => {
-  return [...collection].sort((a, b) =>
-    a.id < b.id ? -1 : a.id == b.id ? 0 : 1
-  );
-};
-
-export type CollectionState = ComplexModel[];
+export type CollectionState = { [id: number]: ComplexModel };
 
 /**
  * Replace the whole ComplexModel collection
  */
 export const setComplexModels = reducer(
-  (_: CollectionState, newModels: CollectionState) => sortCollection(newModels)
+  (_: CollectionState, newModels: CollectionState) => newModels
 );
 
 /**
  * Add a single ComplexModel to the collection
  */
 export const addComplexModel = reducer(
-  (collection: CollectionState, model: ComplexModel) =>
-    sortCollection([...collection, model])
+  (collection: CollectionState, model: ComplexModel) => ({
+    ...collection,
+    [model.id]: model
+  })
 );
 
 /**
  * Update a single ComplexModel in the collection.
- *
- * Works by doing the following:
- * ```
- * { ...existingModel, ...newModel }
- * ```
  */
-export const replaceComplexModel = reducer(
-  (collection: CollectionState, model: ComplexModel) =>
-    collection.map(existing =>
-      existing.id === model.id ? { ...existing, ...model } : existing
-    )
-);
+export const replaceComplexModel = reducer(sameReducerFn(addComplexModel));
 
 /**
  * Remove a single ComplexModel from the collection
  */
 export const removeComplexModel = reducer(
   (collection: CollectionState, modelId: number) =>
-    collection.filter(({ id }) => id !== modelId)
+    Object.fromEntries(
+      Object.entries(collection).filter(([key]) => key != `${modelId}`)
+    )
 );
 
 ////
@@ -72,6 +56,6 @@ export const complexModelCollection$ = action$.pipe(
   reduceToStateStream(
     "complexModelCollection$",
     reducers,
-    [] as CollectionState
+    {} as CollectionState
   )
 );

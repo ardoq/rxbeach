@@ -1,6 +1,7 @@
 import { Observable, OperatorFunction, MonoTypeOperatorFunction } from "rxjs";
 import { ActionWithPayload, AnyAction } from "types";
 import { map, filter } from "rxjs/operators";
+import { Reducer, ReducerDefinition } from "reducer";
 
 export const subscribeAndGuard = (stream$: Observable<unknown>) =>
   stream$.subscribe(
@@ -25,3 +26,7 @@ export const ofType = (
 
 export const ofTypes = (types: symbol[]): MonoTypeOperatorFunction<AnyAction> =>
   filter(({ type }) => types.indexOf(type) !== -1);
+
+export const sameReducerFn = <State, Payload>(
+  ReducerDefinition: ReducerDefinition<State, Payload>
+): Reducer<State, Payload> => ReducerDefinition.reducer[1];

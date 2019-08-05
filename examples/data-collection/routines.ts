@@ -5,7 +5,7 @@ import {
 } from "./complexModelCollection$";
 import { pipe } from "rxjs";
 import { extractPayload } from "../../src/utils";
-import { flatMap, map } from "rxjs/operators";
+import { flatMap } from "rxjs/operators";
 import { routine } from "../../src/routines";
 import { pickComplexModelChildren } from "./operators";
 
@@ -18,6 +18,8 @@ export const deleteChildren = routine<ComplexModel["id"]>(dispatchAction =>
     flatMap(parentId =>
       complexModelCollection$.pipe(pickComplexModelChildren(parentId))
     ),
-    map(children => children.map(({ id }) => removeComplexModel(id)))
+    flatMap(children =>
+      Object.entries(children).map(([, { id }]) => removeComplexModel(id))
+    )
   )
 );

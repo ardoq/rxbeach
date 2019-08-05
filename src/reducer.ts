@@ -14,7 +14,7 @@ export type ReducerMap<State> = Map<symbol, Reducer<State, any>>;
 
 type ReducerEntry<State, Payload> = [symbol, Reducer<State, Payload>];
 
-type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
+export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
   reducer: ReducerEntry<State, Payload>;
 };
 

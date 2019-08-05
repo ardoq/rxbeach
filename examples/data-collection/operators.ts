@@ -18,7 +18,11 @@ const filterUndefined = <T>(): OperatorFunction<T | undefined, T> =>
 export const pickComplexModelChildren = (
   parentId: number
 ): OperatorFunction<CollectionState, CollectionState> =>
-  map(collection => collection.filter(({ parent }) => parent === parentId));
+  map(collection =>
+    Object.fromEntries(
+      Object.entries(collection).filter(([, { parent }]) => parent === parentId)
+    )
+  );
 
 /**
  * Takes a stream of an array, and returns a stream where each of the items of
