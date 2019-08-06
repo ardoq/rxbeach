@@ -12,17 +12,33 @@ import { subscribeAndGuard, ofTypes } from "utils";
 
 import { tap } from "rxjs/operators";
 
-export type Epic<Payload> = OperatorFunction<Action<Payload>, AnyAction>;
+export type Epic<Action> = OperatorFunction<Action, AnyAction>;
 
-type EpicDefinition<Payload> = {
+type EpicDefinition<Action> = {
   actions: symbol[];
-  epic: Epic<Payload>;
+  epic: Epic<Action>;
 };
 
+/**
+ * Define a multiplexing routine
+ *
+ * A multiplexing routine accepts actions and emits actions. There does not
+ * need to be correspondence between the amount of actions accepted and emitted.
+ *
+ * Use a multiplexing routine when you need to hook your own actions into
+ * stand alone / notification actions.
+ *
+ * Multiplexing routines should not rely on other streams. Do **not hook other
+ * streams onto a multiplexing routine**.
+ *
+ * @param epic The routine itself, a simple operator that accepts actions and
+ *             emits actions
+ * @param actions The actions to accept
+ */
 export const epic = <Payload = void>(
-  epic: Epic<Payload>,
+  epic: Epic<Action<Payload>>,
   ...actions: ActionCreator<Payload>[]
-): EpicDefinition<Payload> => ({
+): EpicDefinition<Action<Payload>> => ({
   actions: actions.map(({ type }) => type),
   epic
 });

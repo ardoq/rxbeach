@@ -1,24 +1,47 @@
-import { ActionStream, ActionCreator, ActionDispatcher } from "types";
+import { ActionStream, ActionCreator, ActionDispatcher, Action } from "types";
 import { merge } from "rxjs";
 import { Epic } from "./epics";
 import { createActionCreator } from "actionCreator";
 import { subscribeAndGuard, ofType } from "utils";
 import { tap } from "rxjs/operators";
 
-type Saga<Payload> = Epic<Payload>;
+type Saga<Action> = Epic<Action>;
 
 type SagaDefinition<Payload> = ActionCreator<Payload> & {
-  saga: Saga<Payload>;
+  saga: Saga<Action<Payload>>;
 };
 
+type AnySagaDefinition = ActionCreator<any> & {
+  saga: Saga<any>;
+};
+
+/**
+ * Define a data routine
+ *
+ * A data routine provides data to other actions, or performs side effects where
+ * the result of the side effect is needed in other actions. Examples are:
+ *  - Providing context from `context$` to another action
+ *  - Updating a model on the backend, and feeding the updated model to another
+ *    function
+ *
+ * Data routines are the only routines that should have other streams hooked
+ * onto them, but do not hook the action$ onto a saga. If you want to do that,
+ * use an epic instead.
+ *
+ * @param saga The routine itself, a simple operator tha accepts actions and
+ *             emits actions
+ */
 export const saga = <Payload = void>(
-  saga: Saga<Payload>
+  saga: Saga<Action<Payload>>
 ): SagaDefinition<Payload> => ({
   ...createActionCreator<Payload>(""),
   saga
 });
 
-export type SagaSet = Set<SagaDefinition<any>>;
+export type SagaSet = Set<AnySagaDefinition>;
+
+export const sagaSet = (...sagaDefinitions: SagaDefinition<any>[]): SagaSet =>
+  new Set(sagaDefinitions);
 
 export const attachSagas = (
   action$: ActionStream,
