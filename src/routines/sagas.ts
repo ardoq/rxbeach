@@ -40,9 +40,6 @@ export const saga = <Payload = void>(
 
 export type SagaSet = Set<AnySagaDefinition>;
 
-export const sagaSet = (...sagaDefinitions: SagaDefinition<any>[]): SagaSet =>
-  new Set(sagaDefinitions);
-
 export const attachSagas = (
   action$: ActionStream,
   dispatchAction: ActionDispatcher,

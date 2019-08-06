@@ -40,7 +40,7 @@ const pingPongState$ = action$.pipe(
 );
 
 //// Pure routines ////
-const logPingPong = routine<PingOrPong>(() =>
+const logPingPong = routine<PingOrPong>(
   pipe(
     extractPayload(),
     tap(({ pingOrPong }) => {
@@ -56,7 +56,7 @@ const logPingPong = routine<PingOrPong>(() =>
 // shim for window.alert
 const alert = (msg: string) => null;
 
-const alertInvalidPingPong = routine<PingOrPong>(() =>
+const alertInvalidPingPong = routine<PingOrPong>(
   pipe(
     extractPayload(),
     tap(({ pingOrPong }) => alert(`Invalid ping or pong: ${pingOrPong}`))

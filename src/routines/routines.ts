@@ -1,5 +1,5 @@
 import { OperatorFunction, merge } from "rxjs";
-import { ActionStream, ActionDispatcher, Action, ActionCreator } from "types";
+import { ActionStream, Action, ActionCreator } from "types";
 import { subscribeAndGuard, ofType } from "utils";
 import { createActionCreator } from "actionCreator";
 
@@ -7,12 +7,14 @@ import { createActionCreator } from "actionCreator";
  * Module with utils for creating and using routines
  */
 
-type Routine<Payload> = (
-  dispatchAction: ActionDispatcher
-) => OperatorFunction<Action<Payload>, unknown>;
+type Routine<Action> = OperatorFunction<Action, unknown>;
 
 type RoutineDefinition<Payload> = ActionCreator<Payload> & {
-  routine: Routine<Payload>;
+  routine: Routine<Action<Payload>>;
+};
+
+type AnyRoutineDefinition = ActionCreator<any> & {
+  routine: Routine<any>;
 };
 
 /**
@@ -29,17 +31,16 @@ type RoutineDefinition<Payload> = ActionCreator<Payload> & {
  *                payloads
  */
 export const routine = <Payload = void>(
-  routine: Routine<Payload>
+  routine: Routine<Action<Payload>>
 ): RoutineDefinition<Payload> => ({
   ...createActionCreator<Payload>(""),
   routine
 });
 
-export type RoutineSet = Set<RoutineDefinition<any>>;
+export type RoutineSet = Set<AnyRoutineDefinition>;
 
 export const subscribeRoutines = (
   action$: ActionStream,
-  dispatchAction: ActionDispatcher,
   routineDefinitions: RoutineSet
 ) =>
   subscribeAndGuard(
@@ -47,7 +48,7 @@ export const subscribeRoutines = (
       [...routineDefinitions].map(action =>
         action$.pipe(
           ofType(action.type),
-          action.routine(dispatchAction)
+          action.routine
         )
       )
     )
