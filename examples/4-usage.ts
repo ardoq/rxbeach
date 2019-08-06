@@ -1,6 +1,6 @@
 import { subscribeAndGuard } from "../src/utils";
 import { basicState$, action$ } from "./3-stream";
-import { subscribeRoutines } from "../src/routines";
+import { subscribeRoutines } from "../src/routines/routines";
 import { routines, logPingPong } from "./2-routines";
 import { ActionDispatcher } from "types";
 import { appendRelevantData } from "./1-reducers";

@@ -1,4 +1,4 @@
-import { epic, EpicSet } from "../src/epics";
+import { epic, EpicSet } from "../src/routines/epics";
 import { pipe } from "rxjs";
 import { logPingPong } from "./2-routines";
 import { extractPayload } from "utils";

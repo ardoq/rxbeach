@@ -1,4 +1,4 @@
-import { routine, RoutineSet } from "../src/routines";
+import { routine, RoutineSet } from "../src/routines/routines";
 import { tap } from "rxjs/operators";
 import { pipe } from "rxjs";
 import { extractPayload } from "utils";
