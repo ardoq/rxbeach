@@ -40,8 +40,7 @@ export const attachEpics = (
       [...epicDefinitions].map(epic =>
         action$.pipe(
           ofTypes(epic.actions),
-          // TODO - why don't typings work here?
-          (epic as unknown) as MonoTypeOperatorFunction<UnknownAction>,
+          epic.epic,
           tap(action => dispatchAction(action))
         )
       )
