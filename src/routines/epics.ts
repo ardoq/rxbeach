@@ -1,8 +1,7 @@
-import { OperatorFunction, merge, MonoTypeOperatorFunction } from "rxjs";
+import { OperatorFunction, merge } from "rxjs";
 
 import {
   Action,
-  UnknownAction,
   ActionStream,
   ActionDispatcher,
   AnyAction,
@@ -13,7 +12,7 @@ import { subscribeAndGuard, ofTypes } from "utils";
 
 import { tap } from "rxjs/operators";
 
-type Epic<Payload> = OperatorFunction<Action<Payload>, AnyAction>;
+export type Epic<Payload> = OperatorFunction<Action<Payload>, AnyAction>;
 
 type EpicDefinition<Payload> = {
   actions: symbol[];
