@@ -1,4 +1,6 @@
-import { Observable } from "rxjs";
+import { Observable, OperatorFunction } from "rxjs";
+import { ActionWithPayload } from "types";
+import { map } from "rxjs/operators";
 
 export const subscribeAndGuard = (stream$: Observable<unknown>) =>
   stream$.subscribe(
@@ -10,3 +12,8 @@ export const subscribeAndGuard = (stream$: Observable<unknown>) =>
       subscribeAndGuard(stream$);
     }
   );
+
+export const extractPayload = <Payload>(): OperatorFunction<
+  ActionWithPayload<Payload>,
+  Payload
+> => map(action => action.payload);
