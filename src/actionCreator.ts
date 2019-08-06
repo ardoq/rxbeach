@@ -1,4 +1,4 @@
-import { ActionCreator, UnknownAction, UnknownActionCreator } from "types";
+import { ActionCreator, UnknownActionCreator } from "types";
 
 /*
  * Module with utils for creating and using actionCreators

@@ -1,23 +1,10 @@
-import {
-  useRef,
-  useEffect,
-  useState,
-  createElement,
-  ComponentType
-} from "react";
+import { useEffect, useState, createElement, ComponentType } from "react";
 import { StateStreamFactory } from "stateStream";
-import { ActionStream, ActionDispatcher, Action } from "types";
-import { OperatorFunction, Observable } from "rxjs";
+import { ActionStream, ActionDispatcher } from "types";
 
 /**
  * Utils for connecting a state stream factory to a React component.
  */
-
-type ViewModelPackage<ViewModel> = {
-  viewModel: ViewModel;
-  action$: ActionStream;
-  dispatchAction: ActionDispatcher;
-};
 
 type ViewModelHook<ViewModel> = (
   action$: ActionStream,
