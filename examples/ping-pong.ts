@@ -41,6 +41,7 @@ const pingPongState$ = action$.pipe(
 
 //// Pure routines ////
 const logPingPong = routine<PingOrPong>(
+  "Log ping or pong",
   pipe(
     extractPayload(),
     tap(({ pingOrPong }) => {
@@ -57,6 +58,7 @@ const logPingPong = routine<PingOrPong>(
 const alert = (msg: string) => null;
 
 const alertInvalidPingPong = routine<PingOrPong>(
+  "Alert the user of invalid ping pong state",
   pipe(
     extractPayload(),
     tap(({ pingOrPong }) => alert(`Invalid ping or pong: ${pingOrPong}`))
@@ -103,6 +105,7 @@ const epics: EpicSet = new Set([logWhenPingPong, verifyWhenPingPong]);
 
 //// Data routine ////
 const verifyPingAndPongAlternating = saga<PingOrPong>(
+  "verify next ping pong state is valid",
   pipe(
     extractPayload(),
     combineLatest(pingPongState$),

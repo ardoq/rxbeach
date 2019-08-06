@@ -1,5 +1,4 @@
 import { OperatorFunction, merge } from "rxjs";
-
 import {
   Action,
   ActionStream,
@@ -7,9 +6,7 @@ import {
   AnyAction,
   ActionCreator
 } from "types";
-
 import { subscribeAndGuard, ofTypes } from "utils";
-
 import { tap } from "rxjs/operators";
 
 export type Epic<Action> = OperatorFunction<Action, AnyAction>;
@@ -18,6 +15,8 @@ type EpicDefinition<Action> = {
   actions: symbol[];
   epic: Epic<Action>;
 };
+
+export type EpicSet = Set<EpicDefinition<any>>;
 
 /**
  * Define a multiplexing routine
@@ -42,8 +41,6 @@ export const epic = <Payload = void>(
   actions: actions.map(({ type }) => type),
   epic
 });
-
-export type EpicSet = Set<EpicDefinition<any>>;
 
 export const attachEpics = (
   action$: ActionStream,

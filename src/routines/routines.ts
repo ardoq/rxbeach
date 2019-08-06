@@ -17,6 +17,8 @@ type AnyRoutineDefinition = ActionCreator<any> & {
   routine: Routine<any>;
 };
 
+export type RoutineSet = Set<AnyRoutineDefinition>;
+
 /**
  * Define a pure routine
  *
@@ -31,13 +33,12 @@ type AnyRoutineDefinition = ActionCreator<any> & {
  *                payloads
  */
 export const routine = <Payload = void>(
+  debugName: string,
   routine: Routine<Action<Payload>>
 ): RoutineDefinition<Payload> => ({
-  ...createActionCreator<Payload>(""),
+  ...createActionCreator<Payload>(debugName),
   routine
 });
-
-export type RoutineSet = Set<AnyRoutineDefinition>;
 
 export const subscribeRoutines = (
   action$: ActionStream,
