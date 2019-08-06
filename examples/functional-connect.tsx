@@ -1,9 +1,8 @@
 import { connectHookCreator, ActionStreamProps } from "../src/connect";
 import { ActionDispatcher, ActionStream } from "../src/types";
-import { BasicStateShape } from "./1-reducers";
-import { basicState$Factory } from "./3-stream";
+import { qualified$Factory } from "./qualified-stream";
 
-const useViewModel = connectHookCreator<BasicStateShape>(basicState$Factory);
+const useViewModel = connectHookCreator<string>(qualified$Factory);
 
 const ComplexComponent = ({ action$, dispatchAction }: ActionStreamProps) => {
   const [viewModel, qualifiedAction$, qualifiedDispatchAction] = useViewModel(
@@ -13,7 +12,7 @@ const ComplexComponent = ({ action$, dispatchAction }: ActionStreamProps) => {
 
   return (
     <div>
-      {viewModel.data.length === 0 ? (
+      {viewModel.length === 0 ? (
         <p>No data!</p>
       ) : (
         <SimpleComponent
@@ -30,11 +29,7 @@ const SimpleComponent = ({ action$, dispatchAction }: ActionStreamProps) => {
 
   return (
     <div>
-      <ul>
-        {viewModel.data.map(entry => (
-          <li>{entry}</li>
-        ))}
-      </ul>
+      <p>State is: {viewModel}</p>
     </div>
   );
 };
