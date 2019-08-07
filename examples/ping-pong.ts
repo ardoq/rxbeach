@@ -1,6 +1,6 @@
 import { reducer, ReducerMap } from "reducer";
 import { action$ } from "./globalActions";
-import { reduceToStateStream } from "stateStream";
+import { reduceToStateStream, createStateStreamFactory } from "stateStream";
 import { routine, RoutineSet } from "routines/routines";
 import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
 import { pipe } from "rxjs";

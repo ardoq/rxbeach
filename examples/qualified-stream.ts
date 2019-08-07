@@ -1,4 +1,4 @@
-import { createStateStreamFactory } from "../src/stateStream";
+import { createStateStreamFactory } from "stateStream";
 
 export const qualified$Factory = createStateStreamFactory(
   "test stream",

@@ -4,15 +4,16 @@ import {
   removeComplexModel
 } from "./complexModelCollection$";
 import { pipe } from "rxjs";
-import { extractPayload } from "../../src/utils";
+import { extractPayload } from "utils";
 import { flatMap } from "rxjs/operators";
-import { routine } from "../../src/routines";
+import { routine } from "routines/routines";
 import { pickComplexModelChildren } from "./operators";
 
 /**
  * Delete all the children of a ComplexModel
  */
-export const deleteChildren = routine<ComplexModel["id"]>(dispatchAction =>
+export const deleteChildren = routine<ComplexModel["id"]>(
+  "Delete children",
   pipe(
     extractPayload(),
     flatMap(parentId =>
