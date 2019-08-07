@@ -3,10 +3,6 @@ import { createActionCreator } from "actionCreator";
 import { ActionStream, Action, ActionCreator, VoidPayload } from "types";
 import { subscribeAndGuard, ofType } from "utils";
 
-/*
- * Module with utils for creating and using routines
- */
-
 type Routine<Action> = OperatorFunction<Action, unknown>;
 
 type RoutineDefinition<Payload> = ActionCreator<Payload> & {

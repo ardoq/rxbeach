@@ -1,9 +1,5 @@
 import { ActionCreator, UnknownActionCreator, VoidPayload } from "types";
 
-/*
- * Module with utils for creating and using actionCreators
- */
-
 export function createActionCreator<Payload = VoidPayload>(
   debugName: string
 ): ActionCreator<Payload>;

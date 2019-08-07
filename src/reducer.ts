@@ -1,10 +1,6 @@
 import { createActionCreator } from "actionCreator";
 import { ActionCreator, VoidPayload } from "types";
 
-/*
- * Module with utils for creating and using reducers
- */
-
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
   payload: Payload

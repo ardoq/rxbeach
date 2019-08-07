@@ -1,5 +1,5 @@
 import { OperatorFunction, pipe, Observable } from "rxjs";
-import { scan, filter, startWith, shareReplay } from "rxjs/operators";
+import { scan, startWith, shareReplay } from "rxjs/operators";
 import {
   getQualifier,
   createChildDispatcher,
