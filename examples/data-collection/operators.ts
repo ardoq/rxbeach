@@ -1,6 +1,6 @@
 import { OperatorFunction, ReplaySubject } from "rxjs";
-import { CollectionState } from "./complexModelCollection$";
 import { map, filter, flatMap } from "rxjs/operators";
+import { CollectionState } from "./complexModelCollection$";
 
 /**
  * Util operator that turned out to be unecessary

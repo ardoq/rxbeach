@@ -1,7 +1,7 @@
 import { Observable, OperatorFunction, MonoTypeOperatorFunction } from "rxjs";
-import { ActionWithPayload, AnyAction } from "types";
 import { map, filter } from "rxjs/operators";
 import { Reducer, ReducerDefinition } from "reducer";
+import { ActionWithPayload, AnyAction } from "types";
 
 export const subscribeAndGuard = (stream$: Observable<unknown>) =>
   stream$.subscribe(

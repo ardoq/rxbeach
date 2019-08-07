@@ -1,12 +1,12 @@
+import { pipe } from "rxjs";
+import { flatMap } from "rxjs/operators";
+import { routine } from "routines/routines";
+import { extractPayload } from "utils";
 import {
   ComplexModel,
   complexModelCollection$,
   removeComplexModel
 } from "./complexModelCollection$";
-import { pipe } from "rxjs";
-import { extractPayload } from "utils";
-import { flatMap } from "rxjs/operators";
-import { routine } from "routines/routines";
 import { pickComplexModelChildren } from "./operators";
 
 /**

@@ -1,7 +1,7 @@
 import { OperatorFunction, merge } from "rxjs";
+import { createActionCreator } from "actionCreator";
 import { ActionStream, Action, ActionCreator } from "types";
 import { subscribeAndGuard, ofType } from "utils";
-import { createActionCreator } from "actionCreator";
 
 /*
  * Module with utils for creating and using routines

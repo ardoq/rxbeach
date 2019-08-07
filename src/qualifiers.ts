@@ -1,6 +1,6 @@
-import { Action, ActionDispatcher, ActionStream } from "types";
-import { filter, map } from "rxjs/operators";
 import { MonoTypeOperatorFunction } from "rxjs";
+import { filter, map } from "rxjs/operators";
+import { Action, ActionDispatcher, ActionStream } from "types";
 
 export const getQualifier = () => Symbol();
 

@@ -1,13 +1,13 @@
-import { reducer, ReducerMap } from "reducer";
-import { action$ } from "./globalActions";
-import { reduceToStateStream, createStateStreamFactory } from "stateStream";
-import { routine, RoutineSet } from "routines/routines";
-import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
 import { pipe } from "rxjs";
-import { extractPayload } from "utils";
+import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
+import { reducer, ReducerMap } from "reducer";
 import { epic, EpicSet } from "routines/epics";
-import { ActionWithoutPayload } from "types";
+import { routine, RoutineSet } from "routines/routines";
 import { saga, SagaSet } from "routines/sagas";
+import { reduceToStateStream } from "stateStream";
+import { ActionWithoutPayload } from "types";
+import { extractPayload } from "utils";
+import { action$ } from "./globalActions";
 
 /*
  * A simple stream example: PING -- PONG

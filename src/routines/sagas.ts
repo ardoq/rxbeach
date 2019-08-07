@@ -1,9 +1,9 @@
-import { ActionStream, ActionCreator, ActionDispatcher, Action } from "types";
 import { merge } from "rxjs";
-import { Epic } from "./epics";
-import { createActionCreator } from "actionCreator";
-import { subscribeAndGuard, ofType } from "utils";
 import { tap } from "rxjs/operators";
+import { createActionCreator } from "actionCreator";
+import { ActionStream, ActionCreator, ActionDispatcher, Action } from "types";
+import { subscribeAndGuard, ofType } from "utils";
+import { Epic } from "./epics";
 
 type Saga<Action> = Epic<Action>;
 

@@ -1,7 +1,7 @@
 import { reducer, reducerMap } from "reducer";
-import { action$ } from "../globalActions";
 import { reduceToStateStream } from "stateStream";
 import { sameReducerFn } from "utils";
+import { action$ } from "../globalActions";
 
 export type ComplexModel = {
   id: number;

@@ -1,12 +1,12 @@
 import { OperatorFunction, pipe, Observable } from "rxjs";
 import { scan, filter, startWith, shareReplay } from "rxjs/operators";
-import { Action, UnknownAction, ActionStream, ActionDispatcher } from "types";
-import { ReducerMap } from "reducer";
 import {
   getQualifier,
   createChildDispatcher,
   createChildActionStream
 } from "qualifiers";
+import { ReducerMap } from "reducer";
+import { Action, UnknownAction, ActionStream, ActionDispatcher } from "types";
 
 /*
  * Module with utils for creating and using state streams.

@@ -1,4 +1,5 @@
 import { OperatorFunction, merge } from "rxjs";
+import { tap } from "rxjs/operators";
 import {
   Action,
   ActionStream,
@@ -7,7 +8,6 @@ import {
   ActionCreator
 } from "types";
 import { subscribeAndGuard, ofTypes } from "utils";
-import { tap } from "rxjs/operators";
 
 export type Epic<Action> = OperatorFunction<Action, AnyAction>;
 
