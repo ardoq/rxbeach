@@ -9,26 +9,15 @@ import {
   subscribeAndGuard
 } from "./utils";
 import { ReducerDefinition, Reducer } from "reducer";
-import { number } from "prop-types";
-
-const emptyAction: ActionWithoutPayload = {
-  meta: { qualifiers: [] },
-  type: Symbol()
-};
+import { actionWithPayload, actionWithoutPayload } from "testUtils";
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
   pipe: OperatorFunction<ActionWithPayload<P>, R>
-): Promise<R> => {
-  const action: ActionWithPayload<P> = {
-    ...emptyAction,
-    payload
-  };
-
-  return of(action)
+): Promise<R> =>
+  of(actionWithPayload(Symbol(), payload))
     .pipe(pipe)
     .toPromise();
-};
 
 describe("utils", function() {
   describe("subscribeAndGuard", function() {
@@ -105,9 +94,9 @@ describe("utils", function() {
       const otherType = Symbol("Wrong type");
 
       await of<ActionWithoutPayload>(
-        { ...emptyAction, type: targetType },
-        { ...emptyAction, type: otherType },
-        { ...emptyAction, type: targetType }
+        actionWithoutPayload(targetType),
+        actionWithoutPayload(otherType),
+        actionWithoutPayload(targetType)
       )
         .pipe(
           ofType(targetType),
@@ -122,9 +111,9 @@ describe("utils", function() {
       const otherType = Symbol("Wrong type");
 
       const collectedTypes = await of<ActionWithoutPayload>(
-        { ...emptyAction, type: targetType1 },
-        { ...emptyAction, type: otherType },
-        { ...emptyAction, type: targetType2 }
+        actionWithoutPayload(targetType1),
+        actionWithoutPayload(otherType),
+        actionWithoutPayload(targetType2)
       )
         .pipe(
           ofType(targetType1, targetType2),
