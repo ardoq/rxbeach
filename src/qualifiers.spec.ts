@@ -1,8 +1,8 @@
-import { AnyAction, ActionDispatcher } from "types";
-import { createChildDispatcher, createChildActionStream } from "qualifiers";
-import { deepEqual } from "assert";
-import { actionWithoutPayload } from "testUtils";
 import { of } from "rxjs";
+import { deepEqual } from "assert";
+import { createChildDispatcher, createChildActionStream } from "qualifiers";
+import { actionWithoutPayload } from "testUtils";
+import { AnyAction, ActionDispatcher } from "types";
 
 describe("qualifiers", function() {
   describe("createChildDispatcher", function() {

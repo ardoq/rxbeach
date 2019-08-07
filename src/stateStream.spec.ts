@@ -1,7 +1,7 @@
 import { equal } from "assert";
 import { of } from "rxjs";
 import { ReducerMap } from "reducer";
-import { reduceActions } from "./stateStream";
+import { reduceActions } from "stateStream";
 import { actionWithoutPayload, actionWithPayload } from "testUtils";
 
 const throwErrorFn = () => {

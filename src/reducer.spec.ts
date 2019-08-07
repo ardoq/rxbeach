@@ -1,5 +1,5 @@
-import { reducer, reducerMap } from "reducer";
 import { deepEqual } from "assert";
+import { reducer, reducerMap } from "reducer";
 
 describe("reducer", function() {
   it("Should define actions and map them to reducers", function() {

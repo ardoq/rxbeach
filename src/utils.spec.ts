@@ -1,15 +1,15 @@
-import { equal, deepEqual, notStrictEqual } from "assert";
-import { of, OperatorFunction, Subject, ReplaySubject } from "rxjs";
+import { equal, deepEqual } from "assert";
+import { of, OperatorFunction, Subject } from "rxjs";
 import { tap, reduce } from "rxjs/operators";
+import { ReducerDefinition, Reducer } from "reducer";
+import { actionWithPayload, actionWithoutPayload } from "testUtils";
 import { ActionWithPayload, ActionWithoutPayload } from "types";
 import {
   extractPayload,
   ofType,
   sameReducerFn,
   subscribeAndGuard
-} from "./utils";
-import { ReducerDefinition, Reducer } from "reducer";
-import { actionWithPayload, actionWithoutPayload } from "testUtils";
+} from "utils";
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
