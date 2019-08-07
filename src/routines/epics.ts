@@ -34,6 +34,7 @@ type EpicSet = Set<EpicDefinition<any>>;
  * @param epic The routine itself, a simple operator that accepts actions and
  *             emits actions
  * @param actions The actions to accept
+ * @template `Payload` - The type of payload on the action creators
  */
 export const epic = <Payload = VoidPayload>(
   epic: Epic<Action<Payload>>,
@@ -43,9 +44,23 @@ export const epic = <Payload = VoidPayload>(
   epic
 });
 
+/**
+ * Collect epics into a set for attaching with `attachEpics`
+ *
+ * @param epics The epics to include in the set
+ *
+ * @see attachEpics
+ */
 export const epicSet = (...epics: EpicDefinition<any>[]): EpicSet =>
   new Set(epics);
 
+/**
+ * Attach epics to an action stream
+ *
+ * @param action$ The action stream to attach the epics to
+ * @param dispatchAction The function to dispatch actions returned by the epics
+ * @param epicDefinitions The epics to attach to the action stream
+ */
 export const attachEpics = (
   action$: ActionStream,
   dispatchAction: ActionDispatcher,
@@ -53,7 +68,7 @@ export const attachEpics = (
 ) =>
   subscribeAndGuard(
     merge(
-      [...epicDefinitions].map(epic =>
+      ...[...epicDefinitions].map(epic =>
         action$.pipe(
           ofType(...epic.actions),
           epic.epic,
