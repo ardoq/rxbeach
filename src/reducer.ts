@@ -34,7 +34,7 @@ export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
 export const reducer = <State, Payload = VoidPayload>(
   reducer: Reducer<State, Payload>
 ): ReducerDefinition<State, Payload> => {
-  const action: ActionCreator<Payload> = createActionCreator<Payload>("");
+  const action: ActionCreator<Payload> = createActionCreator("");
   const reducerEntry: ReducerEntry<State, Payload> = [action.type, reducer];
 
   return {
