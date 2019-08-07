@@ -21,7 +21,7 @@ type AnySagaDefinition = ActionCreator<any> & {
   saga: Saga<any>;
 };
 
-export type SagaSet = Set<AnySagaDefinition>;
+type SagaSet = Set<AnySagaDefinition>;
 
 /**
  * Define a data routine
@@ -46,6 +46,9 @@ export const saga = <Payload = VoidPayload>(
   ...createActionCreator<Payload>(debugName),
   saga
 });
+
+export const sagaSet = (...sagas: AnySagaDefinition[]): SagaSet =>
+  new Set(sagas);
 
 export const attachSagas = (
   action$: ActionStream,

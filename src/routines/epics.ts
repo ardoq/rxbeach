@@ -17,7 +17,7 @@ type EpicDefinition<Action> = {
   epic: Epic<Action>;
 };
 
-export type EpicSet = Set<EpicDefinition<any>>;
+type EpicSet = Set<EpicDefinition<any>>;
 
 /**
  * Define a multiplexing routine
@@ -42,6 +42,9 @@ export const epic = <Payload = VoidPayload>(
   actions: actions.map(({ type }) => type),
   epic
 });
+
+export const epicSet = (...epics: EpicDefinition<any>[]): EpicSet =>
+  new Set(epics);
 
 export const attachEpics = (
   action$: ActionStream,
