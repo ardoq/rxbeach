@@ -45,12 +45,12 @@ export const removeComplexModel = reducer(
 
 ////
 
-export const reducers = reducerMap([
-  setComplexModels.reducer,
-  addComplexModel.reducer,
-  replaceComplexModel.reducer,
-  removeComplexModel.reducer
-]);
+export const reducers = reducerMap(
+  setComplexModels,
+  addComplexModel,
+  replaceComplexModel,
+  removeComplexModel
+);
 
 export const complexModelCollection$ = action$.pipe(
   reduceToStateStream(
