@@ -1,6 +1,5 @@
-import { connectHookCreator, ActionStreamProps } from "../src/connect";
-import { ActionDispatcher, ActionStream } from "../src/types";
-import { qualified$Factory } from "./qualified-stream";
+import { connectHookCreator, ActionStreamProps } from "../../src/react/connect";
+import { qualified$Factory } from "../qualified-stream";
 
 const useViewModel = connectHookCreator<string>(qualified$Factory);
 
