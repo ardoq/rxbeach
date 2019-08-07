@@ -5,7 +5,8 @@ import {
   ActionStream,
   ActionDispatcher,
   AnyAction,
-  ActionCreator
+  ActionCreator,
+  VoidPayload
 } from "types";
 import { subscribeAndGuard, ofTypes } from "utils";
 
@@ -34,7 +35,7 @@ export type EpicSet = Set<EpicDefinition<any>>;
  *             emits actions
  * @param actions The actions to accept
  */
-export const epic = <Payload = void>(
+export const epic = <Payload = VoidPayload>(
   epic: Epic<Action<Payload>>,
   ...actions: ActionCreator<Payload>[]
 ): EpicDefinition<Action<Payload>> => ({

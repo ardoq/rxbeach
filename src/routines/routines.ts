@@ -1,6 +1,6 @@
 import { OperatorFunction, merge } from "rxjs";
 import { createActionCreator } from "actionCreator";
-import { ActionStream, Action, ActionCreator } from "types";
+import { ActionStream, Action, ActionCreator, VoidPayload } from "types";
 import { subscribeAndGuard, ofType } from "utils";
 
 /*
@@ -32,7 +32,7 @@ export type RoutineSet = Set<AnyRoutineDefinition>;
  * @param routine The routine itself, a simple operator function that accepts
  *                payloads
  */
-export const routine = <Payload = void>(
+export const routine = <Payload = VoidPayload>(
   debugName: string,
   routine: Routine<Action<Payload>>
 ): RoutineDefinition<Payload> => ({

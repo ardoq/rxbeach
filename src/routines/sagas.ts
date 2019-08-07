@@ -1,7 +1,13 @@
 import { merge } from "rxjs";
 import { tap } from "rxjs/operators";
 import { createActionCreator } from "actionCreator";
-import { ActionStream, ActionCreator, ActionDispatcher, Action } from "types";
+import {
+  ActionStream,
+  ActionCreator,
+  ActionDispatcher,
+  Action,
+  VoidPayload
+} from "types";
 import { subscribeAndGuard, ofType } from "utils";
 import { Epic } from "./epics";
 
@@ -33,7 +39,7 @@ export type SagaSet = Set<AnySagaDefinition>;
  * @param saga The routine itself, a simple operator tha accepts actions and
  *             emits actions
  */
-export const saga = <Payload = void>(
+export const saga = <Payload = VoidPayload>(
   debugName: string,
   saga: Saga<Action<Payload>>
 ): SagaDefinition<Payload> => ({

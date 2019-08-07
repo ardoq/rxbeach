@@ -1,11 +1,11 @@
 import { createActionCreator } from "actionCreator";
-import { ActionCreator } from "types";
+import { ActionCreator, VoidPayload } from "types";
 
 /*
  * Module with utils for creating and using reducers
  */
 
-export type Reducer<State, Payload = void> = (
+export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
   payload: Payload
 ) => State;
@@ -18,7 +18,7 @@ export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
   reducer: ReducerEntry<State, Payload>;
 };
 
-export const reducer = <State, Payload = void>(
+export const reducer = <State, Payload = VoidPayload>(
   reducer: Reducer<State, Payload>
 ): ReducerDefinition<State, Payload> => {
   const action: ActionCreator<Payload> = createActionCreator<Payload>("");
