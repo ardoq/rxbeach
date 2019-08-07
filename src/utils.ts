@@ -1,18 +1,24 @@
 import { Observable, OperatorFunction, MonoTypeOperatorFunction } from "rxjs";
-import { map, filter } from "rxjs/operators";
+import { map, filter, catchError } from "rxjs/operators";
 import { Reducer, ReducerDefinition } from "reducer";
 import { ActionWithPayload, AnyAction } from "types";
 
+/**
+ * Silences errors and subscribes the stream
+ *
+ * Errors are logged to console, and the stream will continue.
+ *
+ * @param stream$ The stream to subscribe and silence errors from
+ */
 export const subscribeAndGuard = (stream$: Observable<unknown>) =>
-  stream$.subscribe(
-    () => null,
-    (error: Error) => {
-      console.error("UNHANDLED ERROR IN STREAM", error);
-
-      // TODO is this needed? Inherited from ardoq subscribeAndGuard
-      subscribeAndGuard(stream$);
-    }
-  );
+  stream$
+    .pipe(
+      catchError((error, stream) => {
+        console.error("UNHANDLED ERROR IN STREAM", error);
+        return stream;
+      })
+    )
+    .subscribe();
 
 /**
  * Stream operator to extract the payload from an action
@@ -27,13 +33,14 @@ export const extractPayload = <Payload>(): OperatorFunction<
 > => map(action => action.payload);
 
 /**
- * Stream operator to filter only actions of a specific type
+ * Stream operator to filter only actions of specific types
  *
  * ```
  * action$.pipe(
  *   ofType(myAction.type),
  *   tap(action => {
- *     // Action is now guaranteed to be of myAction type
+ *     // `action` is now guaranteed to be of myAction type
+ *     // NB: `action` will have type `AnyAction`
  *   })
  * )
  * ```
@@ -41,15 +48,12 @@ export const extractPayload = <Payload>(): OperatorFunction<
  * This function has weak typings. The output type of the operator function
  * will be `AnyAction`.
  *
- * @param targetType The type of the action to filter for
+ * @param targetTypes The types to filter for
  */
 export const ofType = (
-  targetType: symbol
+  ...targetTypes: symbol[]
 ): MonoTypeOperatorFunction<AnyAction> =>
-  filter(({ type }) => type === targetType);
-
-export const ofTypes = (types: symbol[]): MonoTypeOperatorFunction<AnyAction> =>
-  filter(({ type }) => types.indexOf(type) !== -1);
+  filter(({ type }) => targetTypes.indexOf(type) !== -1);
 
 /**
  * Extract the reducer from a reducer definition, for using the same reducer

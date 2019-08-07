@@ -8,7 +8,7 @@ import {
   ActionCreator,
   VoidPayload
 } from "types";
-import { subscribeAndGuard, ofTypes } from "utils";
+import { subscribeAndGuard, ofType } from "utils";
 
 export type Epic<Action> = OperatorFunction<Action, AnyAction>;
 
@@ -52,7 +52,7 @@ export const attachEpics = (
     merge(
       [...epicDefinitions].map(epic =>
         action$.pipe(
-          ofTypes(epic.actions),
+          ofType(...epic.actions),
           epic.epic,
           tap(action => dispatchAction(action))
         )

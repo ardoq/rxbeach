@@ -7,26 +7,27 @@ import {
 } from "qualifiers";
 import { ReducerMap } from "reducer";
 import { Action, UnknownAction, ActionStream, ActionDispatcher } from "types";
-
-/*
- * Module with utils for creating and using state streams.
- *
- * A state stream is a stream which scans over an action stream to produce a
- * state.
- */
+import { ofType } from "utils";
 
 /**
- * A stream operator that accepts actions and returns a state stream
+ * Create a stream operator that reduces actions to a state
  *
- * @param reducers
- * @param seed
+ * The payload of each incoming action is applied to the matching reducers
+ * together with the previous state (or the seed if it's the first invocation),
+ * and the returned state is emitted.
+ *
+ * This operator does not change whether the stream is hot or cold.
+ *
+ * @param reducers A Map from action types to reducers
+ * @param seed The initial input to the first reducer call
  */
 export const reduceActions = <State>(
   reducers: ReducerMap<State>,
   seed: State
 ): OperatorFunction<Action<any>, State> =>
+  // TODO - write test
   pipe(
-    filter(({ type }) => reducers.has(type)),
+    ofType(...reducers.keys()),
     scan((state: State, { type, payload }: UnknownAction) => {
       const reducer = reducers.get(type);
       if (reducer) {
