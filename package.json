@@ -5,7 +5,7 @@
   "company": "Ardoq AS",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "build": "tsc -p tsconfig.json",
     "start": "ts-node --files -P tsconfig.json src/main.ts",
     "lint": "eslint --ext .ts src"
@@ -13,22 +13,25 @@
   "author": "Tobias Laundal",
   "license": "private",
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
     "@types/node": "^11.13.8",
+    "@types/react": "16.8.24",
     "@typescript-eslint/eslint-plugin": "1.7.0",
     "@typescript-eslint/parser": "1.7.0",
-    "@types/react": "16.8.24",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.5.1",
+    "assert": "^2.0.0",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.2.0",
     "eslint-import-resolver-webpack": "0.11.1",
     "eslint-plugin-import": "2.17.2",
     "eslint-plugin-prettier": "3.0.1",
     "eslint-plugin-sort-class-members": "1.4.0",
-    "prettier": "1.17.0"
+    "mocha": "^6.2.0",
+    "prettier": "1.17.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.5.1"
   },
   "dependencies": {
-    "rxjs": "6.5.2",
-    "react": "16.8.6"
+    "react": "16.8.6",
+    "rxjs": "6.5.2"
   }
 }
