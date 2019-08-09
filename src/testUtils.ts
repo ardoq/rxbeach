@@ -47,3 +47,14 @@ export const checkActions = async (
     )
     .toPromise();
 };
+
+type AnyProducer = () => any;
+export const getContext = <ContextCreator extends AnyProducer>(
+  mochaContext: Mocha.Context,
+  contextCreator: ContextCreator
+): ReturnType<ContextCreator> => {
+  if (mochaContext.context === undefined) {
+    mochaContext.context = contextCreator();
+  }
+  return mochaContext.context;
+};
