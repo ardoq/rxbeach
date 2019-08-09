@@ -1,5 +1,11 @@
-import { Observable, OperatorFunction, MonoTypeOperatorFunction } from "rxjs";
-import { map, filter, catchError } from "rxjs/operators";
+import {
+  Observable,
+  OperatorFunction,
+  MonoTypeOperatorFunction,
+  merge,
+  pipe
+} from "rxjs";
+import { map, filter, catchError, share } from "rxjs/operators";
 import { Reducer, ReducerDefinition } from "reducer";
 import { ActionWithPayload, AnyAction } from "types";
 
@@ -68,3 +74,49 @@ export const ofType = (
 export const sameReducerFn = <State, Payload>(
   ReducerDefinition: ReducerDefinition<State, Payload>
 ): Reducer<State, Payload> => ReducerDefinition.reducer[1];
+
+/**
+ * Runs operators in parallel and merges their results
+ *
+ * For each operator, the returned observable is subscribed to a pipe from the
+ * source observable with the operator. This makes it a bit like the `flatMap`
+ * operator and the merge function, but on an operator level instead of value
+ * or observable level.
+ *
+ * NB: Each operator will create a "copy" of the stream, so any operators
+ *     before the `fork` operator, will be executed for each operator passed
+ *     to `fork`. Because of this, you might want to use the `share` operator
+ *
+ * @param operators Operators to run in parallell and merge the results of
+ */
+const _fork = <T, R>(
+  ...operators: OperatorFunction<T, R>[]
+): OperatorFunction<T, R> => source =>
+  new Observable(subscriber => {
+    const observable = merge(
+      ...operators.map(operator => source.pipe(operator))
+    );
+
+    return observable.subscribe(subscriber);
+  });
+
+/**
+ * Runs operators in parallel and merges their results
+ *
+ * For each operator, the returned observable is subscribed to a pipe from the
+ * source observable with the operator. This makes it a bit like the `flatMap`
+ * operator and the merge function, but on an operator level instead of value
+ * or observable level.
+ *
+ * This operator includes the `share` operator on the parent stream, to prevent
+ * operators that are attached before this one from running multiple times
+ *
+ * @param operators Operators to run in parallell and merge the results of
+ */
+export const fork = <T, R>(
+  ...operators: OperatorFunction<T, R>[]
+): OperatorFunction<T, R> =>
+  pipe(
+    share(),
+    _fork(...operators)
+  );
