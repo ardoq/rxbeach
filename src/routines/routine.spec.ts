@@ -24,7 +24,6 @@ const defaultContext = () => {
 };
 
 describe("routines", function() {
-  this.beforeEach(function() {});
   describe("routine", function() {
     it("Should create a routine definition", function() {
       const { someSideeffect, routineOp } = getContext(this, defaultContext);

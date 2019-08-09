@@ -42,14 +42,33 @@ type SagaSet = Set<AnySagaDefinition>;
 export const saga = <Payload = VoidPayload>(
   debugName: string,
   saga: Saga<Action<Payload>>
-): SagaDefinition<Payload> => ({
-  ...createActionCreator<Payload>(debugName),
-  saga
-});
+): SagaDefinition<Payload> => {
+  const definition: Partial<AnySagaDefinition> = createActionCreator<Payload>(
+    debugName
+  );
 
+  definition.saga = saga;
+
+  return definition as SagaDefinition<Payload>;
+};
+
+/**
+ * Collect sagas into a set for attaching with `attachSagas`
+ *
+ * @param sagas The sagas to include in the set
+ *
+ * @see attachSagas
+ */
 export const sagaSet = (...sagas: AnySagaDefinition[]): SagaSet =>
   new Set(sagas);
 
+/**
+ * Attach sagas to an action stream
+ *
+ * @param action$ The action stream to attach the sagas to
+ * @param dispatchAction The function to dispatch actions returned by the sagas
+ * @param epicDefinitions The sagas to attach to the action stream
+ */
 export const attachSagas = (
   action$: ActionStream,
   dispatchAction: ActionDispatcher,
@@ -57,7 +76,7 @@ export const attachSagas = (
 ) =>
   subscribeAndGuard(
     merge(
-      [...sagaDefinitions].map(definition =>
+      ...[...sagaDefinitions].map(definition =>
         action$.pipe(
           ofType(definition.type),
           definition.saga,
