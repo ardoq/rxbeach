@@ -1,4 +1,4 @@
-import { reducer, reducerMap } from "reducer";
+import { reducer, combineReducers } from "reducer";
 import { reduceToStateStream } from "stateStream";
 import { sameReducerFn } from "utils";
 import { action$ } from "../globalActions";
@@ -44,8 +44,9 @@ export const removeComplexModel = reducer(
 );
 
 ////
-
-export const reducers = reducerMap(
+const initialState: CollectionState = {};
+export const reducerOperator = combineReducers(
+  initialState,
   setComplexModels,
   addComplexModel,
   replaceComplexModel,
@@ -53,9 +54,5 @@ export const reducers = reducerMap(
 );
 
 export const complexModelCollection$ = action$.pipe(
-  reduceToStateStream(
-    "complexModelCollection$",
-    reducers,
-    {} as CollectionState
-  )
+  reduceToStateStream("complexModelCollection$", reducerOperator, initialState)
 );

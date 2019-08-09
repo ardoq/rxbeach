@@ -1,13 +1,19 @@
 import { deepEqual, equal } from "assert";
-import { reducer, reducerMap } from "reducer";
+import { reducer, combineReducers } from "reducer";
 import { actionWithPayload, getContext } from "testUtils";
+import { of } from "rxjs";
+import { VoidPayload } from "types";
+
+const throwErrorFn = () => {
+  throw new Error();
+};
 
 const defaultContext = () => {
   const reducerFn = (totalLength: number, payload: string) =>
     totalLength + payload.length;
 
   const addString = reducer(reducerFn);
-  const reducers = reducerMap(addString);
+  const reducers = combineReducers(0, addString);
 
   return {
     reducerFn,
@@ -31,14 +37,29 @@ describe("reducers", function() {
       deepEqual(action, actionWithPayload(addString.type, "Hello"));
     });
   });
-  describe("reducerMap", function() {
-    it("Should map reducer actions to reducer functions", function() {
-      const { reducers, addString, reducerFn } = getContext(
-        this,
-        defaultContext
+
+  describe("combineReducers", function() {
+    it("Should reduce actions to state", async function() {
+      const incrementOne = reducer((accumulator: number) => accumulator + 1);
+      const incrementMany = reducer(
+        (accumulator: number, increment: number) => accumulator + increment
       );
 
-      deepEqual(reducers, new Map([[addString.type, reducerFn]]));
+      const res = await of(incrementOne(), incrementMany(2), incrementOne())
+        .pipe(combineReducers(1, incrementOne, incrementMany))
+        .toPromise();
+
+      equal(res, 5);
+    });
+    it("Should ignore reducers that throw errors", async function() {
+      const throwError = reducer<boolean, VoidPayload>(throwErrorFn);
+      const setState = reducer(() => true);
+
+      const res = await of(throwError(), setState())
+        .pipe(combineReducers(false, throwError, setState))
+        .toPromise();
+
+      equal(res, true);
     });
   });
 });

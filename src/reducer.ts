@@ -1,5 +1,8 @@
 import { createActionCreator } from "actionCreator";
-import { ActionCreator, VoidPayload } from "types";
+import { ActionCreator, VoidPayload, AnyAction, UnknownAction } from "types";
+import { OperatorFunction, pipe } from "rxjs";
+import { ofType } from "utils";
+import { scan } from "rxjs/operators";
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
@@ -21,7 +24,7 @@ export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
  * of adding typings to it.
  *
  * It returns an action creator with the reducer stored on it. This action
- * creator can be put directly into a `reducerMap` call.
+ * creator can be put directly into a `combineReducers` call.
  *
  * @param reducer The reducer function
  * @template `State` - The state the reducer reduces to
@@ -29,7 +32,7 @@ export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
  *                       with the state
  * @returns An action creator for the payload, with the reducer stored on it
  *
- * @see reducerMap
+ * @see combineReducers
  */
 export const reducer = <State, Payload = VoidPayload>(
   reducer: Reducer<State, Payload>
@@ -44,13 +47,35 @@ export const reducer = <State, Payload = VoidPayload>(
 };
 
 /**
- * Create a map from action types to reducer functions
+ * Combine the reducers into a stream operator
  *
- * @param reducers Action creator reducers, as returned by `reducer`
- * @returns A map from action types to reducer functions
+ * The payload of each incoming action is applied to the matching reducers
+ * together with the previous state (or the seed if it's the first invocation),
+ * and the returned state is emitted.
  *
- * @see reducer
+ * This operator does not change whether the stream is hot or cold.
+ *
+ * @param seed The initial input to the first reducer call
+ * @param reducers The reducer actions that should be combined
  */
-export const reducerMap = <State>(
+export const combineReducers = <State>(
+  seed: State,
   ...reducers: ReducerDefinition<State, any>[]
-): ReducerMap<State> => new Map(reducers.map(({ reducer }) => reducer));
+): OperatorFunction<AnyAction, State> => {
+  const reducerMap = new Map(reducers.map(({ reducer }) => reducer));
+  return pipe(
+    ofType(...reducerMap.keys()),
+    scan((state: State, { type, payload }: UnknownAction) => {
+      const reducer = reducerMap.get(type);
+      if (reducer) {
+        try {
+          return reducer(state, payload);
+        } catch (_) {
+          return state;
+        }
+      } else {
+        return state;
+      }
+    }, seed)
+  );
+};

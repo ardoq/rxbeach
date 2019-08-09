@@ -1,45 +1,11 @@
 import { OperatorFunction, pipe, Observable } from "rxjs";
-import { scan, startWith, shareReplay } from "rxjs/operators";
+import { startWith, shareReplay } from "rxjs/operators";
 import {
   getQualifier,
   createChildDispatcher,
   createChildActionStream
 } from "qualifiers";
-import { ReducerMap } from "reducer";
-import { Action, UnknownAction, ActionStream, ActionDispatcher } from "types";
-import { ofType } from "utils";
-
-/**
- * Create a stream operator that reduces actions to a state
- *
- * The payload of each incoming action is applied to the matching reducers
- * together with the previous state (or the seed if it's the first invocation),
- * and the returned state is emitted.
- *
- * This operator does not change whether the stream is hot or cold.
- *
- * @param reducers A map from action types to reducers
- * @param seed The initial input to the first reducer call
- */
-export const reduceActions = <State>(
-  reducers: ReducerMap<State>,
-  seed: State
-): OperatorFunction<Action<any>, State> =>
-  pipe(
-    ofType(...reducers.keys()),
-    scan((state: State, { type, payload }: UnknownAction) => {
-      const reducer = reducers.get(type);
-      if (reducer) {
-        try {
-          return reducer(state, payload);
-        } catch (_) {
-          return state;
-        }
-      } else {
-        return state;
-      }
-    }, seed)
-  );
+import { ActionStream, ActionDispatcher, AnyAction } from "types";
 
 /**
  * A stream operator that accepts actions, and returns a hot, reference counted,
@@ -51,16 +17,16 @@ export const reduceActions = <State>(
  * will replay the latest state to all subscribers.
  *
  * @param debugName A name for debugging purposes
- * @param reducers A map from action types to reducers
+ * @param reducerOperator A streaming operator that reduces actions to a state
  * @param seed The initial state to emit and feed to the reducers
  */
 export const reduceToStateStream = <StateShape>(
   debugName: string,
-  reducers: ReducerMap<StateShape>,
+  reducerOperator: OperatorFunction<AnyAction, StateShape>,
   seed: StateShape
-): OperatorFunction<Action<any>, StateShape> =>
+): OperatorFunction<AnyAction, StateShape> =>
   pipe(
-    reduceActions(reducers, seed),
+    reducerOperator,
     startWith(seed),
     shareReplay({
       // All subscriptions to a state stream should receive the last state
@@ -85,7 +51,7 @@ export const reduceToStateStream = <StateShape>(
  * stream connected to the same action stream.
  *
  * @param debugName A name for debugging purposes
- * @param reducers A map from action types to reducers
+ * @param reducerOperator A streaming operator that reduces actions to a state
  * @param seed The initial state to emit and feed to the reducers
  * @param action$ The action$ to pipe the state stream from
  * @param dispatchAction The action dispatcher to dispatch qualified actions to
@@ -100,7 +66,7 @@ export const reduceToStateStream = <StateShape>(
  */
 const createQualifiedStateStream = <StateShape>(
   debugName: string,
-  reducers: ReducerMap<StateShape>,
+  reducerOperator: OperatorFunction<AnyAction, StateShape>,
   seed: StateShape,
   action$: ActionStream,
   dispatchAction: ActionDispatcher
@@ -114,7 +80,7 @@ const createQualifiedStateStream = <StateShape>(
   const filteredAction$ = createChildActionStream(action$, qualifier);
 
   const state$ = filteredAction$.pipe(
-    reduceToStateStream(debugName, reducers, seed)
+    reduceToStateStream(debugName, reducerOperator, seed)
   );
 
   return {
@@ -146,20 +112,20 @@ export interface StateStreamFactory<StateShape> {
  * but it also adds the `seed` argument to the returned factory.
  *
  * @param debugName A name for debugging purposes
- * @param reducers A map from action types to reducers
+ * @param reducerOperator A streaming operator that reduces actions to a state
  * @param seed The initial state to emit and feed to the reducers
  *
  * @see createQualifiedStateStream
  */
 export const createStateStreamFactory = <StateShape>(
   debugName: string,
-  reducers: ReducerMap<StateShape>,
+  reducerOperator: OperatorFunction<AnyAction, StateShape>,
   seed: StateShape
 ): StateStreamFactory<StateShape> => {
   const factory = (action$: ActionStream, dispatchAction: ActionDispatcher) =>
     createQualifiedStateStream(
       debugName,
-      reducers,
+      reducerOperator,
       seed,
       action$,
       dispatchAction
