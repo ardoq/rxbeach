@@ -1,7 +1,8 @@
 import { createStateStreamFactory } from "stateStream";
+import { combineReducers } from "reducer";
 
 export const qualified$Factory = createStateStreamFactory(
   "test stream",
-  new Map(),
+  combineReducers("no state"),
   "no state"
 );

@@ -1,6 +1,6 @@
 import { pipe } from "rxjs";
 import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
-import { reducer, ReducerMap } from "reducer";
+import { reducer, ReducerMap, combineReducers } from "reducer";
 import { epic, epicSet } from "routines/epics";
 import { routine, routineSet } from "routines/routines";
 import { saga, sagaSet } from "routines/sagas";
@@ -25,12 +25,9 @@ type PingOrPong = {
 //// Stream ////
 // The action-reducers
 const ping = reducer<PingPongState>(() => PingPongState.PING);
-const pong = reducer<PingPongState>(() => PingPongState.PING);
+const pong = reducer<PingPongState>(() => PingPongState.PONG);
 
-const reducers: ReducerMap<PingPongState> = new Map([
-  ping.reducer,
-  pong.reducer
-]);
+const reducers = combineReducers(PingPongState.PONG, ping, pong);
 
 /**
  * The pingPongState$ holds the last ping or pong type
