@@ -13,7 +13,7 @@ type AnyRoutineDefinition = ActionCreator<any> & {
   routine: Routine<any>;
 };
 
-type RoutineSet = Set<AnyRoutineDefinition>;
+export type RoutineSet = Set<AnyRoutineDefinition>;
 
 /**
  * Define a pure routine
@@ -31,21 +31,37 @@ type RoutineSet = Set<AnyRoutineDefinition>;
 export const routine = <Payload = VoidPayload>(
   debugName: string,
   routine: Routine<Action<Payload>>
-): RoutineDefinition<Payload> => ({
-  ...createActionCreator<Payload>(debugName),
-  routine
-});
+): RoutineDefinition<Payload> => {
+  const def: Partial<AnyRoutineDefinition> = createActionCreator(debugName);
+  def.routine = routine;
 
+  return def as RoutineDefinition<Payload>;
+};
+
+/**
+ * Collect routines into a set for subscription with `subscribeRoutines`
+ *
+ * @param routines The routines to collect
+ *
+ * @see subscribeRoutines
+ */
 export const routineSet = (...routines: AnyRoutineDefinition[]): RoutineSet =>
   new Set(routines);
 
+/**
+ * Subscribe routines to an action stream
+ *
+ * @param action$ The action stream to subscribe the routines to
+ * @param routineDefinitions The routines to subscribe, as returned by
+ *                           `routineSet`
+ */
 export const subscribeRoutines = (
   action$: ActionStream,
   routineDefinitions: RoutineSet
 ) =>
   subscribeAndGuard(
     merge(
-      [...routineDefinitions].map(action =>
+      ...[...routineDefinitions].map(action =>
         action$.pipe(
           ofType(action.type),
           action.routine
