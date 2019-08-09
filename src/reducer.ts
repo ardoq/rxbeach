@@ -34,13 +34,13 @@ export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
 export const reducer = <State, Payload = VoidPayload>(
   reducer: Reducer<State, Payload>
 ): ReducerDefinition<State, Payload> => {
-  const action: ActionCreator<Payload> = createActionCreator("");
-  const reducerEntry: ReducerEntry<State, Payload> = [action.type, reducer];
+  type PartialDefinition = Partial<ReducerDefinition<State, any>> &
+    ActionCreator<Payload>;
 
-  return {
-    ...action,
-    reducer: reducerEntry
-  };
+  const definition: PartialDefinition = createActionCreator("");
+  definition.reducer = [definition.type, reducer];
+
+  return definition as ReducerDefinition<State, Payload>;
 };
 
 /**
