@@ -1,87 +1,41 @@
-import { merge } from "rxjs";
-import { tap } from "rxjs/operators";
 import { createActionCreator } from "actionCreator";
 import {
-  ActionStream,
-  ActionCreator,
-  ActionDispatcher,
   Action,
-  VoidPayload
+  VoidPayload,
+  ActionCreatorConsumer,
+  AnyAction,
+  AnyActionCreatorConsumer
 } from "types";
-import { subscribeAndGuard, ofType } from "utils";
-import { Epic } from "./epics";
-
-type Saga<Action> = Epic<Action>;
-
-type SagaDefinition<Payload> = ActionCreator<Payload> & {
-  saga: Saga<Action<Payload>>;
-};
-
-type AnySagaDefinition = ActionCreator<any> & {
-  saga: Saga<any>;
-};
-
-type SagaSet = Set<AnySagaDefinition>;
+import { OperatorFunction } from "rxjs";
 
 /**
- * Define a data routine
+ * Define a saga / data routine / action middleware
  *
- * A data routine provides data to other actions, or performs side effects where
- * the result of the side effect is needed in other actions. Examples are:
+ * A saga does one of the following
+ *  - Provides data to other actions
+ *  - Performs side effects where the result is needed for other actions
+ *
+ * Some concrete examples:
  *  - Providing context from `context$` to another action
  *  - Updating a model on the backend, and feeding the updated model to another
  *    function
  *
- * Data routines are the only routines that should have other streams hooked
+ * Sagas are the only routines that should have other streams hooked
  * onto them, but do not hook the action$ onto a saga. If you want to do that,
  * use an epic instead.
  *
- * @param saga The routine itself, a simple operator tha accepts actions and
- *             emits actions
+ * @param operator The routine itself, a simple operator tha accepts actions and
+ *                 emits actions
  */
 export const saga = <Payload = VoidPayload>(
   debugName: string,
-  saga: Saga<Action<Payload>>
-): SagaDefinition<Payload> => {
-  const definition: Partial<AnySagaDefinition> = createActionCreator<Payload>(
-    debugName
-  );
+  operator: OperatorFunction<Action<Payload>, AnyAction>
+): ActionCreatorConsumer<Payload> => {
+  const definition: Partial<AnyActionCreatorConsumer> = createActionCreator<
+    Payload
+  >(debugName);
 
-  definition.saga = saga;
+  definition.operator = operator;
 
-  return definition as SagaDefinition<Payload>;
+  return definition as ActionCreatorConsumer<Payload>;
 };
-
-/**
- * Collect sagas into a set for attaching with `attachSagas`
- *
- * @param sagas The sagas to include in the set
- *
- * @see attachSagas
- */
-export const sagaSet = (...sagas: AnySagaDefinition[]): SagaSet =>
-  new Set(sagas);
-
-/**
- * Attach sagas to an action stream
- *
- * @param action$ The action stream to attach the sagas to
- * @param dispatchAction The function to dispatch actions returned by the sagas
- * @param epicDefinitions The sagas to attach to the action stream
- */
-export const attachSagas = (
-  action$: ActionStream,
-  dispatchAction: ActionDispatcher,
-  sagaDefinitions: SagaSet
-) =>
-  subscribeAndGuard(
-    merge(
-      ...[...sagaDefinitions].map(definition =>
-        action$.pipe(
-          ofType(definition.type),
-          definition.saga,
-          tap(action => dispatchAction(action))
-        )
-      )
-    )
-  );

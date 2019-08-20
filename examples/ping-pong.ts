@@ -1,12 +1,12 @@
 import { pipe } from "rxjs";
 import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
-import { reducer, ReducerMap, combineReducers } from "reducer";
-import { epic, epicSet } from "routines/epics";
-import { routine, routineSet } from "routines/routines";
-import { saga, sagaSet } from "routines/sagas";
+import { reducer, combineReducers } from "reducer";
+import { epic } from "routines/epics";
+import { routine } from "routines/routines";
+import { saga } from "routines/sagas";
 import { reduceToStateStream } from "stateStream";
-import { ActionWithoutPayload } from "types";
-import { extractPayload } from "utils";
+import { ActionWithoutPayload, ActionConsumer } from "types";
+import { extractPayload, combineActionOperators } from "utils";
 import { action$ } from "./globalActions";
 
 /*
@@ -62,8 +62,6 @@ const alertInvalidPingPong = routine<PingOrPong>(
   )
 );
 
-const routines = routineSet(logPingPong);
-
 //// Multiplexing routines ////
 // Utils
 const filterPingPongActions = () =>
@@ -98,8 +96,6 @@ const verifyWhenPingPong = epic(
   pong
 );
 
-const epics = epicSet(logWhenPingPong, verifyWhenPingPong);
-
 //// Data routine ////
 const verifyPingAndPongAlternating = saga<PingOrPong>(
   "verify next ping pong state is valid",
@@ -115,4 +111,9 @@ const verifyPingAndPongAlternating = saga<PingOrPong>(
   )
 );
 
-const sagas = sagaSet(verifyPingAndPongAlternating);
+const actionOperators = combineActionOperators(
+  logPingPong,
+  logWhenPingPong,
+  verifyWhenPingPong,
+  verifyPingAndPongAlternating
+);

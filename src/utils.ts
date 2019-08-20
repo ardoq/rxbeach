@@ -7,7 +7,13 @@ import {
 } from "rxjs";
 import { map, filter, catchError, share } from "rxjs/operators";
 import { Reducer, ReducerDefinition } from "reducer";
-import { ActionWithPayload, AnyAction } from "types";
+import {
+  ActionWithPayload,
+  AnyAction,
+  ActionMiddleware,
+  AnyActionCreatorConsumer,
+  ActionConsumer
+} from "types";
 
 /**
  * Silences errors and subscribes the stream
@@ -84,21 +90,16 @@ export const sameReducerFn = <State, Payload>(
  * or observable level.
  *
  * NB: Each operator will create a "copy" of the stream, so any operators
- *     before the `fork` operator, will be executed for each operator passed
- *     to `fork`. Because of this, you might want to use the `share` operator
+ *     before the `coldFork` operator, will be executed for each operator passed
+ *     to `coldFork`. Because of this, you might want to use the `fork`
+ *     operator, which includes a `share` operator to make the upstream hot.
  *
  * @param operators Operators to run in parallell and merge the results of
  */
-const _fork = <T, R>(
+const coldFork = <T, R>(
   ...operators: OperatorFunction<T, R>[]
 ): OperatorFunction<T, R> => source =>
-  new Observable(subscriber => {
-    const observable = merge(
-      ...operators.map(operator => source.pipe(operator))
-    );
-
-    return observable.subscribe(subscriber);
-  });
+  merge(...operators.map(operator => source.pipe(operator)));
 
 /**
  * Runs operators in parallel and merges their results
@@ -109,7 +110,7 @@ const _fork = <T, R>(
  * or observable level.
  *
  * This operator includes the `share` operator on the parent stream, to prevent
- * operators that are attached before this one from running multiple times
+ * operators that are attached before this one from running multiple times.
  *
  * @param operators Operators to run in parallell and merge the results of
  */
@@ -118,5 +119,41 @@ export const fork = <T, R>(
 ): OperatorFunction<T, R> =>
   pipe(
     share(),
-    _fork(...operators)
+    coldFork(...operators)
+  );
+
+/**
+ * Creates a stream operator that filters actions appropriate for the given
+ * action consumer or action middleware
+ *
+ * @param definition The action consumer or action middleware
+ */
+export const _filterForMiddlewareOrConsumer = (
+  definition: ActionConsumer<any> | ActionMiddleware<any>
+) => {
+  if ((definition as ActionConsumer<any>).type) {
+    return ofType((definition as ActionConsumer<any>).type);
+  } else {
+    return ofType(...(definition as ActionMiddleware<any>).types);
+  }
+};
+
+/**
+ * Combine action operator definitions to a single operator
+ *
+ * Input actions to this operator will not be emitted from it, only the emitted
+ * actions from the action operators will be emitted.
+ *
+ * @param definitions The action operator defintiions that should be combined
+ */
+export const combineActionOperators = (
+  ...definitions: (ActionConsumer<any> | ActionMiddleware<any>)[]
+) =>
+  fork(
+    ...definitions.map(definition =>
+      pipe(
+        _filterForMiddlewareOrConsumer(definition),
+        definition.operator
+      )
+    )
   );
