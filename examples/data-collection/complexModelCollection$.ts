@@ -1,6 +1,6 @@
 import { reducer, combineReducers } from "reducer";
 import { reduceToStateStream } from "stateStream";
-import { sameReducerFn } from "utils";
+import { sameReducerFn } from "utils/utils";
 import { action$ } from "../globalActions";
 
 export type ComplexModel = {

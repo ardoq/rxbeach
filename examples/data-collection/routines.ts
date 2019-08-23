@@ -1,7 +1,7 @@
 import { pipe } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { routine } from "routines/routines";
-import { extractPayload } from "utils";
+import { extractPayload } from "utils/operators";
 import {
   ComplexModel,
   complexModelCollection$,

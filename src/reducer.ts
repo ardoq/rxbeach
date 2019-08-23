@@ -1,7 +1,7 @@
 import { createActionCreator } from "actionCreator";
 import { VoidPayload, AnyAction, UnknownAction } from "types/Action";
 import { OperatorFunction, pipe } from "rxjs";
-import { ofType } from "utils";
+import { ofType } from "utils/operators";
 import { scan } from "rxjs/operators";
 import { ActionCreator } from "types/ActionCreator";
 
