@@ -5,7 +5,7 @@ import { epic } from "routines/epics";
 import { routine } from "routines/routines";
 import { saga } from "routines/sagas";
 import { reduceToStateStream } from "stateStream";
-import { ActionWithoutPayload, ActionConsumer } from "types";
+import { ActionWithoutPayload } from "types/Action";
 import { extractPayload, combineActionOperators } from "utils";
 import { action$ } from "./globalActions";
 

@@ -1,8 +1,9 @@
 import { createActionCreator } from "actionCreator";
-import { ActionCreator, VoidPayload, AnyAction, UnknownAction } from "types";
+import { VoidPayload, AnyAction, UnknownAction } from "types/Action";
 import { OperatorFunction, pipe } from "rxjs";
 import { ofType } from "utils";
 import { scan } from "rxjs/operators";
+import { ActionCreator } from "types/ActionCreator";
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,

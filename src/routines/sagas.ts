@@ -1,12 +1,10 @@
 import { createActionCreator } from "actionCreator";
-import {
-  Action,
-  VoidPayload,
-  ActionCreatorConsumer,
-  AnyAction,
-  AnyActionCreatorConsumer
-} from "types";
+import { Action, VoidPayload, AnyAction } from "types/Action";
 import { OperatorFunction } from "rxjs";
+import {
+  AnyActionCreatorConsumer,
+  ActionCreatorConsumer
+} from "types/actionOperators";
 
 /**
  * Define a saga / data routine / action middleware

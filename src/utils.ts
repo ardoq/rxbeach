@@ -7,42 +7,10 @@ import {
 } from "rxjs";
 import { map, filter, catchError, share } from "rxjs/operators";
 import { Reducer, ReducerDefinition } from "reducer";
-import {
-  ActionWithPayload,
-  AnyAction,
-  ActionMiddleware,
-  AnyActionCreatorConsumer,
-  ActionConsumer
-} from "types";
+import { ActionWithPayload, AnyAction } from "types/Action";
+import { ActionConsumer, ActionMiddleware } from "types/actionOperators";
 
-/**
- * Silences errors and subscribes the stream
- *
- * Errors are logged to console, and the stream will continue.
- *
- * @param stream$ The stream to subscribe and silence errors from
- */
-export const subscribeAndGuard = (stream$: Observable<unknown>) =>
-  stream$
-    .pipe(
-      catchError((error, stream) => {
-        console.error("UNHANDLED ERROR IN STREAM", error);
-        return stream;
-      })
-    )
-    .subscribe();
-
-/**
- * Stream operator to extract the payload from an action
- *
- * @template `Payload` - The type of the payload, can be inferred if the stream
- *                       is typed, or explicitly set if the stream has `any`
- *                       type or the payload type is `any`
- */
-export const extractPayload = <Payload>(): OperatorFunction<
-  ActionWithPayload<Payload>,
-  Payload
-> => map(action => action.payload);
+//// Routines ////
 
 /**
  * Stream operator to filter only actions of specific types
@@ -66,20 +34,6 @@ export const ofType = (
   ...targetTypes: symbol[]
 ): MonoTypeOperatorFunction<AnyAction> =>
   filter(({ type }) => targetTypes.indexOf(type) !== -1);
-
-/**
- * Extract the reducer from a reducer definition, for using the same reducer
- * in multiple definitions
- *
- * ```
- * export const aliasReducerAction = reducer(sameReducerFn(originalReducerAction));
- * ```
- *
- * @param ReducerDefinition The reducer definition to extract the reducer from
- */
-export const sameReducerFn = <State, Payload>(
-  ReducerDefinition: ReducerDefinition<State, Payload>
-): Reducer<State, Payload> => ReducerDefinition.reducer[1];
 
 /**
  * Runs operators in parallel and merges their results
@@ -157,3 +111,48 @@ export const combineActionOperators = (
       )
     )
   );
+
+//// Other utils ////
+
+/**
+ * Silences errors and subscribes the stream
+ *
+ * Errors are logged to console, and the stream will continue.
+ *
+ * @param stream$ The stream to subscribe and silence errors from
+ */
+export const subscribeAndGuard = (stream$: Observable<unknown>) =>
+  stream$
+    .pipe(
+      catchError((error, stream) => {
+        console.error("UNHANDLED ERROR IN STREAM", error);
+        return stream;
+      })
+    )
+    .subscribe();
+
+/**
+ * Stream operator to extract the payload from an action
+ *
+ * @template `Payload` - The type of the payload, can be inferred if the stream
+ *                       is typed, or explicitly set if the stream has `any`
+ *                       type or the payload type is `any`
+ */
+export const extractPayload = <Payload>(): OperatorFunction<
+  ActionWithPayload<Payload>,
+  Payload
+> => map(action => action.payload);
+
+/**
+ * Extract the reducer from a reducer definition, for using the same reducer
+ * in multiple definitions
+ *
+ * ```
+ * export const aliasReducerAction = reducer(sameReducerFn(originalReducerAction));
+ * ```
+ *
+ * @param ReducerDefinition The reducer definition to extract the reducer from
+ */
+export const sameReducerFn = <State, Payload>(
+  ReducerDefinition: ReducerDefinition<State, Payload>
+): Reducer<State, Payload> => ReducerDefinition.reducer[1];

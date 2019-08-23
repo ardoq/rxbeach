@@ -1,11 +1,10 @@
 import { pipe, OperatorFunction } from "rxjs";
 import { createActionCreator } from "actionCreator";
+import { Action, VoidPayload } from "types/Action";
 import {
-  Action,
-  VoidPayload,
   ActionCreatorConsumer,
   AnyActionCreatorConsumer
-} from "types";
+} from "types/actionOperators";
 import { ignoreElements } from "rxjs/operators";
 
 /**

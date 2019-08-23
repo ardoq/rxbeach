@@ -1,6 +1,6 @@
 import { useEffect, useState, createElement, ComponentType } from "react";
 import { StateStreamFactory } from "stateStream";
-import { ActionStream, ActionDispatcher } from "types";
+import { ActionStream, ActionDispatcher } from "types/helpers";
 
 /**
  * Utils for connecting a state stream factory to a React component.

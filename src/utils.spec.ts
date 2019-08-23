@@ -3,7 +3,11 @@ import { of, OperatorFunction, Subject, pipe } from "rxjs";
 import { tap, reduce, filter, mapTo, scan } from "rxjs/operators";
 import { ReducerDefinition, Reducer } from "reducer";
 import { actionWithPayload, actionWithoutPayload } from "testUtils";
-import { ActionWithPayload, ActionWithoutPayload, AnyAction } from "types";
+import {
+  ActionWithPayload,
+  ActionWithoutPayload,
+  AnyAction
+} from "types/Action";
 import {
   extractPayload,
   ofType,

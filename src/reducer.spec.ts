@@ -2,7 +2,7 @@ import { deepEqual, equal } from "assert";
 import { reducer, combineReducers } from "reducer";
 import { actionWithPayload, getContext } from "testUtils";
 import { of } from "rxjs";
-import { VoidPayload } from "types";
+import { VoidPayload } from "types/Action";
 
 const throwErrorFn = () => {
   throw new Error();

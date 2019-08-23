@@ -1,6 +1,6 @@
 import { getContext, actionWithoutPayload } from "testUtils";
 import { map } from "rxjs/operators";
-import { AnyAction, ActionWithoutPayload } from "types";
+import { AnyAction, ActionWithoutPayload } from "types/Action";
 import { saga } from "./sagas";
 import { equal, deepEqual } from "assert";
 

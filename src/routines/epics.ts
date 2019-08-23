@@ -1,11 +1,7 @@
-import {
-  Action,
-  ActionCreator,
-  VoidPayload,
-  ActionMiddleware,
-  AnyAction
-} from "types";
+import { Action, VoidPayload, AnyAction } from "types/Action";
 import { OperatorFunction } from "rxjs";
+import { ActionCreator } from "types/ActionCreator";
+import { ActionMiddleware } from "types/actionOperators";
 
 /**
  * Define a multiplexing routine

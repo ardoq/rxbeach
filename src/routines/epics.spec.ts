@@ -1,7 +1,7 @@
 import { createActionCreator } from "actionCreator";
 import { filter } from "rxjs/operators";
 import { epic } from "./epics";
-import { ActionWithoutPayload } from "types";
+import { ActionWithoutPayload } from "types/Action";
 import { equal, deepEqual } from "assert";
 
 describe("epics", function() {

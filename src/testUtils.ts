@@ -1,9 +1,8 @@
 import {
   ActionWithPayload,
   ActionWithoutPayload,
-  ActionStream,
   AnyAction
-} from "types";
+} from "types/Action";
 import { Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 

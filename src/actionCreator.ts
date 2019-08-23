@@ -1,4 +1,5 @@
-import { ActionCreator, UnknownActionCreator, VoidPayload } from "types";
+import { ActionCreator, UnknownActionCreator } from "types/ActionCreator";
+import { VoidPayload } from "types/Action";
 
 /**
  * Create an action creator for a given payload
