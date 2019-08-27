@@ -3,8 +3,8 @@ import {
   ActionWithoutPayload,
   AnyAction
 } from "types/Action";
-import { Subject } from "rxjs";
-import { tap } from "rxjs/operators";
+import { Subject, Observable } from "rxjs";
+import { tap, reduce } from "rxjs/operators";
 
 export const actionWithoutPayload = (
   type: symbol,
@@ -57,3 +57,10 @@ export const getContext = <ContextCreator extends AnyProducer>(
   }
   return mochaContext.context;
 };
+
+/**
+ * Returnes a promise that resolves to an array of the history of the observable
+ * when the observable is completed.
+ */
+export const toHistoryPromise = <T>(obs: Observable<T>): Promise<T[]> =>
+  obs.pipe(reduce((acc, value) => [...acc, value], [] as T[])).toPromise();
