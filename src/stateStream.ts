@@ -38,6 +38,23 @@ export const reduceToStateStream = <StateShape>(
     })
   );
 
+export const createQualifiedStateStream = <StateShape>(
+  debugName: string,
+  reducerOperator: OperatorFunction<AnyAction, StateShape>,
+  seed: StateShape,
+  action$: ActionStream
+): [Observable<StateShape>, ActionStream, symbol] => {
+  const qualifier = getQualifier();
+
+  const filteredAction$ = createChildActionStream(action$, qualifier);
+
+  const state$ = filteredAction$.pipe(
+    reduceToStateStream(debugName, reducerOperator, seed)
+  );
+
+  return [state$, filteredAction$, qualifier];
+};
+
 /**
  * Create a qualified state stream
  *
@@ -65,23 +82,23 @@ export const reduceToStateStream = <StateShape>(
  *                    and thus only reacts to actions dispatched with the
  *                    returned `dispatchAction` function
  */
-const createQualifiedStateStream = <StateShape>(
+export const createQualifiedStateStreamAndDispatcher = <StateShape>(
   debugName: string,
   reducerOperator: OperatorFunction<AnyAction, StateShape>,
   seed: StateShape,
   action$: ActionStream,
   dispatchAction: ActionDispatcher
 ) => {
-  const qualifier = getQualifier();
+  const [state$, filteredAction$, qualifier] = createQualifiedStateStream(
+    debugName,
+    reducerOperator,
+    seed,
+    action$
+  );
 
   const dispatchQualifiedAction = createChildDispatcher(
     dispatchAction,
     qualifier
-  );
-  const filteredAction$ = createChildActionStream(action$, qualifier);
-
-  const state$ = filteredAction$.pipe(
-    reduceToStateStream(debugName, reducerOperator, seed)
   );
 
   return {
@@ -94,7 +111,7 @@ const createQualifiedStateStream = <StateShape>(
 /**
  * Create an instance of this stream.
  *
- * @see createQualifiedStateStream
+ * @see createQualifiedStateStreamAndDispatcher
  */
 export interface StateStreamFactory<StateShape> {
   seed: StateShape;
@@ -109,14 +126,14 @@ export interface StateStreamFactory<StateShape> {
 /**
  * Create a state stream factory
  *
- * This is mainly a utility function that curries `createQualifiedStateStream`,
+ * This is mainly a utility function that curries `createQualifiedStateStreamAndDispatcher`,
  * but it also adds the `seed` argument to the returned factory.
  *
  * @param debugName A name for debugging purposes
  * @param reducerOperator A streaming operator that reduces actions to a state
  * @param seed The initial state to emit and feed to the reducers
  *
- * @see createQualifiedStateStream
+ * @see createQualifiedStateStreamAndDispatcher
  */
 export const createStateStreamFactory = <StateShape>(
   debugName: string,
@@ -124,7 +141,7 @@ export const createStateStreamFactory = <StateShape>(
   seed: StateShape
 ): StateStreamFactory<StateShape> => {
   const factory = (action$: ActionStream, dispatchAction: ActionDispatcher) =>
-    createQualifiedStateStream(
+    createQualifiedStateStreamAndDispatcher(
       debugName,
       reducerOperator,
       seed,
