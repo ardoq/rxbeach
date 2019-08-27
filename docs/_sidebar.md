@@ -12,6 +12,7 @@
     - [Collection streams](fundamentals/state-streams/collection-streams.md)
     - [Local data streams](fundamentals/state-streams/local-data-streams.md)
 - [Recipes](recipes/)
+  - [Collections](recipes/collections.md)
   - [Connected components](recipes/connected-components.md)
   - [ViewModel from data streams](recipes/viewmodel-from-data-stream.md)
   - [Initial fetching of local data](recipes/initial-fetch-local-data.md)
