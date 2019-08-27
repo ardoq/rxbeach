@@ -4,7 +4,7 @@
 
 Welcome to the documentation for the Ardoq stream architecture. This
 documentation mainly cover the concepts and patterns we are using, along with
-some recipies and techniques for concrete examples of their usage. Throught the
+some recipes and techniques for concrete examples of their usage. Throught the
 documentation we are using the architecture utilities and scaffolding provided
 alongside this documentation.
 
@@ -35,4 +35,4 @@ We recommend these articles to get a refresher on those subjects:
 
 The side bar contains all the documentation articles. We advice you read through
 all the articles under "Fundamentals" in the order they are listed, and then
-read the articles under "Recipies" and "Techniques" as you need them.
+read the articles under "Recipes" and "Techniques" as you need them.
