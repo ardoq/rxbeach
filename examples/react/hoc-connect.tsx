@@ -1,4 +1,4 @@
-import { connectHOC } from "../../src/react/connect";
+import { connectHOC } from "../../src/recipes/reactConnect";
 import { qualified$Factory } from "../qualified-stream";
 
 const SimpleComponent = (state: string) => (
