@@ -1,11 +1,38 @@
 import { of } from "rxjs";
 import { deepEqual } from "assert";
-import { createChildDispatcher, createChildActionStream } from "qualifiers";
-import { actionWithoutPayload } from "testUtils";
+import {
+  createChildDispatcher,
+  createChildActionStream,
+  createQualifiedActionCreator
+} from "qualifiers";
+import { actionWithoutPayload, actionWithPayload } from "testUtils";
 import { AnyAction } from "types/Action";
 import { ActionDispatcher } from "types/helpers";
 
 describe("qualifiers", function() {
+  describe("createQualifiedActionCreator", function() {
+    it("Should create actions with qualifier", function() {
+      const type = Symbol("action type");
+      const parentQualifier = Symbol("parent qualifier");
+      const childQualifier = Symbol("child qualifier");
+      const actionCreator = (payload: number) =>
+        actionWithPayload(type, payload, [parentQualifier]);
+      actionCreator.type = type;
+
+      const qualifiedActionCreator = createQualifiedActionCreator(
+        childQualifier,
+        actionCreator
+      );
+
+      const action = qualifiedActionCreator(12);
+
+      deepEqual(
+        action,
+        actionWithPayload(type, 12, [childQualifier, parentQualifier])
+      );
+    });
+  });
+
   describe("createChildDispatcher", function() {
     it("Should invoke the parent dispatcher with qualified actions", function() {
       let dispatchedAction: AnyAction | undefined;

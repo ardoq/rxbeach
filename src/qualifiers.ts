@@ -1,7 +1,8 @@
 import { MonoTypeOperatorFunction } from "rxjs";
 import { filter, map } from "rxjs/operators";
 import { ActionDispatcher, ActionStream } from "types/helpers";
-import { Action } from "types/Action";
+import { Action, UnknownAction } from "types/Action";
+import { ActionCreator } from "types/ActionCreator";
 
 /**
  * Alias to create a new symbol
@@ -36,6 +37,46 @@ const stripQualifier = (): MonoTypeOperatorFunction<Action<any>> =>
     meta: { ...meta, qualifiers }
   }));
 
+export const _appendQualifierToAction = (
+  qualifier: symbol,
+  action: UnknownAction
+) => ({
+  type: action.type,
+  payload: action.payload,
+  meta: {
+    ...action.meta,
+    qualifiers: [qualifier, ...action.meta.qualifiers]
+  }
+});
+
+/**
+ * Decorate an action creator so that the created actions have qualifiers
+ *
+ * The given qualifier is added as the top qualifier to each action created by
+ * the action creator.
+ *
+ * Existing qualifiers on the actions will be shifted down.
+ *
+ * In contrast to `createChildDispatcher`, the function returned by this
+ * function creates an action object instead of dispatching it.
+ *
+ * @see createChildDispatcher
+ * @param qualifier The qualifier to add to the created actions
+ * @param actionCreator The action creator to decorate
+ * @returns An action creator that creates actions using the passed action
+ *          creator, and adds the qualifier
+ */
+export const createQualifiedActionCreator = <Payload>(
+  qualifier: symbol,
+  actionCreator: ActionCreator<Payload>
+): ActionCreator<Payload> => {
+  const creator = (payload?: any) =>
+    _appendQualifierToAction(qualifier, actionCreator(payload));
+  creator.type = actionCreator.type;
+
+  return creator as ActionCreator<Payload>;
+};
+
 /**
  * Create a dispatcher that dispatches qualified actions to the parent dispatcher
  *
@@ -45,6 +86,10 @@ const stripQualifier = (): MonoTypeOperatorFunction<Action<any>> =>
  *
  * Existing qualifiers on the actions will be shifted down.
  *
+ * In contrast to `createQualifiedActionCreator`, the function returned by this
+ * function dispatches the action, instead of creating it.
+ *
+ * @see createQualifiedActionCreator
  * @param parentDispatcher The dispatcher the returned  action dispatcher will
  *                         dispatch to
  * @param qualifier The qualifier that is added as the top qualifier to each
@@ -56,14 +101,7 @@ export const createChildDispatcher = (
   parentDispatcher: ActionDispatcher,
   qualifier: symbol
 ): ActionDispatcher => action =>
-  parentDispatcher({
-    type: action.type,
-    payload: action.payload,
-    meta: {
-      ...action.meta,
-      qualifiers: [qualifier, ...action.meta.qualifiers]
-    }
-  });
+  parentDispatcher(_appendQualifierToAction(qualifier, action));
 
 /**
  * Create an action stream that only emits actions with the correct top qualifier
