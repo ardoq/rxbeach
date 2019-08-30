@@ -4,7 +4,7 @@ import {
   AnyAction
 } from "types/Action";
 import { Subject, Observable, OperatorFunction } from "rxjs";
-import { tap, reduce } from "rxjs/operators";
+import { tap, reduce, take } from "rxjs/operators";
 
 export const actionWithoutPayload = (
   type: symbol,
@@ -67,3 +67,6 @@ const collectHistory = <T>(): OperatorFunction<T, T[]> =>
  */
 export const toHistoryPromise = <T>(obs: Observable<T>): Promise<T[]> =>
   obs.pipe(collectHistory()).toPromise();
+
+export const latest = <T>(obs: Observable<T>): Promise<T> =>
+  obs.pipe(take(1)).toPromise();
