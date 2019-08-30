@@ -6,8 +6,9 @@ import { routine } from "routines/routines";
 import { saga } from "routines/sagas";
 import { reduceToStateStream } from "stateStream";
 import { ActionWithoutPayload } from "types/Action";
-import { extractPayload, combineActionOperators } from "utils/operators";
+import { extractPayload } from "utils/operators";
 import { action$ } from "./globalActions";
+import { combineActionOperators } from "actionOperators";
 
 /*
  * A simple stream example: PING -- PONG

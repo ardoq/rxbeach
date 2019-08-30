@@ -1,11 +1,7 @@
 import { OperatorFunction, MonoTypeOperatorFunction, merge, pipe } from "rxjs";
 import { map, filter, share, tap } from "rxjs/operators";
 import { ActionWithPayload, AnyAction } from "types/Action";
-import {
-  ActionConsumer,
-  ActionMiddleware,
-  NeverEmits
-} from "types/actionOperators";
+import { ActionConsumer, ActionMiddleware, NeverEmits } from "actionOperators";
 
 //// Routines ////
 
@@ -88,26 +84,6 @@ export const _filterForMiddlewareOrConsumer = (
     return ofType(...(definition as ActionMiddleware<any>).types);
   }
 };
-
-/**
- * Combine action operator definitions to a single operator
- *
- * Input actions to this operator will not be emitted from it, only the emitted
- * actions from the action operators will be emitted.
- *
- * @param definitions The action operator definitions that should be combined
- */
-export const combineActionOperators = (
-  ...definitions: (ActionConsumer<any> | ActionMiddleware<any>)[]
-): OperatorFunction<AnyAction, NeverEmits> =>
-  fork(
-    ...definitions.map(definition =>
-      pipe(
-        _filterForMiddlewareOrConsumer(definition),
-        definition.operator
-      )
-    )
-  );
 
 /**
  * Stream operator to extract the payload from an action

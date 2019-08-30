@@ -4,7 +4,7 @@ import { Action, VoidPayload } from "types/Action";
 import {
   ActionCreatorConsumer,
   AnyActionCreatorConsumer
-} from "types/actionOperators";
+} from "actionOperators";
 import { ignoreElements } from "rxjs/operators";
 
 /**

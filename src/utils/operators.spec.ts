@@ -3,12 +3,7 @@ import { of, OperatorFunction, Subject, pipe } from "rxjs";
 import { tap, reduce, filter, mapTo, scan } from "rxjs/operators";
 import { actionWithPayload, actionWithoutPayload } from "testUtils";
 import { ActionWithPayload, ActionWithoutPayload } from "types/Action";
-import {
-  extractPayload,
-  ofType,
-  fork,
-  combineActionOperators
-} from "./operators";
+import { extractPayload, ofType, fork } from "./operators";
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
@@ -104,36 +99,6 @@ describe("operators", function() {
       equal(beforeCount, 2, "Parent pipe should be hot");
       equal(aCount, 1, "Pipe A should run in isolation");
       equal(bCount, 1, "Pipe B should run in isolation");
-    });
-  });
-
-  describe("combineActionOperators", function() {
-    it("Should work", async function() {
-      const one = actionWithoutPayload(Symbol("one"));
-      const two = actionWithoutPayload(Symbol("two"));
-      const three = actionWithoutPayload(Symbol("three"));
-      const alpha = actionWithoutPayload(Symbol("alpha"));
-      const bravo = actionWithoutPayload(Symbol("bravo"));
-
-      const combined = combineActionOperators(
-        {
-          type: one.type,
-          operator: mapTo(alpha)
-        },
-        {
-          types: [two.type, three.type],
-          operator: mapTo(bravo)
-        }
-      );
-
-      const res = await of(one, two, three)
-        .pipe(
-          combined,
-          scan<any, any[]>((acc, val) => [...acc, val], [])
-        )
-        .toPromise();
-
-      deepEqual(res, [alpha, bravo, bravo]);
     });
   });
 });

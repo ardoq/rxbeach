@@ -1,6 +1,7 @@
-import { OperatorFunction } from "rxjs";
-import { AnyAction, Action } from "./Action";
-import { ActionCreator } from "./ActionCreator";
+import { OperatorFunction, pipe } from "rxjs";
+import { AnyAction, Action } from "./types/Action";
+import { ActionCreator } from "./types/ActionCreator";
+import { fork, _filterForMiddlewareOrConsumer } from "utils/operators";
 
 /**
  * ActionMiddleware are streaming operators that should run for specific sets
@@ -42,3 +43,23 @@ export type ActionCreatorConsumer<Payload> = ActionCreator<Payload> &
   ActionConsumer<Payload>;
 
 export type AnyActionCreatorConsumer = ActionCreator<any> & AnyActionConsumer;
+
+/**
+ * Combine action operator definitions to a single operator
+ *
+ * Input actions to this operator will not be emitted from it, only the emitted
+ * actions from the action operators will be emitted.
+ *
+ * @param definitions The action operator definitions that should be combined
+ */
+export const combineActionOperators = (
+  ...definitions: (ActionConsumer<any> | ActionMiddleware<any>)[]
+): OperatorFunction<AnyAction, NeverEmits> =>
+  fork(
+    ...definitions.map(definition =>
+      pipe(
+        _filterForMiddlewareOrConsumer(definition),
+        definition.operator
+      )
+    )
+  );

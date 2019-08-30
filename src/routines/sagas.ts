@@ -4,7 +4,7 @@ import { OperatorFunction } from "rxjs";
 import {
   AnyActionCreatorConsumer,
   ActionCreatorConsumer
-} from "types/actionOperators";
+} from "actionOperators";
 
 /**
  * Define a saga / data routine / action middleware
