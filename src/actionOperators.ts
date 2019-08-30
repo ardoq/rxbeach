@@ -1,7 +1,10 @@
-import { OperatorFunction, pipe } from "rxjs";
+import { OperatorFunction, pipe, MonoTypeOperatorFunction } from "rxjs";
 import { AnyAction, Action } from "./types/Action";
 import { ActionCreator } from "./types/ActionCreator";
 import { fork, _filterForMiddlewareOrConsumer } from "utils/operators";
+import { ActionStream, ActionDispatcher } from "types/helpers";
+import { tap } from "rxjs/operators";
+import { subscribeAndGuard } from "utils/utils";
 
 /**
  * ActionMiddleware are streaming operators that should run for specific sets
@@ -19,7 +22,7 @@ export type ActionMiddleware<Action> = {
  * Cannot be void, as the operator might be used together with other operators
  * that actually emit something.
  */
-export type NeverEmits = unknown;
+export type NeverEmits = AnyAction;
 
 /**
  * ActionConsumers are streaming operators that should run for specific actions,
@@ -54,12 +57,24 @@ export type AnyActionCreatorConsumer = ActionCreator<any> & AnyActionConsumer;
  */
 export const combineActionOperators = (
   ...definitions: (ActionConsumer<any> | ActionMiddleware<any>)[]
-): OperatorFunction<AnyAction, NeverEmits> =>
+): MonoTypeOperatorFunction<AnyAction> =>
   fork(
     ...definitions.map(definition =>
       pipe(
         _filterForMiddlewareOrConsumer(definition),
         definition.operator
       )
+    )
+  );
+
+export const registerActionOperators = (
+  action$: ActionStream,
+  dispatchAction: ActionDispatcher,
+  actionOperators: MonoTypeOperatorFunction<AnyAction>
+) =>
+  subscribeAndGuard(
+    action$.pipe(
+      actionOperators,
+      tap(action => dispatchAction(action))
     )
   );
