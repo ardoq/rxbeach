@@ -4,7 +4,6 @@ import { combineReducers, reducer } from "reducer";
 import { createQualifiedActionCreator } from "qualifiers";
 import { Observable } from "rxjs";
 import { ActionCreatorWithPayload } from "types/ActionCreator";
-import { removeComplexModel } from "../../examples/data-collection/complexModelCollection$";
 
 type IdType = string;
 
@@ -12,7 +11,9 @@ export interface WithId {
   id: IdType;
 }
 
-type CollectionContent<Model extends WithId = WithId> = { [id: string]: Model };
+export type CollectionContent<Model extends WithId = WithId> = {
+  [id: string]: Model;
+};
 export type Collection<Model extends WithId = WithId> = {
   contents: CollectionContent<Model>;
 };
@@ -42,6 +43,18 @@ const reducers = combineReducers(
   _replaceModels
 );
 
+/**
+ * Create a stream-based collection
+ *
+ * @template `Model` - The model type for the collection
+ * @param name The name of the collection
+ * @param action$ The action$ the collection should be subscribed to
+ * @returns A list with:
+ *          - The collection stream
+ *          - putModel action
+ *          - removeModel action
+ *          - replaceModels action
+ */
 export const collection = <Model extends WithId>(
   name: string,
   action$: ActionStream
