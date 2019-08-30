@@ -12,16 +12,26 @@ export type ActionMiddleware<Action> = {
 };
 
 /**
- * ActionConsumers are streaming operators that should run for specific actions
+ * Type to use as return for OperatorFunctions to indicate they will never
+ * emit anything.
+ *
+ * Cannot be void, as the operator might be used together with other operators
+ * that actually emit something.
+ */
+export type NeverEmits = unknown;
+
+/**
+ * ActionConsumers are streaming operators that should run for specific actions,
+ * but never emit anything.
  */
 export type ActionConsumer<Payload> = {
   type: symbol;
-  operator: OperatorFunction<Action<Payload>, unknown>;
+  operator: OperatorFunction<Action<Payload>, NeverEmits>;
 };
 
 export type AnyActionConsumer = {
   type: symbol;
-  operator: OperatorFunction<any, unknown>;
+  operator: OperatorFunction<any, NeverEmits>;
 };
 
 /**

@@ -17,6 +17,8 @@ import { ignoreElements } from "rxjs/operators";
  * This function provides typings for the routine, and creates a corresponding
  * action creator.
  *
+ * Anything emitted from the operator will be discarded.
+ *
  * @param operator The routine itself, a simple operator function that accepts
  *                 payloads
  */

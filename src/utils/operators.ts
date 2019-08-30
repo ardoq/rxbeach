@@ -1,7 +1,11 @@
 import { OperatorFunction, MonoTypeOperatorFunction, merge, pipe } from "rxjs";
-import { map, filter, catchError, share } from "rxjs/operators";
+import { map, filter, share, tap } from "rxjs/operators";
 import { ActionWithPayload, AnyAction } from "types/Action";
-import { ActionConsumer, ActionMiddleware } from "types/actionOperators";
+import {
+  ActionConsumer,
+  ActionMiddleware,
+  NeverEmits
+} from "types/actionOperators";
 
 //// Routines ////
 
@@ -91,11 +95,11 @@ export const _filterForMiddlewareOrConsumer = (
  * Input actions to this operator will not be emitted from it, only the emitted
  * actions from the action operators will be emitted.
  *
- * @param definitions The action operator defintiions that should be combined
+ * @param definitions The action operator definitions that should be combined
  */
 export const combineActionOperators = (
   ...definitions: (ActionConsumer<any> | ActionMiddleware<any>)[]
-) =>
+): OperatorFunction<AnyAction, NeverEmits> =>
   fork(
     ...definitions.map(definition =>
       pipe(
