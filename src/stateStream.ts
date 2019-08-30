@@ -44,7 +44,7 @@ export const createQualifiedStateStream = <StateShape>(
   seed: StateShape,
   action$: ActionStream
 ): [Observable<StateShape>, ActionStream, symbol] => {
-  const qualifier = getQualifier();
+  const qualifier = getQualifier(debugName);
 
   const filteredAction$ = createChildActionStream(action$, qualifier);
 

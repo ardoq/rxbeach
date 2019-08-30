@@ -7,7 +7,7 @@ import { ActionCreator } from "types/ActionCreator";
 /**
  * Alias to create a new symbol
  */
-export const getQualifier = () => Symbol();
+export const getQualifier = (name: string) => Symbol(name);
 
 /**
  * Stream operator that filters out actions without the correct top qualifier
