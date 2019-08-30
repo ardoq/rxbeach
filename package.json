@@ -5,7 +5,7 @@
   "company": "Ardoq AS",
   "private": true,
   "scripts": {
-    "test": "NODE_PATH=./src mocha",
+    "test": "NODE_PATH=./src:./examples mocha",
     "build": "tsc -p tsconfig.json",
     "start": "ts-node --files -P tsconfig.json src/main.ts",
     "lint": "eslint --ext .ts src"
