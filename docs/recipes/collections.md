@@ -50,3 +50,7 @@ Qualifiers are used to separate them from each other. Elsewhere in Ardoq actions
 we have opted to qualify the `dispatchAction` function itself, but for
 `collection` we have added a qualifying wrapper around each action. The result
 is the same, but allows for more flexibility among the users of `collection`.
+
+## Examples
+
+- [Example in the repo](https://github.com/ardoq/ardoq-actions/tree/master/examples/data-collection)
