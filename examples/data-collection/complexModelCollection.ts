@@ -2,12 +2,12 @@ import { action$, dispatchAction } from "../globalActions";
 import { collection, WithId, Collection } from "recipes/collection";
 import { OperatorFunction, pipe } from "rxjs";
 import { map, flatMap, tap, switchMap } from "rxjs/operators";
-import { saga } from "routines/sagas";
 import { extractPayload } from "utils/operators";
 import {
   combineActionOperators,
   registerActionOperators
 } from "actionOperators";
+import { actionRoutine } from "routines/actionRoutine";
 
 export type ComplexModel = WithId & {
   parent?: ComplexModel["id"];
@@ -37,23 +37,20 @@ export const pickComplexModelChildren = (
 
 /**
  * Delete all the children of a ComplexModel
- *
- * Note: This is a saga because:
- *  1. It should be an action in itself (epics are not)
- *  2. It only return actions that should be emitted to the action stream (routines do not)
  */
-export const deleteChildren = saga<ComplexModel["id"]>(
+export const deleteChildren = actionRoutine<ComplexModel["id"]>(
   "Delete children",
   pipe(
     extractPayload(),
     switchMap(parentId =>
       complexModelCollection$.pipe(pickComplexModelChildren(parentId))
     ),
-    flatMap(children => children.map(({ id }) => removeComplexModel(id)))
+    flatMap(children => children.map(({ id }) => removeComplexModel(id))),
+    tap(dispatchAction)
   )
 );
 
 export const routines = combineActionOperators(deleteChildren);
 
 // In a setup function
-registerActionOperators(action$, dispatchAction, routines);
+registerActionOperators(action$, routines);

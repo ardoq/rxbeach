@@ -3,8 +3,8 @@ import {
   combineActionOperators,
   registerActionOperators
 } from "actionOperators";
-import { mapTo, scan } from "rxjs/operators";
-import { of } from "rxjs";
+import { mapTo, scan, tap } from "rxjs/operators";
+import { of, pipe } from "rxjs";
 import { deepEqual, equal } from "assert";
 import { ActionDispatcher } from "types/helpers";
 import { AnyAction } from "types/Action";
@@ -42,7 +42,12 @@ describe("actionOperators", function() {
       const one = actionWithoutPayload(Symbol("one"));
       const two = actionWithoutPayload(Symbol("two"));
 
-      const s = registerActionOperators(of(one), dispatchAction, mapTo(two));
+      const routine = pipe(
+        mapTo(two),
+        tap(dispatchAction)
+      );
+
+      const s = registerActionOperators(of(one), routine);
 
       equal(lastAction, two);
 

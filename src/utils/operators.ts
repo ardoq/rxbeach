@@ -1,7 +1,7 @@
 import { OperatorFunction, MonoTypeOperatorFunction, merge, pipe } from "rxjs";
 import { map, filter, share, tap } from "rxjs/operators";
 import { ActionWithPayload, AnyAction } from "types/Action";
-import { ActionConsumer, ActionMiddleware, NeverEmits } from "actionOperators";
+import { SingleActionOperator, MultiActionOperator } from "actionOperators";
 
 //// Routines ////
 
@@ -71,17 +71,17 @@ export const fork = <T, R>(
 
 /**
  * Creates a stream operator that filters actions appropriate for the given
- * action consumer or action middleware
+ * action operator, whether for a single or multiple actions.
  *
- * @param definition The action consumer or action middleware
+ * @param definition The action operator
  */
-export const _filterForMiddlewareOrConsumer = (
-  definition: ActionConsumer<any> | ActionMiddleware<any>
+export const _filterForActionOperator = (
+  definition: SingleActionOperator<any> | MultiActionOperator<any>
 ) => {
-  if ((definition as ActionConsumer<any>).type) {
-    return ofType((definition as ActionConsumer<any>).type);
+  if ((definition as SingleActionOperator<any>).type) {
+    return ofType((definition as SingleActionOperator<any>).type);
   } else {
-    return ofType(...(definition as ActionMiddleware<any>).types);
+    return ofType(...(definition as MultiActionOperator<any>).types);
   }
 };
 

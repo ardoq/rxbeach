@@ -1,67 +1,59 @@
 import { OperatorFunction, pipe, MonoTypeOperatorFunction } from "rxjs";
 import { AnyAction, Action } from "./types/Action";
 import { ActionCreator } from "./types/ActionCreator";
-import { fork, _filterForMiddlewareOrConsumer } from "utils/operators";
+import { fork, _filterForActionOperator } from "utils/operators";
 import { ActionStream, ActionDispatcher } from "types/helpers";
-import { tap } from "rxjs/operators";
 import { subscribeAndGuard } from "utils/utils";
+import { ignoreElements } from "rxjs/operators";
 
 /**
- * ActionMiddleware are streaming operators that should run for specific sets
- * of actions
+ * MultiActionOperator are streaming operators that should run for specific sets
+ * of actions.
+ * Their emitted values will always be discarded.
  */
-export type ActionMiddleware<Action> = {
+export type MultiActionOperator<Action> = {
   types: symbol[];
-  operator: OperatorFunction<Action, AnyAction>;
+  operator: OperatorFunction<Action, unknown>;
 };
 
 /**
- * Type to use as return for OperatorFunctions to indicate they will never
- * emit anything.
- *
- * Cannot be void, as the operator might be used together with other operators
- * that actually emit something.
+ * ActionConsumers are streaming operators that should run for specific actions.
+ * Their emitted values will always be discarded.
  */
-export type NeverEmits = AnyAction;
-
-/**
- * ActionConsumers are streaming operators that should run for specific actions,
- * but never emit anything.
- */
-export type ActionConsumer<Payload> = {
+export type SingleActionOperator<Payload> = {
   type: symbol;
-  operator: OperatorFunction<Action<Payload>, NeverEmits>;
+  operator: OperatorFunction<Action<Payload>, unknown>;
 };
 
-export type AnyActionConsumer = {
+export type AnySingleActionOperator = {
   type: symbol;
-  operator: OperatorFunction<any, NeverEmits>;
+  operator: OperatorFunction<any, unknown>;
 };
 
 /**
  * ActionCreatorConsumers are ActionCreators that also function as
  * ActionConsumers
  */
-export type ActionCreatorConsumer<Payload> = ActionCreator<Payload> &
-  ActionConsumer<Payload>;
+export type ActionCreatorOperator<Payload> = ActionCreator<Payload> &
+  SingleActionOperator<Payload>;
 
-export type AnyActionCreatorConsumer = ActionCreator<any> & AnyActionConsumer;
+export type AnyActionCreatorOperator = ActionCreator<any> &
+  AnySingleActionOperator;
 
 /**
  * Combine action operator definitions to a single operator
  *
- * Input actions to this operator will not be emitted from it, only the emitted
- * actions from the action operators will be emitted.
+ * Nothing will be emitted from this operator.
  *
  * @param definitions The action operator definitions that should be combined
  */
 export const combineActionOperators = (
-  ...definitions: (ActionConsumer<any> | ActionMiddleware<any>)[]
-): MonoTypeOperatorFunction<AnyAction> =>
+  ...definitions: (SingleActionOperator<any> | MultiActionOperator<any>)[]
+): OperatorFunction<AnyAction, unknown> =>
   fork(
     ...definitions.map(definition =>
       pipe(
-        _filterForMiddlewareOrConsumer(definition),
+        _filterForActionOperator(definition),
         definition.operator
       )
     )
@@ -69,12 +61,5 @@ export const combineActionOperators = (
 
 export const registerActionOperators = (
   action$: ActionStream,
-  dispatchAction: ActionDispatcher,
-  actionOperators: MonoTypeOperatorFunction<AnyAction>
-) =>
-  subscribeAndGuard(
-    action$.pipe(
-      actionOperators,
-      tap(action => dispatchAction(action))
-    )
-  );
+  actionOperators: OperatorFunction<AnyAction, unknown>
+) => subscribeAndGuard(action$.pipe(actionOperators));

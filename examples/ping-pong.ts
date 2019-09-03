@@ -1,13 +1,12 @@
 import { pipe } from "rxjs";
 import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
 import { reducer, combineReducers } from "reducer";
-import { epic } from "routines/epics";
-import { routine } from "routines/routines";
-import { saga } from "routines/sagas";
+import { hookRoutine } from "routines/hookRoutine";
+import { actionRoutine } from "routines/actionRoutine";
 import { reduceToStateStream } from "stateStream";
 import { ActionWithoutPayload } from "types/Action";
 import { extractPayload } from "utils/operators";
-import { action$ } from "./globalActions";
+import { action$, dispatchAction } from "./globalActions";
 import { combineActionOperators } from "actionOperators";
 
 /*
@@ -38,7 +37,7 @@ const pingPongState$ = action$.pipe(
 );
 
 //// Pure routines ////
-const logPingPong = routine<PingOrPong>(
+const logPingPong = actionRoutine<PingOrPong>(
   "Log ping or pong",
   pipe(
     extractPayload(),
@@ -55,7 +54,7 @@ const logPingPong = routine<PingOrPong>(
 // shim for window.alert
 const alert = (msg: string) => null;
 
-const alertInvalidPingPong = routine<PingOrPong>(
+const alertInvalidPingPong = actionRoutine<PingOrPong>(
   "Alert the user of invalid ping pong state",
   pipe(
     extractPayload(),
@@ -79,26 +78,28 @@ const actionToPingOrPong = (action: ActionWithoutPayload): PingOrPong => {
   }
 };
 
-const logWhenPingPong = epic(
+const logWhenPingPong = hookRoutine(
   pipe(
     filterPingPongActions(),
-    map(action => logPingPong(actionToPingOrPong(action)))
+    map(action => logPingPong(actionToPingOrPong(action))),
+    tap(dispatchAction)
   ),
   ping,
   pong
 );
 
-const verifyWhenPingPong = epic(
+const verifyWhenPingPong = hookRoutine(
   pipe(
     filterPingPongActions(),
-    map(action => verifyPingAndPongAlternating(actionToPingOrPong(action)))
+    map(action => verifyPingAndPongAlternating(actionToPingOrPong(action))),
+    tap(dispatchAction)
   ),
   ping,
   pong
 );
 
 //// Data routine ////
-const verifyPingAndPongAlternating = saga<PingOrPong>(
+const verifyPingAndPongAlternating = actionRoutine<PingOrPong>(
   "verify next ping pong state is valid",
   pipe(
     extractPayload(),

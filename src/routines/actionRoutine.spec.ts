@@ -1,13 +1,13 @@
-import { routine } from "./routines";
+import { actionRoutine } from "./actionRoutine";
 import { tap } from "rxjs/operators";
 import { deepEqual } from "assert";
 import { actionWithPayload } from "testUtils";
 import { of } from "rxjs";
 
 describe("routines", function() {
-  describe("routine", function() {
-    it("Should create a routine definition", async function() {
-      const testRoutine = routine("test routine", tap(() => {}));
+  describe("actionRoutine", function() {
+    it("Should create a actionRoutine definition", async function() {
+      const testRoutine = actionRoutine("test routine", tap(() => {}));
 
       await of(testRoutine())
         .pipe(
@@ -19,7 +19,7 @@ describe("routines", function() {
         .toPromise();
     });
     it("Should serve as an action creator", function() {
-      const testRoutine = routine<string>("test routine", tap(() => {}));
+      const testRoutine = actionRoutine<string>("test routine", tap(() => {}));
       const action = testRoutine("Hello");
 
       deepEqual(action, actionWithPayload(testRoutine.type, "Hello"));
