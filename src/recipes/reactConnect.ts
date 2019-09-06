@@ -35,17 +35,29 @@ export type ActionStreamProps = {
   dispatchAction: ActionDispatcher;
 };
 
+type ViewModelProp<StateShape> = {
+  viewModel: StateShape;
+};
+
+export type ConnectProps<StateShape> = ActionStreamProps &
+  ViewModelProp<StateShape>;
+
 export const connectHOC = <StateShape>(
   state$Factory: StateStreamFactory<StateShape>,
-  WrappedComponent: ComponentType<StateShape>
-) => {
+  WrappedComponent: ComponentType<ActionStreamProps & ViewModelProp<StateShape>>
+): ComponentType<ActionStreamProps> => {
   const useViewModel = connectHookCreator<StateShape>(state$Factory);
 
   return ({ action$, dispatchAction }: ActionStreamProps) => {
-    const [viewModel] = useViewModel(action$, dispatchAction);
+    const [viewModel, childAction$, childDispatchAction] = useViewModel(
+      action$,
+      dispatchAction
+    );
 
-    // TODO - How do we pass down action$ and dispatchAction without requiring
-    // the wrapped component to accept them?
-    return createElement(WrappedComponent, viewModel);
+    return createElement(WrappedComponent, {
+      viewModel,
+      action$: childAction$,
+      dispatchAction: childDispatchAction
+    });
   };
 };

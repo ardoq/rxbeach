@@ -1,7 +1,4 @@
-import {
-  connectHookCreator,
-  ActionStreamProps
-} from "../../src/recipes/reactConnect";
+import { connectHookCreator, ActionStreamProps } from "recipes/reactConnect";
 import { qualified$Factory } from "../qualified-stream";
 
 const useViewModel = connectHookCreator<string>(qualified$Factory);

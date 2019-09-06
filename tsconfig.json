@@ -1,38 +1,30 @@
 {
-    "compilerOptions": {
-        // Target latest version of ECMAScript.
-        "target": "esnext",
-        // Search under node_modules for non-relative imports.
-        "moduleResolution": "node",
-        "allowJs": false,
-        // Don't emit; allow Babel to transform files.
-        "noEmit": true,
-        // Enable strictest settings like strictNullChecks & noImplicitAny.
-        "strict": true,
-        // Disallow features that require cross-file information for emit.
-        "isolatedModules": false,
-        // Import non-ES modules as default imports.
-        "esModuleInterop": true,
-        // Specify JSX code generation: 'preserve', 'react', or 'react-native'.
-        //"jsx": "react"
-        "skipLibCheck": true,
-        // https://github.com/gdi2290/angular-starter/issues/931#issuecomment-244001423
-        "lib": [
-            "esnext"
-        ],
-        // http://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
-        "baseUrl": "./src/",
-        "paths": {
-            "*": [
-                "*"
-            ]
-        }
+  "compilerOptions": {
+    // Target latest version of ECMAScript.
+    "target": "esnext",
+    // Search under node_modules for non-relative imports.
+    "moduleResolution": "node",
+    "allowJs": false,
+    // Don't emit; allow Babel to transform files.
+    "noEmit": true,
+    // Enable strictest settings like strictNullChecks & noImplicitAny.
+    "strict": true,
+    // Disallow features that require cross-file information for emit.
+    "isolatedModules": false,
+    // Import non-ES modules as default imports.
+    "esModuleInterop": true,
+    // Specify JSX code generation: 'preserve', 'react', or 'react-native'.
+    //"jsx": "react"
+    "skipLibCheck": true,
+    // https://github.com/gdi2290/angular-starter/issues/931#issuecomment-244001423
+    "lib": ["esnext"],
+    // http://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
+    "baseUrl": "./src/",
+    "paths": {
+      "*": ["*"]
     },
-    "include": [
-        "**/*.ts",
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    "jsx": "preserve"
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }
