@@ -3,6 +3,7 @@ import { filter, map } from "rxjs/operators";
 import { ActionDispatcher, ActionStream } from "types/helpers";
 import { Action, UnknownAction } from "types/Action";
 import { ActionCreator } from "types/ActionCreator";
+import { tag } from "rxjs-spy/operators";
 
 /**
  * Alias to create a new symbol
@@ -121,5 +122,6 @@ export const createChildActionStream = (
 ): ActionStream =>
   action$.pipe(
     filterQualifier(qualifier),
-    stripQualifier()
+    stripQualifier(),
+    tag("action$ - " + qualifier.toString())
   );

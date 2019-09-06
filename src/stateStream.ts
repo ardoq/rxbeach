@@ -1,4 +1,5 @@
 import { OperatorFunction, pipe, Observable } from "rxjs";
+import { tag } from "rxjs-spy/operators";
 import { startWith, shareReplay } from "rxjs/operators";
 import {
   getQualifier,
@@ -29,6 +30,7 @@ export const reduceToStateStream = <StateShape>(
   pipe(
     reducerOperator,
     startWith(seed),
+    tag(debugName),
     shareReplay({
       // All subscriptions to a state stream should receive the last state
       bufferSize: 1,
@@ -49,7 +51,11 @@ export const createQualifiedStateStream = <StateShape>(
   const filteredAction$ = createChildActionStream(action$, qualifier);
 
   const state$ = filteredAction$.pipe(
-    reduceToStateStream(debugName, reducerOperator, seed)
+    reduceToStateStream(
+      debugName + " - " + qualifier.toString(),
+      reducerOperator,
+      seed
+    )
   );
 
   return [state$, filteredAction$, qualifier];
