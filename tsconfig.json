@@ -14,17 +14,16 @@
     // Import non-ES modules as default imports.
     "esModuleInterop": true,
     // Specify JSX code generation: 'preserve', 'react', or 'react-native'.
-    //"jsx": "react"
+    "jsx": "react",
     "skipLibCheck": true,
     // https://github.com/gdi2290/angular-starter/issues/931#issuecomment-244001423
     "lib": ["esnext"],
     // http://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
     "baseUrl": "./src/",
     "paths": {
-      "*": ["*"]
-    },
-    "jsx": "preserve"
+      "~*": ["./*"]
+    }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

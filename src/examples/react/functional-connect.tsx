@@ -1,3 +1,4 @@
+import React from "react";
 import { qualified$Factory } from "examples/qualified-stream";
 import {
   connectHookCreator,

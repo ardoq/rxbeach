@@ -7,8 +7,12 @@
   "scripts": {
     "test": "NODE_PATH=./src:./examples mocha",
     "build": "tsc -p tsconfig.json",
-    "start": "parcel src/web/index.html",
+    "start": "parcel src/index.html",
     "lint": "eslint --ext .ts src"
+  },
+  "alias": {
+    "lib": "~lib",
+    "examples": "~examples"
   },
   "author": "Tobias Laundal",
   "license": "private",

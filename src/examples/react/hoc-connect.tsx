@@ -1,3 +1,4 @@
+import React from "react";
 import { action$, dispatchAction } from "examples/globalActions";
 import { qualified$Factory } from "examples/qualified-stream";
 import { connectHOC, ConnectProps } from "lib/recipes/reactConnect";
