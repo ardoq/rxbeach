@@ -7,7 +7,7 @@
   "scripts": {
     "test": "NODE_PATH=./src:./examples mocha",
     "build": "tsc -p tsconfig.json",
-    "start": "ts-node --files -P tsconfig.json src/main.ts",
+    "start": "parcel src/web/index.html",
     "lint": "eslint --ext .ts src"
   },
   "author": "Tobias Laundal",
@@ -25,6 +25,7 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-sort-class-members": "1.6.0",
     "mocha": "6.2.0",
+    "parcel-bundler": "1.12.3",
     "prettier": "1.18.2",
     "ts-node": "8.3.0",
     "typescript": "3.6.2"
