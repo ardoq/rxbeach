@@ -1,14 +1,15 @@
 module.exports = {
   env: {
-    es6: true
+    es6: true,
+    "shared-node-browser": true
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    // "project": "./tsconfig.json", // uncomment to enable linting rules that relies on types. It takes 10x the time as of April 2019.
+    project: "./tsconfig.json",
     sourceType: "module",
     ecmaVersion: 2018,
     ecmaFeatures: {
-      jsx: false
+      jsx: true
     }
   },
   settings: {
@@ -16,9 +17,9 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["*.ts"],
-      rules: {
-        "no-undef": "off"
+      files: ["*.spec.ts"],
+      env: {
+        mocha: true
       }
     }
   ],
