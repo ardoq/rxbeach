@@ -8,7 +8,7 @@ describe("utils", function() {
   describe("subscribeAndGuard", function() {
     this.beforeAll(function() {
       this.originalConsoleError = console.error;
-      console.error = (...args) => (this.hasLoggedErr = true);
+      console.error = (...args: any[]) => (this.hasLoggedErr = true);
     });
     this.beforeEach(function() {
       this.hasLoggedErr = false;
