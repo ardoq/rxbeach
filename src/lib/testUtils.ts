@@ -1,10 +1,18 @@
-import { Subject, Observable, OperatorFunction } from "rxjs";
-import { tap, reduce, take } from "rxjs/operators";
+import {
+  Subject,
+  Observable,
+  OperatorFunction,
+  of,
+  BehaviorSubject,
+  timer
+} from "rxjs";
+import { tap, reduce, take, delay, zip } from "rxjs/operators";
 import {
   ActionWithPayload,
   ActionWithoutPayload,
   AnyAction
 } from "lib/types/Action";
+import { subscriptionCount } from "rxjs-subscription-count";
 
 export const actionWithoutPayload = (
   type: symbol,
@@ -70,3 +78,16 @@ export const toHistoryPromise = <T>(obs: Observable<T>): Promise<T[]> =>
 
 export const latest = <T>(obs: Observable<T>): Promise<T> =>
   obs.pipe(take(1)).toPromise();
+
+export const testStream = <T>(
+  ...values: T[]
+): [Observable<T>, BehaviorSubject<number>] => {
+  const subscriptionCounter = new BehaviorSubject(0);
+  const stream = of(...values).pipe(
+    // Makes sure each value is emitted with one node-tick in between
+    zip(timer(0, 0), v => v),
+    subscriptionCount(subscriptionCounter)
+  );
+
+  return [stream, subscriptionCounter];
+};
