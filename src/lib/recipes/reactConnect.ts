@@ -1,31 +1,34 @@
 import { useEffect, useState, createElement, ComponentType } from "react";
 import { StateStreamFactory } from "lib/stateStream";
 import { ActionStream, ActionDispatcher } from "lib/types/helpers";
+import { Observable } from "rxjs";
 
 /**
  * Utils for connecting a state stream factory to a React component.
  */
 
-type ViewModelHook<ViewModel> = (
-  action$: ActionStream,
-  dispatchAction: ActionDispatcher
-) => [ViewModel, ActionStream, ActionDispatcher];
+export const useStream = <T>(stream$: Observable<T>, initial: T) => {
+  const [value, setValue] = useState<T>(initial);
+
+  useEffect(() => {
+    const subscription = stream$.subscribe(setValue);
+
+    return () => subscription.unsubscribe();
+  }, [stream$]);
+
+  return value;
+};
 
 export const connectHookCreator = <StateShape>(
   state$Factory: StateStreamFactory<StateShape>
-): ViewModelHook<StateShape> => (parentAction$, parentDispatchAction) => {
+) => (
+  parentAction$: ActionStream,
+  parentDispatchAction: ActionDispatcher
+): [StateShape, ActionStream, ActionDispatcher] => {
   const [{ state$, action$, dispatchAction }] = useState(() =>
     state$Factory(parentAction$, parentDispatchAction)
   );
-  const [viewModel, setViewModel] = useState<StateShape>(state$Factory.seed);
-
-  useEffect(() => {
-    const viewModelSubscription = state$.subscribe(viewModel =>
-      setViewModel(viewModel)
-    );
-
-    return () => viewModelSubscription.unsubscribe();
-  });
+  const viewModel = useStream(state$, state$Factory.seed);
 
   return [viewModel, action$, dispatchAction];
 };
