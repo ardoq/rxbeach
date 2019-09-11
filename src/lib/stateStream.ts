@@ -51,11 +51,7 @@ export const createQualifiedStateStream = <StateShape>(
   const filteredAction$ = createChildActionStream(action$, qualifier);
 
   const state$ = filteredAction$.pipe(
-    reduceToStateStream(
-      debugName + " - " + qualifier.toString(),
-      reducerOperator,
-      seed
-    )
+    reduceToStateStream(`state$ - ${debugName}`, reducerOperator, seed)
   );
 
   return [state$, filteredAction$, qualifier];

@@ -65,7 +65,7 @@ export const collection = <Model extends WithId>(
   ActionCreatorWithPayload<CollectionContent<Model>>
 ] => {
   const [_collection$, , qualifier] = createQualifiedStateStream(
-    name,
+    "collection - " + name,
     reducers,
     EMPTY_COLLECTION,
     action$

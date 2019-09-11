@@ -123,5 +123,5 @@ export const createChildActionStream = (
   action$.pipe(
     filterQualifier(qualifier),
     stripQualifier(),
-    tag("action$ - " + qualifier.toString())
+    tag("action$ - " + qualifier.description)
   );
