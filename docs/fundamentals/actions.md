@@ -34,24 +34,26 @@ const action = {
 
 This example describes an action that will increment a counter by three.
 
-In actual usage you would never write such an action object yourself, the only
-thing "users" of the architecture provide is the payload and, indirectly, the
+In actual usage you would never write such an action object yourself; the only
+thing "users" of the architecture provide is the payload, and indirectly, the
 type. The action objects are created by action creator functions, sometimes
 called "action types" or even just "actions". The action types are defined by
 the help of utils.
 
 The action types are defined as part of a reducer, part of a routine or as a
 legacy action. They are defined one time each, as globals, and are then invoked
-as functions in order to get an action object.
+as functions in order to get an action object. These reducers and routines that
+also create actions, are sometimes called action-reducers and action-routines.
 
-Given a reducer called `incrementCounter`, creating the action object example
-above, would probably look something like this:
+Action creators are functions that accept the payload as their only argument.
+Given an action-reducer called `incrementCounter`, creating the action object
+example above, would probably look something like this:
 
 ```javascript
 incrementCounter({ increment: 3 });
 ```
 
-### Payloads
+## Payloads
 
 Care should be taken when designing the shape of an action payload. There are
 two very important rules regarding payloads:

@@ -17,9 +17,9 @@ Ardoq actions has two utility functions to create routines
 - `actionRoutine`
 - `hookRoutine`
 
-The only difference between these two is that action routines get an action
-defined together with them, and should use this action to trigger logic, while
-the hook routines are hooked onto existing actions.
+The only difference between these two is that action routines also define an
+action, and should use this action to trigger logic, while the hook routines are
+hooked onto existing actions.
 
 ### Action routines
 
@@ -130,7 +130,7 @@ cases, while being explicit and familiar. The three patterns are as follows:
 After reading about each of these patterns, you might notice that the example of
 a hook routine above does not follow any of them. It seems to be a mix of a pure
 routine and a multiplex routine. A more correct implementation of the examples
-above, can be found [here](https://github.com/ardoq/ardoq-actions/tree/master/examples/routines).
+above, can be found [here](https://github.com/ardoq/ardoq-actions/tree/master/src/examples/routines).
 
 ### Pure routine
 
@@ -160,7 +160,7 @@ might be data that is pulled from other streams, or order or temporal context by
 invoking other actions at the correct time. In order to separate the _what_ from
 the _when_, context routines should be action routines.
 
-Rules for context rouines:
+Rules for context routines:
 
 - _Emits_[<sup>1</sup>](#Footnotes) other actions
 - Only performs side effects when needed in order to get the correct context
@@ -203,7 +203,7 @@ manually in the pipe. Instead, you are adviced to make your pipe end by emitting
 actions, and adding `tap(dispatchAction)` as the last step. You might need to
 use `flatMap` to make sure the pipe emits one action at a time, instead of an
 array of actions. The
-[data collection example](https://github.com/ardoq/ardoq-actions/tree/master/examples/data-collection)
+[data collection example](https://github.com/ardoq/ardoq-actions/tree/master/src/examples/data-collection)
 is a good reference for this pattern.
 
 #### Footnotes

@@ -53,4 +53,4 @@ is the same, but allows for more flexibility among the users of `collection`.
 
 ## Examples
 
-- [Example in the repo](https://github.com/ardoq/ardoq-actions/tree/master/examples/data-collection)
+- [Example in the repo](https://github.com/ardoq/ardoq-actions/tree/master/src/examples/data-collection)

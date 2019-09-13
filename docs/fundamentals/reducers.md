@@ -20,9 +20,7 @@ An example of the state from calculated field options:
 export interface CalculatedFieldOption extends LabeledValue<string> {
   ids: string[];
 }
-
 export type CalculatedFieldOptionsState = CalculatedFieldOption[];
-
 export const defaultState = [] as CalculatedFieldOptionsState;
 ```
 
@@ -36,21 +34,14 @@ connected to the reducer has a one-to-one relation with a reducer, and is only
 associated with a single reducer. To enforce this, a reducer declaration is
 also the action declaration for the action that reducer will react to.
 
-We will use predefined types of the reducer function and the action:
-
-```typescript
-// reducer.ts
-export type Reducer<State, Payload = VoidPayload> = (
-  previousState: State,
-  payload: Payload
-) => State;
-```
-
 We write types of the reducers state, and define the reducer-action:
 
 ```typescript
 // ./actions
-const setCalculatedFieldOptions = reducer<CalculatedFieldOption[]>(
+const setCalculatedFieldOptions = reducer<
+  CalculatedFieldOptionsState,
+  CalculatedFieldOption[]
+>(
   (, options) => options
 );
 
