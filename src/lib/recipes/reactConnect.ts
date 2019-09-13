@@ -11,7 +11,9 @@ export const useStream = <T>(stream$: Observable<T>, initial: T) => {
   const [value, setValue] = useState<T>(initial);
 
   useEffect(() => {
-    const subscription = stream$.subscribe(setValue);
+    const subscription = stream$.subscribe(v => {
+      setValue(v);
+    });
 
     return () => subscription.unsubscribe();
   }, [stream$]);
@@ -25,9 +27,9 @@ export const connectHookCreator = <StateShape>(
   parentAction$: ActionStream,
   parentDispatchAction: ActionDispatcher
 ): [StateShape, ActionStream, ActionDispatcher] => {
-  const [{ state$, action$, dispatchAction }] = useState(() =>
-    state$Factory(parentAction$, parentDispatchAction)
-  );
+  const [{ state$, action$, dispatchAction }] = useState(() => {
+    return state$Factory(parentAction$, parentDispatchAction);
+  });
   const viewModel = useStream(state$, state$Factory.seed);
 
   return [viewModel, action$, dispatchAction];

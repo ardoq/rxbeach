@@ -55,15 +55,15 @@ export const checkActions = async (
     .toPromise();
 };
 
-type AnyProducer = () => any;
-export const getContext = <ContextCreator extends AnyProducer>(
-  mochaContext: Mocha.Context,
-  contextCreator: ContextCreator
-): ReturnType<ContextCreator> => {
-  if (mochaContext.context === undefined) {
-    mochaContext.context = contextCreator();
-  }
-  return mochaContext.context;
+export const beforeEach = <T>(
+  suite: Mocha.Suite,
+  setup: () => T
+): ((context: Mocha.Context) => T) => {
+  suite.beforeEach(function() {
+    this.scaffolding = setup();
+  });
+
+  return context => context.scaffolding as T;
 };
 
 const collectHistory = <T>(): OperatorFunction<T, T[]> =>

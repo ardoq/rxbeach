@@ -1,36 +1,36 @@
 import { of } from "rxjs";
 import { deepEqual, equal } from "assert";
 import { reducer, combineReducers } from "lib/reducer";
-import { actionWithPayload, getContext } from "lib/testUtils";
+import { actionWithPayload, beforeEach } from "lib/testUtils";
 import { VoidPayload } from "lib/types/Action";
 
 const throwErrorFn = () => {
   throw new Error();
 };
 
-const defaultContext = () => {
-  const reducerFn = (totalLength: number, payload: string) =>
-    totalLength + payload.length;
-
-  const addString = reducer(reducerFn);
-  const reducers = combineReducers(0, addString);
-
-  return {
-    reducerFn,
-    addString,
-    reducers
-  };
-};
-
 describe("reducers", function() {
   describe("reducer", function() {
+    const scaffolding = beforeEach(this, () => {
+      const reducerFn = (totalLength: number, payload: string) =>
+        totalLength + payload.length;
+
+      const addString = reducer(reducerFn);
+      const reducers = combineReducers(0, addString);
+
+      return {
+        reducerFn,
+        addString,
+        reducers
+      };
+    });
+
     it("Should store reducer function", function() {
-      const { reducerFn, addString } = getContext(this, defaultContext);
+      const { reducerFn, addString } = scaffolding(this);
 
       equal(addString.reducer[1], reducerFn);
     });
     it("Should create functioning action creator", function() {
-      const { addString } = getContext(this, defaultContext);
+      const { addString } = scaffolding(this);
 
       const action = addString("Hello");
 
