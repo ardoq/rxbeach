@@ -4,10 +4,13 @@ import { mapTo, tap } from "rxjs/operators";
 import {
   combineActionOperators,
   registerActionOperators
-} from "actionOperators";
-import { actionWithoutPayload, toHistoryPromise } from "testUtils";
-import { AnyAction } from "types/Action";
-import { ActionDispatcher } from "types/helpers";
+} from "stream-patterns/actionOperators";
+import {
+  actionWithoutPayload,
+  toHistoryPromise
+} from "stream-patterns/testUtils";
+import { AnyAction } from "stream-patterns/types/Action";
+import { ActionDispatcher } from "stream-patterns/types/helpers";
 
 describe("actionOperators", function() {
   describe("combineActionOperators", function() {

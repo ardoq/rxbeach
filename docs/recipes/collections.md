@@ -22,9 +22,9 @@ This is a small example showcasing the simplicity of creating collections with
 the `collection` utility.
 
 ```typescript
-import { action$, dispatchAction } from "action$";
-import { collection } from "ardoq-actions/recipes/collection";
-import { MetaModel } from "meta-model/types";
+import { action$, dispatchAction } from "stream-patterns/action$";
+import { collection } from "stream-patterns/ardoq-actions/recipes/collection";
+import { MetaModel } from "stream-patterns/meta-model/types";
 
 const [
   metaModels$,

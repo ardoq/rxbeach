@@ -1,7 +1,10 @@
 import { OperatorFunction, MonoTypeOperatorFunction, merge, pipe } from "rxjs";
 import { map, filter, share } from "rxjs/operators";
-import { SingleActionOperator, MultiActionOperator } from "actionOperators";
-import { ActionWithPayload, AnyAction } from "types/Action";
+import {
+  SingleActionOperator,
+  MultiActionOperator
+} from "stream-patterns/actionOperators";
+import { ActionWithPayload, AnyAction } from "stream-patterns/types/Action";
 
 //// Routines ////
 

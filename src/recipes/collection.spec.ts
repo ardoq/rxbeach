@@ -1,7 +1,7 @@
 import { deepEqual } from "assert";
 import { Subject } from "rxjs";
-import { toHistoryPromise } from "testUtils";
-import { AnyAction } from "types/Action";
+import { toHistoryPromise } from "stream-patterns/testUtils";
+import { AnyAction } from "stream-patterns/types/Action";
 import { WithId, collection, Collection } from "./collection";
 
 interface SomeModel extends WithId {

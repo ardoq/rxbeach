@@ -1,6 +1,6 @@
 import { useEffect, useState, createElement, ComponentType } from "react";
-import { StateStreamFactory } from "stateStream";
-import { ActionStream, ActionDispatcher } from "types/helpers";
+import { StateStreamFactory } from "stream-patterns/stateStream";
+import { ActionStream, ActionDispatcher } from "stream-patterns/types/helpers";
 import { Observable } from "rxjs";
 
 /**

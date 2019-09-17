@@ -32,8 +32,8 @@ Here is a short code example of an action routine that prints a message to the
 browser console:
 
 ```typescript
-import { actionRoutine } from "routines/actionRoutine";
-import { extractPayload } from "utils/operators";
+import { actionRoutine } from "stream-patterns/routines/actionRoutine";
+import { extractPayload } from "stream-patterns/utils/operators";
 
 const logToConsole = actionRoutine<string>(
   "[debug] log to console",
@@ -63,7 +63,7 @@ Here is a short example that hooks into the `logToConsole` action routine above
 and prints the length of the message to the browser console:
 
 ```typescript
-import { hookRoutine } from "routines/hookRoutine";
+import { hookRoutine } from "stream-patterns/routines/hookRoutine";
 
 const logMessageLength = hookRoutine(
   pipe(
@@ -98,7 +98,7 @@ Here is an example registration of the two routines above:
 import {
   combineActionOperators,
   registerActionOperators
-} from "actionOperators";
+} from "stream-patterns/actionOperators";
 
 const routines = combineActionOperators(logToConsole, logMessageLength);
 registerActionOperators(action$, routines);

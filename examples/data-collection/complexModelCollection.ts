@@ -4,10 +4,14 @@ import { action$, dispatchAction } from "../globalActions";
 import {
   combineActionOperators,
   registerActionOperators
-} from "actionOperators";
-import { collection, WithId, Collection } from "recipes/collection";
-import { actionRoutine } from "routines/actionRoutine";
-import { extractPayload } from "utils/operators";
+} from "stream-patterns/actionOperators";
+import {
+  collection,
+  WithId,
+  Collection
+} from "stream-patterns/recipes/collection";
+import { actionRoutine } from "stream-patterns/routines/actionRoutine";
+import { extractPayload } from "stream-patterns/utils/operators";
 
 export type ComplexModel = WithId & {
   parent?: ComplexModel["id"];

@@ -1,7 +1,7 @@
 import { equal, deepEqual } from "assert";
 import { of } from "rxjs";
 import { tap } from "rxjs/operators";
-import { createActionCreator } from "actionCreator";
+import { createActionCreator } from "stream-patterns/actionCreator";
 import { hookRoutine } from "./hookRoutine";
 
 describe("routines", function() {

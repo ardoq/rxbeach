@@ -1,8 +1,8 @@
 import { OperatorFunction, pipe } from "rxjs";
 import { ignoreElements } from "rxjs/operators";
-import { MultiActionOperator } from "actionOperators";
-import { Action, VoidPayload } from "types/Action";
-import { ActionCreator } from "types/ActionCreator";
+import { MultiActionOperator } from "stream-patterns/actionOperators";
+import { Action, VoidPayload } from "stream-patterns/types/Action";
+import { ActionCreator } from "stream-patterns/types/ActionCreator";
 
 /**
  * Define a routine hooked onto existing actions

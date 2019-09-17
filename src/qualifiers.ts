@@ -1,9 +1,9 @@
 import { MonoTypeOperatorFunction } from "rxjs";
 import { filter, map } from "rxjs/operators";
 import { tag } from "rxjs-spy/operators";
-import { Action, UnknownAction } from "types/Action";
-import { ActionCreator } from "types/ActionCreator";
-import { ActionDispatcher, ActionStream } from "types/helpers";
+import { Action, UnknownAction } from "stream-patterns/types/Action";
+import { ActionCreator } from "stream-patterns/types/ActionCreator";
+import { ActionDispatcher, ActionStream } from "stream-patterns/types/helpers";
 
 /**
  * Alias to create a new symbol

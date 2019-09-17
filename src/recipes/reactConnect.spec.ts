@@ -1,11 +1,11 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { equal, strictEqual } from "assert";
 import { Subject } from "rxjs";
-import { ActionDispatcher } from "types/helpers";
-import { reducer, combineReducers } from "reducer";
-import { createStateStreamFactory } from "stateStream";
-import { testStream, beforeEach } from "testUtils";
-import { AnyAction } from "types/Action";
+import { ActionDispatcher } from "stream-patterns/types/helpers";
+import { reducer, combineReducers } from "stream-patterns/reducer";
+import { createStateStreamFactory } from "stream-patterns/stateStream";
+import { testStream, beforeEach } from "stream-patterns/testUtils";
+import { AnyAction } from "stream-patterns/types/Action";
 import { useStream, connectHookCreator } from "./reactConnect";
 
 describe("reactConnect", function() {

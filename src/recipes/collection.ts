@@ -1,9 +1,9 @@
 import { Observable } from "rxjs";
-import { createQualifiedActionCreator } from "qualifiers";
-import { combineReducers, reducer } from "reducer";
-import { createQualifiedStateStream } from "stateStream";
-import { ActionCreatorWithPayload } from "types/ActionCreator";
-import { ActionStream } from "types/helpers";
+import { createQualifiedActionCreator } from "stream-patterns/qualifiers";
+import { combineReducers, reducer } from "stream-patterns/reducer";
+import { createQualifiedStateStream } from "stream-patterns/stateStream";
+import { ActionCreatorWithPayload } from "stream-patterns/types/ActionCreator";
+import { ActionStream } from "stream-patterns/types/helpers";
 
 type IdType = string;
 

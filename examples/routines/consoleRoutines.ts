@@ -4,10 +4,10 @@ import { action$, dispatchAction } from "../globalActions";
 import {
   combineActionOperators,
   registerActionOperators
-} from "actionOperators";
-import { actionRoutine } from "routines/actionRoutine";
-import { hookRoutine } from "routines/hookRoutine";
-import { extractPayload } from "utils/operators";
+} from "stream-patterns/actionOperators";
+import { actionRoutine } from "stream-patterns/routines/actionRoutine";
+import { hookRoutine } from "stream-patterns/routines/hookRoutine";
+import { extractPayload } from "stream-patterns/utils/operators";
 
 export const messages: string[] = [];
 

@@ -5,9 +5,9 @@ import {
   getQualifier,
   createChildDispatcher,
   createChildActionStream
-} from "qualifiers";
-import { AnyAction } from "types/Action";
-import { ActionStream, ActionDispatcher } from "types/helpers";
+} from "stream-patterns/qualifiers";
+import { AnyAction } from "stream-patterns/types/Action";
+import { ActionStream, ActionDispatcher } from "stream-patterns/types/helpers";
 
 /**
  * A stream operator that accepts actions, and returns a hot, reference counted,

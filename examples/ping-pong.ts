@@ -1,12 +1,18 @@
 import { pipe } from "rxjs";
-import { tap, map, flatMap, combineLatest, filter } from "rxjs/operators";
-import { combineActionOperators } from "actionOperators";
-import { reducer, combineReducers } from "reducer";
-import { actionRoutine } from "routines/actionRoutine";
-import { hookRoutine } from "routines/hookRoutine";
-import { reduceToStateStream } from "stateStream";
-import { ActionWithoutPayload } from "types/Action";
-import { extractPayload } from "utils/operators";
+import {
+  tap,
+  map,
+  flatMap,
+  combineLatest,
+  filter
+} from "rxjs/operators";
+import { combineActionOperators } from "stream-patterns/actionOperators";
+import { reducer, combineReducers } from "stream-patterns/reducer";
+import { actionRoutine } from "stream-patterns/routines/actionRoutine";
+import { hookRoutine } from "stream-patterns/routines/hookRoutine";
+import { reduceToStateStream } from "stream-patterns/stateStream";
+import { ActionWithoutPayload } from "stream-patterns/types/Action";
+import { extractPayload } from "stream-patterns/utils/operators";
 import { action$, dispatchAction } from "./globalActions";
 
 /*

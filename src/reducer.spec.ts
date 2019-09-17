@@ -1,8 +1,8 @@
 import { of } from "rxjs";
 import { deepEqual, equal } from "assert";
-import { reducer, combineReducers } from "reducer";
-import { actionWithPayload, beforeEach } from "testUtils";
-import { VoidPayload } from "types/Action";
+import { reducer, combineReducers } from "stream-patterns/reducer";
+import { actionWithPayload, beforeEach } from "stream-patterns/testUtils";
+import { VoidPayload } from "stream-patterns/types/Action";
 
 const throwErrorFn = () => {
   throw new Error();

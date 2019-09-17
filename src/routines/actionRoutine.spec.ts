@@ -1,7 +1,7 @@
 import { deepEqual } from "assert";
 import { of } from "rxjs";
 import { tap } from "rxjs/operators";
-import { actionWithPayload } from "testUtils";
+import { actionWithPayload } from "stream-patterns/testUtils";
 import { actionRoutine } from "./actionRoutine";
 
 describe("routines", function() {

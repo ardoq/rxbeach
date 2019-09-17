@@ -1,5 +1,5 @@
 import { equal } from "assert";
-import { createActionCreator } from "actionCreator";
+import { createActionCreator } from "stream-patterns/actionCreator";
 
 describe("actionCreator", function() {
   describe("createActionCreator", function() {

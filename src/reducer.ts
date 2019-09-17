@@ -1,9 +1,13 @@
 import { OperatorFunction, pipe } from "rxjs";
 import { scan } from "rxjs/operators";
-import { createActionCreator } from "actionCreator";
-import { VoidPayload, AnyAction, UnknownAction } from "types/Action";
-import { ActionCreator } from "types/ActionCreator";
-import { ofType } from "utils/operators";
+import { createActionCreator } from "stream-patterns/actionCreator";
+import {
+  VoidPayload,
+  AnyAction,
+  UnknownAction
+} from "stream-patterns/types/Action";
+import { ActionCreator } from "stream-patterns/types/ActionCreator";
+import { ofType } from "stream-patterns/utils/operators";
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,

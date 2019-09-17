@@ -1,6 +1,6 @@
 import { deepEqual } from "assert";
 import { dispatchAction } from "../globalActions";
-import { latest } from "testUtils";
+import { latest } from "stream-patterns/testUtils";
 import {
   ComplexModel,
   putComplexModel,

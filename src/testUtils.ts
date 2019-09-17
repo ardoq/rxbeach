@@ -11,7 +11,7 @@ import {
   ActionWithPayload,
   ActionWithoutPayload,
   AnyAction
-} from "types/Action";
+} from "stream-patterns/types/Action";
 import { subscriptionCount } from "rxjs-subscription-count";
 
 export const actionWithoutPayload = (

@@ -4,10 +4,13 @@ import {
   createChildDispatcher,
   createChildActionStream,
   createQualifiedActionCreator
-} from "qualifiers";
-import { actionWithoutPayload, actionWithPayload } from "testUtils";
-import { AnyAction } from "types/Action";
-import { ActionDispatcher } from "types/helpers";
+} from "stream-patterns/qualifiers";
+import {
+  actionWithoutPayload,
+  actionWithPayload
+} from "stream-patterns/testUtils";
+import { AnyAction } from "stream-patterns/types/Action";
+import { ActionDispatcher } from "stream-patterns/types/helpers";
 
 describe("qualifiers", function() {
   describe("createQualifiedActionCreator", function() {

@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { Reducer, ReducerDefinition } from "reducer";
+import { Reducer, ReducerDefinition } from "stream-patterns/reducer";
 
 /**
  * Silences errors and subscribes the stream

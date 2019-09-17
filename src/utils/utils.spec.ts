@@ -1,8 +1,8 @@
 import { equal } from "assert";
 import { Subject } from "rxjs";
 import { tap } from "rxjs/operators";
-import { ReducerDefinition, Reducer } from "reducer";
-import { sameReducerFn, subscribeAndGuard } from "utils/utils";
+import { ReducerDefinition, Reducer } from "stream-patterns/reducer";
+import { sameReducerFn, subscribeAndGuard } from "stream-patterns/utils/utils";
 
 describe("utils", function() {
   describe("subscribeAndGuard", function() {
