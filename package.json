@@ -7,21 +7,15 @@
   "scripts": {
     "test": "NODE_PATH=./src:./examples mocha",
     "build": "tsc -p tsconfig.json",
-    "start": "parcel src/index.html",
     "lint": "eslint --ext .ts src"
-  },
-  "alias": {
-    "lib": "~lib",
-    "examples": "~examples"
   },
   "author": "Tobias Laundal",
   "license": "private",
   "devDependencies": {
     "@testing-library/react-hooks": "2.0.1",
+    "@types/assert": "^1.4.3",
     "@types/mocha": "5.2.7",
-    "@types/node": "12.7.4",
     "@types/react": "16.9.2",
-    "@types/react-dom": "16.9.0",
     "@typescript-eslint/eslint-plugin": "2.2.0",
     "@typescript-eslint/parser": "2.2.0",
     "assert": "2.0.0",
@@ -31,9 +25,7 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-sort-class-members": "1.6.0",
     "mocha": "6.2.0",
-    "parcel-bundler": "1.12.3",
     "prettier": "1.18.2",
-    "react-dom": "16.9.0",
     "react-test-renderer": "16.9.0",
     "rxjs-subscription-count": "1.0.1",
     "ts-node": "8.3.0",

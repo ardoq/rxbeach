@@ -19,11 +19,8 @@
     // https://github.com/gdi2290/angular-starter/issues/931#issuecomment-244001423
     "lib": ["esnext", "dom"],
     // http://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
-    "baseUrl": "./src/",
-    "paths": {
-      "~*": ["./*"]
-    }
+    "baseUrl": "./src/"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "examples/**/*"],
   "exclude": ["node_modules", "dist"]
 }

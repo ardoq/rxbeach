@@ -21,12 +21,6 @@ module.exports = {
       env: {
         mocha: true
       }
-    },
-    {
-      files: ["src/web/*"],
-      env: {
-        browser: true
-      }
     }
   ],
   plugins: ["@typescript-eslint", "prettier", "import", "sort-class-members"],
