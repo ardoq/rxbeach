@@ -1,25 +1,19 @@
 {
   "compilerOptions": {
-    // Target latest version of ECMAScript.
     "target": "esnext",
-    // Search under node_modules for non-relative imports.
-    "moduleResolution": "node",
-    "allowJs": false,
-    // Don't emit; allow Babel to transform files.
-    "noEmit": true,
-    // Enable strictest settings like strictNullChecks & noImplicitAny.
     "strict": true,
-    // Disallow features that require cross-file information for emit.
+    "allowJs": false,
+
+    "moduleResolution": "node",
     "isolatedModules": false,
-    // Import non-ES modules as default imports.
     "esModuleInterop": true,
-    // Specify JSX code generation: 'preserve', 'react', or 'react-native'.
-    "jsx": "react",
-    "skipLibCheck": true,
-    // https://github.com/gdi2290/angular-starter/issues/931#issuecomment-244001423
+
     "lib": ["esnext", "dom"],
-    // http://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
-    "baseUrl": "./src/"
+    "jsx": "react",
+
+    "baseUrl": "./src/",
+
+    "noEmit": true
   },
   "include": ["src/**/*", "examples/**/*"],
   "exclude": ["node_modules", "dist"]
