@@ -5,7 +5,7 @@ import { ActionWithPayload, AnyAction } from 'stream-patterns/types/Action';
 //// Routines ////
 
 /**
- * Stream operator to filter only actions of specific types
+ * Stream operator to filter only actions of a specific type
  *
  * ```
  * action$.pipe(
@@ -20,12 +20,24 @@ import { ActionWithPayload, AnyAction } from 'stream-patterns/types/Action';
  * This function has weak typings. The output type of the operator function
  * will be `AnyAction`.
  *
- * @param targetTypes The types to filter for
+ * @param targetType The type to filter for
  */
 export const ofType = (
-  ...targetTypes: string[]
+  targetType: string
 ): MonoTypeOperatorFunction<AnyAction> =>
-  filter(({ type }) => targetTypes.indexOf(type) !== -1);
+  filter(({ type }) => type === targetType);
+
+/**
+ * Stream operator to filter only actions of specific types
+ *
+ * This function has weak typings. The output type of the operator function
+ * will be `AnyAction`.
+ *
+ * @param types A set of the types to filter for
+ */
+export const ofTypes = (
+  types: Set<string>
+): MonoTypeOperatorFunction<AnyAction> => filter(({ type }) => types.has(type));
 
 /**
  * Stream operator to extract the payload from an action
