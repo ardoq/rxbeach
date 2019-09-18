@@ -7,7 +7,7 @@
   "scripts": {
     "test": "ts-mocha --paths -p tsconfig.json src/**/*.tests.ts examples/**/*.tests.ts",
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint --ext .ts src"
+    "lint": "eslint --ext .ts src examples"
   },
   "author": "Tobias Laundal",
   "license": "private",
