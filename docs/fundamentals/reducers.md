@@ -20,7 +20,7 @@ export interface CalculatedFieldOption extends LabeledValue<string> {
   ids: string[];
 }
 export type CalculatedFieldOptionsState = CalculatedFieldOption[];
-export const defaultState = [] as CalculatedFieldOptionsState;
+export const defaultState: CalculatedFieldOptionsState = [];
 ```
 
 ## Handling Actions
