@@ -23,7 +23,7 @@ import { ActionWithPayload, AnyAction } from 'stream-patterns/types/Action';
  * @param targetTypes The types to filter for
  */
 export const ofType = (
-  ...targetTypes: symbol[]
+  ...targetTypes: string[]
 ): MonoTypeOperatorFunction<AnyAction> =>
   filter(({ type }) => targetTypes.indexOf(type) !== -1);
 

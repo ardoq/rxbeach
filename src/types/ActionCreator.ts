@@ -6,7 +6,7 @@ import {
 } from './Action';
 
 interface ActionCreatorCommon {
-  type: symbol;
+  type: string;
 }
 
 export interface ActionCreatorWithoutPayload extends ActionCreatorCommon {

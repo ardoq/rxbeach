@@ -1,11 +1,11 @@
 export type VoidPayload = void;
 
 type Meta = {
-  qualifiers: symbol[];
+  qualifiers: string[];
 };
 
 export type ActionWithoutPayload = {
-  type: symbol;
+  type: string;
   meta: Meta;
 };
 
