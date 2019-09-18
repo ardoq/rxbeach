@@ -11,8 +11,7 @@ Reducers generates a state by reducing over the stream of actions.
 Reducers are most often used to provide data for a view. The reducer will
 separate the data from the view. The goal is to keep a tidy state that only
 reflects what is needed for the view. A default state is defined and initially
-applied when the reducer is loaded. Nesting of data in the reducer is not
-advised, this to keep the complexity at a minimum.
+applied when the reducer is loaded. Nesting of data in the reducer is discouraged, this to keep the complexity at a minimum.
 
 An example of the state from calculated field options:
 
