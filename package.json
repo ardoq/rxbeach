@@ -5,7 +5,7 @@
   "company": "Ardoq AS",
   "private": true,
   "scripts": {
-    "test": "ts-mocha --paths -p tsconfig.json src/**/*.spec.ts examples/**/*.spec.ts",
+    "test": "ts-mocha --paths -p tsconfig.json src/**/*.tests.ts examples/**/*.tests.ts",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint --ext .ts src"
   },

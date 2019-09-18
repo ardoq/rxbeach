@@ -30,5 +30,5 @@ export const subscribeAndGuard = (stream$: Observable<unknown>) =>
  * @param ReducerDefinition The reducer definition to extract the reducer from
  */
 export const sameReducerFn = <State, Payload>(
-  ReducerDefinition: ReducerDefinition<State, Payload>
-): Reducer<State, Payload> => ReducerDefinition.reducer[1];
+  reducerDefinition: ReducerDefinition<State, Payload>
+): Reducer<State, Payload> => reducerDefinition.reducer[1];
