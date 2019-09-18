@@ -1,19 +1,13 @@
-import { pipe } from "rxjs";
-import {
-  tap,
-  map,
-  flatMap,
-  combineLatest,
-  filter
-} from "rxjs/operators";
-import { combineActionOperators } from "stream-patterns/actionOperators";
-import { reducer, combineReducers } from "stream-patterns/reducer";
-import { actionRoutine } from "stream-patterns/routines/actionRoutine";
-import { hookRoutine } from "stream-patterns/routines/hookRoutine";
-import { reduceToStateStream } from "stream-patterns/stateStream";
-import { ActionWithoutPayload } from "stream-patterns/types/Action";
-import { extractPayload } from "stream-patterns/utils/operators";
-import { action$, dispatchAction } from "./globalActions";
+import { pipe } from 'rxjs';
+import { tap, map, flatMap, combineLatest, filter } from 'rxjs/operators';
+import { combineActionOperators } from 'stream-patterns/actionOperators';
+import { reducer, combineReducers } from 'stream-patterns/reducer';
+import { actionRoutine } from 'stream-patterns/routines/actionRoutine';
+import { hookRoutine } from 'stream-patterns/routines/hookRoutine';
+import { reduceToStateStream } from 'stream-patterns/stateStream';
+import { ActionWithoutPayload } from 'stream-patterns/types/Action';
+import { extractPayload } from 'stream-patterns/utils/operators';
+import { action$, dispatchAction } from './globalActions';
 
 /*
  * A simple stream example: PING -- PONG
@@ -21,7 +15,7 @@ import { action$, dispatchAction } from "./globalActions";
 
 enum PingPongState {
   PING,
-  PONG
+  PONG,
 }
 
 type PingOrPong = {
@@ -39,29 +33,30 @@ const reducers = combineReducers(PingPongState.PONG, ping, pong);
  * The pingPongState$ holds the last ping or pong type
  */
 const pingPongState$ = action$.pipe(
-  reduceToStateStream("pingPongState$", reducers, PingPongState.PING)
+  reduceToStateStream('pingPongState$', reducers, PingPongState.PING)
 );
 
 //// Pure routines ////
 const logPingPong = actionRoutine<PingOrPong>(
-  "Log ping or pong",
+  'Log ping or pong',
   pipe(
     extractPayload(),
     tap(({ pingOrPong }) => {
       if (pingOrPong === PingPongState.PING) {
-        console.log("PING");
+        console.log('PING');
       } else if (pingOrPong === PingPongState.PONG) {
-        console.log("PONG!");
+        console.log('PONG!');
       }
     })
   )
 );
 
 // shim for window.alert
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const alert = (msg: string) => null;
 
 const alertInvalidPingPong = actionRoutine<PingOrPong>(
-  "Alert the user of invalid ping pong state",
+  'Alert the user of invalid ping pong state',
   pipe(
     extractPayload(),
     tap(({ pingOrPong }) => alert(`Invalid ping or pong: ${pingOrPong}`))
@@ -80,7 +75,7 @@ const actionToPingOrPong = (action: ActionWithoutPayload): PingOrPong => {
   } else if (action.type === pong.type) {
     return { pingOrPong: PingPongState.PONG };
   } else {
-    throw new Error("Unknown action");
+    throw new Error('Unknown action');
   }
 };
 
@@ -106,7 +101,7 @@ const verifyWhenPingPong = hookRoutine(
 
 //// Data routine ////
 const verifyPingAndPongAlternating = actionRoutine<PingOrPong>(
-  "verify next ping pong state is valid",
+  'verify next ping pong state is valid',
   pipe(
     extractPayload(),
     combineLatest(pingPongState$),
@@ -119,6 +114,7 @@ const verifyPingAndPongAlternating = actionRoutine<PingOrPong>(
   )
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const actionOperators = combineActionOperators(
   logPingPong,
   logWhenPingPong,

@@ -1,15 +1,15 @@
-import { equal, deepEqual } from "assert";
-import { of, OperatorFunction, Subject, pipe } from "rxjs";
-import { tap, reduce, filter } from "rxjs/operators";
+import { equal, deepEqual } from 'assert';
+import { of, OperatorFunction, Subject, pipe } from 'rxjs';
+import { tap, reduce, filter } from 'rxjs/operators';
 import {
   actionWithPayload,
-  actionWithoutPayload
-} from "stream-patterns/testUtils";
+  actionWithoutPayload,
+} from 'stream-patterns/testUtils';
 import {
   ActionWithPayload,
-  ActionWithoutPayload
-} from "stream-patterns/types/Action";
-import { extractPayload, ofType, fork } from "./operators";
+  ActionWithoutPayload,
+} from 'stream-patterns/types/Action';
+import { extractPayload, ofType, fork } from './operators';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
@@ -19,12 +19,12 @@ const pipeActionWithPayload = <P, R>(
     .pipe(pipe)
     .toPromise();
 
-describe("operators", function() {
-  describe("extractPayload", function() {
+describe('operators', function() {
+  describe('extractPayload', function() {
     const tests = [
-      ["primitive", "Hello World"],
-      ["array", ["Hello", { what: "World" }]],
-      ["object", { foo: true }]
+      ['primitive', 'Hello World'],
+      ['array', ['Hello', { what: 'World' }]],
+      ['object', { foo: true }],
     ];
 
     for (const [name, payload] of tests) {
@@ -36,10 +36,10 @@ describe("operators", function() {
     }
   });
 
-  describe("ofType", function() {
-    it("Should filter one action type", async function() {
-      const targetType = Symbol("Correct type");
-      const otherType = Symbol("Wrong type");
+  describe('ofType', function() {
+    it('Should filter one action type', async function() {
+      const targetType = Symbol('Correct type');
+      const otherType = Symbol('Wrong type');
 
       await of<ActionWithoutPayload>(
         actionWithoutPayload(targetType),
@@ -53,10 +53,10 @@ describe("operators", function() {
         .toPromise();
     });
 
-    it("Should filter multiple action types", async function() {
-      const targetType1 = Symbol("Correct type one");
-      const targetType2 = Symbol("Correct type two");
-      const otherType = Symbol("Wrong type");
+    it('Should filter multiple action types', async function() {
+      const targetType1 = Symbol('Correct type one');
+      const targetType2 = Symbol('Correct type two');
+      const otherType = Symbol('Wrong type');
 
       const collectedTypes = await of<ActionWithoutPayload>(
         actionWithoutPayload(targetType1),
@@ -73,38 +73,38 @@ describe("operators", function() {
     });
   });
 
-  describe("fork", function() {
-    it("Should Run each pipe in parallel", async function() {
+  describe('fork', function() {
+    it('Should Run each pipe in parallel', async function() {
       let aCount = 0;
       let bCount = 0;
       let beforeCount = 0;
 
-      const subj = new Subject<{ type: "A" | "B" }>();
+      const subj = new Subject<{ type: 'A' | 'B' }>();
       const promise = subj
         .pipe(
           tap(() => (beforeCount += 1)),
           fork(
             pipe(
-              filter(({ type }) => type === "A"),
+              filter(({ type }) => type === 'A'),
               tap(() => (aCount += 1))
             ),
             pipe(
-              filter(({ type }) => type === "B"),
+              filter(({ type }) => type === 'B'),
               tap(() => (bCount += 1))
             )
           )
         )
         .toPromise();
 
-      subj.next({ type: "A" });
-      subj.next({ type: "B" });
+      subj.next({ type: 'A' });
+      subj.next({ type: 'B' });
       subj.complete();
 
       await promise;
 
-      equal(beforeCount, 2, "Parent pipe should be hot");
-      equal(aCount, 1, "Pipe A should run in isolation");
-      equal(bCount, 1, "Pipe B should run in isolation");
+      equal(beforeCount, 2, 'Parent pipe should be hot');
+      equal(aCount, 1, 'Pipe A should run in isolation');
+      equal(bCount, 1, 'Pipe B should run in isolation');
     });
   });
 });

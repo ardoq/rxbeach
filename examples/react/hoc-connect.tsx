@@ -1,7 +1,8 @@
-import React from "react";
-import { action$, dispatchAction } from "../globalActions";
-import { qualified$Factory } from "../qualified-stream";
-import { connectHOC, ConnectProps } from "stream-patterns/recipes/reactConnect";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React from 'react';
+import { action$, dispatchAction } from '../globalActions';
+import { qualified$Factory } from '../qualified-stream';
+import { connectHOC, ConnectProps } from 'stream-patterns/recipes/reactConnect';
 
 const SimpleComponent = ({ viewModel }: ConnectProps<string>) => (
   <div>

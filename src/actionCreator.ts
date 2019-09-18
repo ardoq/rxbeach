@@ -1,8 +1,8 @@
-import { VoidPayload } from "stream-patterns/types/Action";
+import { VoidPayload } from 'stream-patterns/types/Action';
 import {
   ActionCreator,
-  UnknownActionCreator
-} from "stream-patterns/types/ActionCreator";
+  UnknownActionCreator,
+} from 'stream-patterns/types/ActionCreator';
 
 /**
  * Create an action creator for a given payload
@@ -29,8 +29,8 @@ export function createActionCreator(debugName: string): UnknownActionCreator {
     type,
     payload,
     meta: {
-      qualifiers: []
-    }
+      qualifiers: [],
+    },
   });
   action.type = type;
 

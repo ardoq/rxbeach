@@ -1,13 +1,13 @@
-import { OperatorFunction, pipe, Observable } from "rxjs";
-import { startWith, shareReplay } from "rxjs/operators";
-import { tag } from "rxjs-spy/operators";
+import { OperatorFunction, pipe, Observable } from 'rxjs';
+import { startWith, shareReplay } from 'rxjs/operators';
+import { tag } from 'rxjs-spy/operators';
 import {
   getQualifier,
   createChildDispatcher,
-  createChildActionStream
-} from "stream-patterns/qualifiers";
-import { AnyAction } from "stream-patterns/types/Action";
-import { ActionStream, ActionDispatcher } from "stream-patterns/types/helpers";
+  createChildActionStream,
+} from 'stream-patterns/qualifiers';
+import { AnyAction } from 'stream-patterns/types/Action';
+import { ActionStream, ActionDispatcher } from 'stream-patterns/types/helpers';
 
 /**
  * A stream operator that accepts actions, and returns a hot, reference counted,
@@ -36,7 +36,7 @@ export const reduceToStateStream = <StateShape>(
       bufferSize: 1,
       // When all subscriptions are finished (for instance  when a `connect`ed
       // component is unmounted), The state should not be kept in memory
-      refCount: true
+      refCount: true,
     })
   );
 
@@ -106,7 +106,7 @@ export const createQualifiedStateStreamAndDispatcher = <StateShape>(
   return {
     state$,
     action$: filteredAction$,
-    dispatchAction: dispatchQualifiedAction
+    dispatchAction: dispatchQualifiedAction,
   };
 };
 

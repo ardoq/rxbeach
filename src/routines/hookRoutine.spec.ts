@@ -1,14 +1,14 @@
-import { equal, deepEqual } from "assert";
-import { of } from "rxjs";
-import { tap } from "rxjs/operators";
-import { createActionCreator } from "stream-patterns/actionCreator";
-import { hookRoutine } from "./hookRoutine";
+import { equal, deepEqual } from 'assert';
+import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { createActionCreator } from 'stream-patterns/actionCreator';
+import { hookRoutine } from './hookRoutine';
 
-describe("routines", function() {
-  const action = createActionCreator("action");
+describe('routines', function() {
+  const action = createActionCreator('action');
 
-  describe("hookRoutine", function() {
-    it("Should create an hookRoutine definition", async function() {
+  describe('hookRoutine', function() {
+    it('Should create an hookRoutine definition', async function() {
       let invoked = false;
       const epicDefinition = hookRoutine(tap(() => (invoked = true)), action);
 
@@ -16,7 +16,7 @@ describe("routines", function() {
         .pipe(
           epicDefinition.operator,
           tap(() => {
-            throw new Error("Actions should not leak past hookRoutines");
+            throw new Error('Actions should not leak past hookRoutines');
           })
         )
         .toPromise();

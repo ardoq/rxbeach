@@ -1,12 +1,12 @@
-import { OperatorFunction, pipe } from "rxjs";
-import { AnyAction, Action } from "./types/Action";
-import { ActionCreator } from "./types/ActionCreator";
-import { ActionStream } from "stream-patterns/types/helpers";
+import { OperatorFunction, pipe } from 'rxjs';
+import { AnyAction, Action } from './types/Action';
+import { ActionCreator } from './types/ActionCreator';
+import { ActionStream } from 'stream-patterns/types/helpers';
 import {
   fork,
-  _filterForActionOperator
-} from "stream-patterns/utils/operators";
-import { subscribeAndGuard } from "stream-patterns/utils/utils";
+  _filterForActionOperator,
+} from 'stream-patterns/utils/operators';
+import { subscribeAndGuard } from 'stream-patterns/utils/utils';
 
 /**
  * MultiActionOperator are streaming operators that should run for specific sets

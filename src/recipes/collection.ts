@@ -1,9 +1,9 @@
-import { Observable } from "rxjs";
-import { createQualifiedActionCreator } from "stream-patterns/qualifiers";
-import { combineReducers, reducer } from "stream-patterns/reducer";
-import { createQualifiedStateStream } from "stream-patterns/stateStream";
-import { ActionCreatorWithPayload } from "stream-patterns/types/ActionCreator";
-import { ActionStream } from "stream-patterns/types/helpers";
+import { Observable } from 'rxjs';
+import { createQualifiedActionCreator } from 'stream-patterns/qualifiers';
+import { combineReducers, reducer } from 'stream-patterns/reducer';
+import { createQualifiedStateStream } from 'stream-patterns/stateStream';
+import { ActionCreatorWithPayload } from 'stream-patterns/types/ActionCreator';
+import { ActionStream } from 'stream-patterns/types/helpers';
 
 type IdType = string;
 
@@ -23,12 +23,13 @@ const EMPTY_COLLECTION: Collection<any> = { contents: {} };
 const _putModel = reducer<Collection, WithId>(({ contents }, model) => ({
   contents: {
     ...contents,
-    [model.id]: model
-  }
+    [model.id]: model,
+  },
 }));
 
 const _removeModel = reducer<Collection, IdType>((state, removeId) => {
-  const { [removeId]: remove, ...contents } = state.contents;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { [removeId]: _, ...contents } = state.contents;
   return { contents };
 });
 
@@ -65,7 +66,7 @@ export const collection = <Model extends WithId>(
   ActionCreatorWithPayload<CollectionContent<Model>>
 ] => {
   const [_collection$, , qualifier] = createQualifiedStateStream(
-    "collection - " + name,
+    'collection - ' + name,
     reducers,
     EMPTY_COLLECTION,
     action$

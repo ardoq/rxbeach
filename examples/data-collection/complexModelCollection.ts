@@ -1,20 +1,20 @@
-import { OperatorFunction, pipe } from "rxjs";
-import { map, flatMap, tap, switchMap } from "rxjs/operators";
-import { action$, dispatchAction } from "../globalActions";
+import { OperatorFunction, pipe } from 'rxjs';
+import { map, flatMap, tap, switchMap } from 'rxjs/operators';
+import { action$, dispatchAction } from '../globalActions';
 import {
   combineActionOperators,
-  registerActionOperators
-} from "stream-patterns/actionOperators";
+  registerActionOperators,
+} from 'stream-patterns/actionOperators';
 import {
   collection,
   WithId,
-  Collection
-} from "stream-patterns/recipes/collection";
-import { actionRoutine } from "stream-patterns/routines/actionRoutine";
-import { extractPayload } from "stream-patterns/utils/operators";
+  Collection,
+} from 'stream-patterns/recipes/collection';
+import { actionRoutine } from 'stream-patterns/routines/actionRoutine';
+import { extractPayload } from 'stream-patterns/utils/operators';
 
 export type ComplexModel = WithId & {
-  parent?: ComplexModel["id"];
+  parent?: ComplexModel['id'];
   data: string;
 };
 
@@ -22,8 +22,8 @@ export const [
   complexModelCollection$,
   putComplexModel,
   removeComplexModel,
-  replaceComplexModels
-] = collection<ComplexModel>("complexModels", action$);
+  replaceComplexModels,
+] = collection<ComplexModel>('complexModels', action$);
 
 /**
  * Stream operator that accepts a collection of ComplexModel, and emits a
@@ -42,8 +42,8 @@ export const pickComplexModelChildren = (
 /**
  * Delete all the children of a ComplexModel
  */
-export const deleteChildren = actionRoutine<ComplexModel["id"]>(
-  "Delete children",
+export const deleteChildren = actionRoutine<ComplexModel['id']>(
+  'Delete children',
   pipe(
     extractPayload(),
     switchMap(parentId =>

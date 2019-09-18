@@ -1,7 +1,7 @@
-import { useEffect, useState, createElement, ComponentType } from "react";
-import { StateStreamFactory } from "stream-patterns/stateStream";
-import { ActionStream, ActionDispatcher } from "stream-patterns/types/helpers";
-import { Observable } from "rxjs";
+import { useEffect, useState, createElement, ComponentType } from 'react';
+import { StateStreamFactory } from 'stream-patterns/stateStream';
+import { ActionStream, ActionDispatcher } from 'stream-patterns/types/helpers';
+import { Observable } from 'rxjs';
 
 /**
  * Utils for connecting a state stream factory to a React component.
@@ -62,7 +62,7 @@ export const connectHOC = <StateShape>(
     return createElement(WrappedComponent, {
       viewModel,
       action$: childAction$,
-      dispatchAction: childDispatchAction
+      dispatchAction: childDispatchAction,
     });
   };
 };

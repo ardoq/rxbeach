@@ -4,22 +4,22 @@ import {
   OperatorFunction,
   of,
   BehaviorSubject,
-  timer
-} from "rxjs";
-import { tap, reduce, take, delay, zip } from "rxjs/operators";
+  timer,
+} from 'rxjs';
+import { tap, reduce, take, zip } from 'rxjs/operators';
 import {
   ActionWithPayload,
   ActionWithoutPayload,
-  AnyAction
-} from "stream-patterns/types/Action";
-import { subscriptionCount } from "rxjs-subscription-count";
+  AnyAction,
+} from 'stream-patterns/types/Action';
+import { subscriptionCount } from 'rxjs-subscription-count';
 
 export const actionWithoutPayload = (
   type: symbol,
   qualifiers: symbol[] = []
 ): ActionWithoutPayload => ({
   meta: { qualifiers },
-  type
+  type,
 });
 
 export const actionWithPayload = <P>(
@@ -28,7 +28,7 @@ export const actionWithPayload = <P>(
   qualifiers: symbol[] = []
 ): ActionWithPayload<P> => ({
   ...actionWithoutPayload(type, qualifiers),
-  payload
+  payload,
 });
 
 /**

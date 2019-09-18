@@ -1,13 +1,13 @@
-import { pipe } from "rxjs";
-import { tap, map } from "rxjs/operators";
-import { action$, dispatchAction } from "../globalActions";
+import { pipe } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
+import { action$, dispatchAction } from '../globalActions';
 import {
   combineActionOperators,
-  registerActionOperators
-} from "stream-patterns/actionOperators";
-import { actionRoutine } from "stream-patterns/routines/actionRoutine";
-import { hookRoutine } from "stream-patterns/routines/hookRoutine";
-import { extractPayload } from "stream-patterns/utils/operators";
+  registerActionOperators,
+} from 'stream-patterns/actionOperators';
+import { actionRoutine } from 'stream-patterns/routines/actionRoutine';
+import { hookRoutine } from 'stream-patterns/routines/hookRoutine';
+import { extractPayload } from 'stream-patterns/utils/operators';
 
 export const messages: string[] = [];
 
@@ -15,7 +15,7 @@ export const messages: string[] = [];
 const consoleLog = (msg: string) => messages.push(msg);
 
 export const logToConsole = actionRoutine<string>(
-  "[debug] log to console",
+  '[debug] log to console',
   pipe(
     extractPayload(),
     tap(message => consoleLog(message))
@@ -23,10 +23,10 @@ export const logToConsole = actionRoutine<string>(
 );
 
 const logMessageLength = actionRoutine<number>(
-  "[debug] log message length",
+  '[debug] log message length',
   pipe(
     extractPayload(),
-    tap(length => consoleLog("Message length: " + length))
+    tap(length => consoleLog('Message length: ' + length))
   )
 );
 

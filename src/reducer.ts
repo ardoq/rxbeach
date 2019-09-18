@@ -1,13 +1,13 @@
-import { OperatorFunction, pipe } from "rxjs";
-import { scan } from "rxjs/operators";
-import { createActionCreator } from "stream-patterns/actionCreator";
+import { OperatorFunction, pipe } from 'rxjs';
+import { scan } from 'rxjs/operators';
+import { createActionCreator } from 'stream-patterns/actionCreator';
 import {
   VoidPayload,
   AnyAction,
-  UnknownAction
-} from "stream-patterns/types/Action";
-import { ActionCreator } from "stream-patterns/types/ActionCreator";
-import { ofType } from "stream-patterns/utils/operators";
+  UnknownAction,
+} from 'stream-patterns/types/Action';
+import { ActionCreator } from 'stream-patterns/types/ActionCreator';
+import { ofType } from 'stream-patterns/utils/operators';
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
@@ -45,7 +45,7 @@ export const reducer = <State, Payload = VoidPayload>(
   type PartialDefinition = Partial<ReducerDefinition<State, any>> &
     ActionCreator<Payload>;
 
-  const definition: PartialDefinition = createActionCreator("");
+  const definition: PartialDefinition = createActionCreator('');
   definition.reducer = [definition.type, reducer];
 
   return definition as ReducerDefinition<State, Payload>;

@@ -1,14 +1,14 @@
-import { deepEqual } from "assert";
-import { dispatchAction } from "../globalActions";
-import { latest } from "stream-patterns/testUtils";
+import { deepEqual } from 'assert';
+import { dispatchAction } from '../globalActions';
+import { latest } from 'stream-patterns/testUtils';
 import {
   ComplexModel,
   putComplexModel,
   complexModelCollection$,
-  deleteChildren
-} from "./complexModelCollection";
+  deleteChildren,
+} from './complexModelCollection';
 
-describe("examples", function() {
+describe('examples', function() {
   // The collection stream needs to be live for latest to work
   this.beforeEach(function() {
     this.subscription = complexModelCollection$.subscribe();
@@ -17,29 +17,29 @@ describe("examples", function() {
     this.subscription.unsubscribe();
   });
 
-  it("complexModelCollection", async function() {
+  it('complexModelCollection', async function() {
     const complexA: ComplexModel = {
-      id: "a",
-      data: "This is a root thingy"
+      id: 'a',
+      data: 'This is a root thingy',
     };
     const complexB: ComplexModel = {
-      id: "b",
-      data: "This is also a root thingy"
+      id: 'b',
+      data: 'This is also a root thingy',
     };
     const complexA1: ComplexModel = {
-      id: "a1",
+      id: 'a1',
       parent: complexA.id,
-      data: "This is a child"
+      data: 'This is a child',
     };
     const complexA2: ComplexModel = {
-      id: "a2",
+      id: 'a2',
       parent: complexA.id,
-      data: "This is also a child"
+      data: 'This is also a child',
     };
     const complexB1: ComplexModel = {
-      id: "b1",
+      id: 'b1',
       parent: complexB.id,
-      data: "This is a child of B"
+      data: 'This is a child of B',
     };
 
     dispatchAction(putComplexModel(complexA));
@@ -54,7 +54,7 @@ describe("examples", function() {
       b: complexB,
       a1: complexA1,
       a2: complexA2,
-      b1: complexB1
+      b1: complexB1,
     });
 
     dispatchAction(deleteChildren(complexA.id));
@@ -63,7 +63,7 @@ describe("examples", function() {
     deepEqual(complexModels.contents, {
       a: complexA,
       b: complexB,
-      b1: complexB1
+      b1: complexB1,
     });
   });
 });

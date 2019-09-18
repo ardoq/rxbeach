@@ -2,8 +2,8 @@ import {
   ActionWithoutPayload,
   ActionWithPayload,
   VoidPayload,
-  UnknownAction
-} from "./Action";
+  UnknownAction,
+} from './Action';
 
 interface ActionCreatorCommon {
   type: symbol;

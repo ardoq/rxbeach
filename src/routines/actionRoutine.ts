@@ -1,11 +1,11 @@
-import { pipe, OperatorFunction } from "rxjs";
-import { ignoreElements } from "rxjs/operators";
-import { createActionCreator } from "stream-patterns/actionCreator";
+import { pipe, OperatorFunction } from 'rxjs';
+import { ignoreElements } from 'rxjs/operators';
+import { createActionCreator } from 'stream-patterns/actionCreator';
 import {
   ActionCreatorOperator,
-  AnyActionCreatorOperator
-} from "stream-patterns/actionOperators";
-import { Action, VoidPayload } from "stream-patterns/types/Action";
+  AnyActionCreatorOperator,
+} from 'stream-patterns/actionOperators';
+import { Action, VoidPayload } from 'stream-patterns/types/Action';
 
 /**
  * Define an action routine - a routine with a corresponding action definition

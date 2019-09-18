@@ -1,8 +1,8 @@
-import { OperatorFunction, pipe } from "rxjs";
-import { ignoreElements } from "rxjs/operators";
-import { MultiActionOperator } from "stream-patterns/actionOperators";
-import { Action, VoidPayload } from "stream-patterns/types/Action";
-import { ActionCreator } from "stream-patterns/types/ActionCreator";
+import { OperatorFunction, pipe } from 'rxjs';
+import { ignoreElements } from 'rxjs/operators';
+import { MultiActionOperator } from 'stream-patterns/actionOperators';
+import { Action, VoidPayload } from 'stream-patterns/types/Action';
+import { ActionCreator } from 'stream-patterns/types/ActionCreator';
 
 /**
  * Define a routine hooked onto existing actions
@@ -26,5 +26,5 @@ export const hookRoutine = <Payload = VoidPayload>(
   operator: pipe(
     operator,
     ignoreElements()
-  )
+  ),
 });

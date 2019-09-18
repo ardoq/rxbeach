@@ -1,9 +1,9 @@
-import { MonoTypeOperatorFunction } from "rxjs";
-import { filter, map } from "rxjs/operators";
-import { tag } from "rxjs-spy/operators";
-import { Action, UnknownAction } from "stream-patterns/types/Action";
-import { ActionCreator } from "stream-patterns/types/ActionCreator";
-import { ActionDispatcher, ActionStream } from "stream-patterns/types/helpers";
+import { MonoTypeOperatorFunction } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { tag } from 'rxjs-spy/operators';
+import { Action, UnknownAction } from 'stream-patterns/types/Action';
+import { ActionCreator } from 'stream-patterns/types/ActionCreator';
+import { ActionDispatcher, ActionStream } from 'stream-patterns/types/helpers';
 
 /**
  * Alias to create a new symbol
@@ -21,8 +21,8 @@ const filterQualifier = (
   filter(
     ({
       meta: {
-        qualifiers: [actionQualifier]
-      }
+        qualifiers: [actionQualifier],
+      },
     }) => actionQualifier === qualifier
   );
 
@@ -35,7 +35,7 @@ const filterQualifier = (
 const stripQualifier = (): MonoTypeOperatorFunction<Action<any>> =>
   map(({ meta: { qualifiers: [, ...qualifiers], ...meta }, ...action }) => ({
     ...action,
-    meta: { ...meta, qualifiers }
+    meta: { ...meta, qualifiers },
   }));
 
 export const _appendQualifierToAction = (
@@ -46,8 +46,8 @@ export const _appendQualifierToAction = (
   payload: action.payload,
   meta: {
     ...action.meta,
-    qualifiers: [qualifier, ...action.meta.qualifiers]
-  }
+    qualifiers: [qualifier, ...action.meta.qualifiers],
+  },
 });
 
 /**
@@ -123,5 +123,5 @@ export const createChildActionStream = (
   action$.pipe(
     filterQualifier(qualifier),
     stripQualifier(),
-    tag("action$ - " + qualifier.description)
+    tag('action$ - ' + qualifier.description)
   );

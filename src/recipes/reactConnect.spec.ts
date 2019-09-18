@@ -1,18 +1,18 @@
-import { renderHook } from "@testing-library/react-hooks";
-import { equal, strictEqual } from "assert";
-import { Subject } from "rxjs";
-import { ActionDispatcher } from "stream-patterns/types/helpers";
-import { reducer, combineReducers } from "stream-patterns/reducer";
-import { createStateStreamFactory } from "stream-patterns/stateStream";
-import { testStream, beforeEach } from "stream-patterns/testUtils";
-import { AnyAction } from "stream-patterns/types/Action";
-import { useStream, connectHookCreator } from "./reactConnect";
+import { renderHook } from '@testing-library/react-hooks';
+import { equal, strictEqual } from 'assert';
+import { Subject } from 'rxjs';
+import { ActionDispatcher } from 'stream-patterns/types/helpers';
+import { reducer, combineReducers } from 'stream-patterns/reducer';
+import { createStateStreamFactory } from 'stream-patterns/stateStream';
+import { testStream, beforeEach } from 'stream-patterns/testUtils';
+import { AnyAction } from 'stream-patterns/types/Action';
+import { useStream, connectHookCreator } from './reactConnect';
 
-describe("reactConnect", function() {
-  describe("useStream", function() {
+describe('reactConnect', function() {
+  describe('useStream', function() {
     const scaffolding = beforeEach(this, () => {
-      const initial = "alfa";
-      const emit = ["bravo", "charlie"];
+      const initial = 'alfa';
+      const emit = ['bravo', 'charlie'];
       const [obs$, subscriptions] = testStream(...emit);
       const hook = renderHook(() => useStream(obs$, initial));
 
@@ -21,38 +21,38 @@ describe("reactConnect", function() {
         initial,
         emit,
         obs$,
-        subscriptions
+        subscriptions,
       };
     });
     this.afterEach(function() {
       scaffolding(this).unmount();
     });
 
-    it("should first return initial value", async function() {
+    it('should first return initial value', async function() {
       const { result } = scaffolding(this);
 
-      equal(result.current, "alfa");
+      equal(result.current, 'alfa');
     });
-    it("should return emitted values", async function() {
+    it('should return emitted values', async function() {
       const { result, waitForNextUpdate } = scaffolding(this);
 
       await waitForNextUpdate();
-      equal(result.current, "bravo");
+      equal(result.current, 'bravo');
     });
-    it("should unsubscribe on unmount", async function() {
+    it('should unsubscribe on unmount', async function() {
       const { subscriptions, unmount } = scaffolding(this);
 
-      equal(subscriptions.value, 1, "subscribed");
+      equal(subscriptions.value, 1, 'subscribed');
       unmount();
 
-      equal(subscriptions.value, 0, "unsubscribed");
+      equal(subscriptions.value, 0, 'unsubscribed');
     });
   });
-  describe("connectHookCreator", function() {
+  describe('connectHookCreator', function() {
     const scaffolding = beforeEach(this, () => {
       const increment = reducer<number>(a => a + 1);
       const count$Factory = createStateStreamFactory(
-        "count",
+        'count',
         combineReducers(0, increment),
         0
       );
@@ -66,22 +66,22 @@ describe("reactConnect", function() {
         {
           initialProps: {
             action$,
-            dispatchAction
-          }
+            dispatchAction,
+          },
         }
       );
       const dispatchIncrement = () => hook.result.current[2](increment());
 
       return {
         ...hook,
-        dispatchIncrement
+        dispatchIncrement,
       };
     });
     this.afterEach(function() {
       scaffolding(this).unmount();
     });
 
-    it("should receive values", async function() {
+    it('should receive values', async function() {
       const { result, rerender, dispatchIncrement } = scaffolding(this);
 
       equal(result.current[0], 0);
@@ -94,7 +94,7 @@ describe("reactConnect", function() {
       equal(result.current[0], 1);
     });
 
-    it("should keep the same stream and dispatcher", async function() {
+    it('should keep the same stream and dispatcher', async function() {
       const { result, rerender } = scaffolding(this);
 
       const [, action$1, dispatchAction1] = result.current;

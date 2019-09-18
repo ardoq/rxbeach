@@ -1,6 +1,6 @@
-import { Observable } from "rxjs";
-import { AnyAction, UnknownAction } from "./Action";
-import { ActionCreatorWithPayload } from "./ActionCreator";
+import { Observable } from 'rxjs';
+import { AnyAction, UnknownAction } from './Action';
+import { ActionCreatorWithPayload } from './ActionCreator';
 
 export type ActionStream = Observable<AnyAction>;
 
@@ -15,4 +15,4 @@ export type ActionDispatcher = (action: UnknownAction) => void;
  */
 export type ExtractPayload<
   ActionType extends ActionCreatorWithPayload<any>
-> = ReturnType<ActionType>["payload"];
+> = ReturnType<ActionType>['payload'];

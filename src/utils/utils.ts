@@ -1,6 +1,6 @@
-import { Observable } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { Reducer, ReducerDefinition } from "stream-patterns/reducer";
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Reducer, ReducerDefinition } from 'stream-patterns/reducer';
 
 /**
  * Silences errors and subscribes the stream
@@ -13,7 +13,7 @@ export const subscribeAndGuard = (stream$: Observable<unknown>) =>
   stream$
     .pipe(
       catchError((error, stream) => {
-        console.error("UNHANDLED ERROR IN STREAM", error);
+        console.error('UNHANDLED ERROR IN STREAM', error);
         return stream;
       })
     )
