@@ -1,16 +1,16 @@
 {
-  "name": "ardoq-actions",
+  "name": "rxbeach",
   "version": "0.0.1",
-  "description": "Stream architecture for Ardoq",
+  "description": "Chill with streams at the RxBeach",
   "company": "Ardoq AS",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "test": "ts-mocha --paths -p tsconfig.json src/**/*.tests.ts examples/**/*.tests.ts",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint --ext .ts src examples"
   },
   "author": "Tobias Laundal",
-  "license": "private",
   "devDependencies": {
     "@testing-library/react-hooks": "2.0.1",
     "@types/assert": "1.4.3",
