@@ -1,7 +1,7 @@
 import createActionCreator from 'createActionCreator';
 import { equal, deepEqual } from 'assert';
 import { of } from 'rxjs';
-import { ofType, extractPayload } from 'utils/operators';
+import { ofType, extractPayload } from 'operators';
 import { map } from 'rxjs/operators';
 import { ExtractPayload } from 'types/helpers';
 
