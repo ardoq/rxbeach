@@ -1,5 +1,4 @@
-import { VoidPayload } from 'types/Action';
-import { ActionCreator, UnknownActionCreator } from 'types/ActionCreator';
+import { VoidPayload, ActionCreator, UnknownActionCreator } from 'rxbeach';
 
 /**
  * Create an action creator for a given payload
@@ -10,7 +9,7 @@ import { ActionCreator, UnknownActionCreator } from 'types/ActionCreator';
  *          returns a complete action object with that payload and a type unique
  *          to this action creator
  */
-export default function createActionCreator<Payload = VoidPayload>(
+export function createActionCreator<Payload = VoidPayload>(
   type: string
 ): ActionCreator<Payload>;
 
@@ -21,9 +20,7 @@ export default function createActionCreator<Payload = VoidPayload>(
  * If you see this message in your IDE, you should investigate why TS did not
  * recognize the generic, typed overload of this function.
  */
-export default function createActionCreator(
-  type: string
-): UnknownActionCreator {
+export function createActionCreator(type: string): UnknownActionCreator {
   const action = (payload?: any) => ({
     type,
     payload,

@@ -1,6 +1,6 @@
 import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { ActionWithPayload, AnyAction } from 'types/Action';
+import { ActionWithPayload, AnyAction } from 'rxbeach';
 
 //// Routines ////
 

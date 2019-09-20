@@ -3,7 +3,7 @@ import {
   ActionWithPayload,
   VoidPayload,
   UnknownAction,
-} from './Action';
+} from 'rxbeach';
 
 interface ActionCreatorCommon {
   type: string;

@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
-import { AnyAction, UnknownAction } from './Action';
-import { ActionCreatorWithPayload } from './ActionCreator';
+import { AnyAction, UnknownAction, ActionCreatorWithPayload } from 'rxbeach';
 
 export type ActionStream = Observable<AnyAction>;
 
