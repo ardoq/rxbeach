@@ -41,11 +41,11 @@ export const extractPayload = <Payload>(): OperatorFunction<
 > => map(action => action.payload);
 
 /**
- * Stream operator that filters for actions with the correct qualifier
+ * Stream operator that filters for actions with the correct namespace
  *
- * @param qualifier The qualifier to filter for
+ * @param namespace The namespace to filter for
  */
-export const filterQualifier = (
-  targetQualifier: symbol
+export const filterNamespace = (
+  targetNamespace: symbol
 ): MonoTypeOperatorFunction<Action<any>> =>
-  filter(({ meta: { qualifier } }) => qualifier === targetQualifier);
+  filter(({ meta: { namespace } }) => namespace === targetNamespace);

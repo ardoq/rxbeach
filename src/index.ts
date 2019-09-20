@@ -17,7 +17,4 @@ export {
 
 export { createActionCreator } from './createActionCreator';
 
-export {
-  createQualifiedActionCreator,
-  createChildDispatcher,
-} from './qualifiers';
+export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
