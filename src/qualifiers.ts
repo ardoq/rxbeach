@@ -1,6 +1,4 @@
-import { MonoTypeOperatorFunction } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { Action, ActionCreator, ActionDispatcher } from 'rxbeach';
+import { ActionCreator, ActionDispatcher } from 'rxbeach';
 import { UnknownAction } from 'rxbeach/internal';
 
 /**
@@ -11,16 +9,6 @@ import { UnknownAction } from 'rxbeach/internal';
  *                    instances of qualifiers
  */
 export const createQualifier = (description: string) => Symbol(description);
-
-/**
- * Stream operator that filters for actions with the correct qualifier
- *
- * @param qualifier The qualifier to filter for
- */
-export const filterQualifier = (
-  targetQualifier: symbol
-): MonoTypeOperatorFunction<Action<any>> =>
-  filter(({ meta: { qualifier } }) => qualifier === targetQualifier);
 
 const _appendQualifierToAction = (
   qualifier: symbol,

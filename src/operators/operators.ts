@@ -1,6 +1,6 @@
 import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { ActionWithPayload } from 'rxbeach';
+import { ActionWithPayload, Action } from 'rxbeach';
 import { AnyAction } from 'rxbeach/internal';
 
 //// Routines ////
@@ -39,3 +39,13 @@ export const extractPayload = <Payload>(): OperatorFunction<
   ActionWithPayload<Payload>,
   Payload
 > => map(action => action.payload);
+
+/**
+ * Stream operator that filters for actions with the correct qualifier
+ *
+ * @param qualifier The qualifier to filter for
+ */
+export const filterQualifier = (
+  targetQualifier: symbol
+): MonoTypeOperatorFunction<Action<any>> =>
+  filter(({ meta: { qualifier } }) => qualifier === targetQualifier);
