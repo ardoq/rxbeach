@@ -16,11 +16,13 @@ import {
 export function createActionCreator<Payload = VoidPayload>(
   type: string
 ): ActionCreator<Payload>;
+
 /**
  * Untyped `createActionCreator`
  *
- * **You should not hit this function**, your code should hit the overload with
- * typed payload.
+ * **You code should not hit this untyped overload**
+ * If you see this message in your IDE, you should investigate why TS did not
+ * recognize the generic, typed overload of this function.
  */
 export function createActionCreator(type: string): UnknownActionCreator {
   const action = (payload?: any) => ({
