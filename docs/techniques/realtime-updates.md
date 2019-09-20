@@ -5,7 +5,7 @@ Realtime updates can be handled with sagas.
 Consider the case when a remote user makes a change:
 
 1. The local instance receives the change with web sockets
-2. An saga is invoked with a payload describing the change
+2. A saga is invoked with a payload describing the change
 3. The saga buffers this action until another action is dispatched telling the
    saga to flush it's changes
 4. The saga dispatches the actions for changing the local collection
