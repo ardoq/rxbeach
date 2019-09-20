@@ -1,6 +1,6 @@
 import { equal, deepEqual } from 'assert';
-import { of, OperatorFunction, Subject, pipe } from 'rxjs';
-import { tap, reduce, filter } from 'rxjs/operators';
+import { of, OperatorFunction } from 'rxjs';
+import { tap, reduce } from 'rxjs/operators';
 import {
   actionWithPayload,
   actionWithoutPayload,
@@ -9,7 +9,7 @@ import {
   ActionWithPayload,
   ActionWithoutPayload,
 } from 'stream-patterns/types/Action';
-import { extractPayload, ofType, fork } from './operators';
+import { extractPayload, ofType } from './operators';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
@@ -70,41 +70,6 @@ describe('operators', function() {
         .toPromise();
 
       deepEqual(collectedTypes, [targetType1, targetType2]);
-    });
-  });
-
-  describe('fork', function() {
-    it('Should Run each pipe in parallel', async function() {
-      let aCount = 0;
-      let bCount = 0;
-      let beforeCount = 0;
-
-      const subj = new Subject<{ type: 'A' | 'B' }>();
-      const promise = subj
-        .pipe(
-          tap(() => (beforeCount += 1)),
-          fork(
-            pipe(
-              filter(({ type }) => type === 'A'),
-              tap(() => (aCount += 1))
-            ),
-            pipe(
-              filter(({ type }) => type === 'B'),
-              tap(() => (bCount += 1))
-            )
-          )
-        )
-        .toPromise();
-
-      subj.next({ type: 'A' });
-      subj.next({ type: 'B' });
-      subj.complete();
-
-      await promise;
-
-      equal(beforeCount, 2, 'Parent pipe should be hot');
-      equal(aCount, 1, 'Pipe A should run in isolation');
-      equal(bCount, 1, 'Pipe B should run in isolation');
     });
   });
 });
