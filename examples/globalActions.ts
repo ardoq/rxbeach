@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
-import { Action } from 'stream-patterns/types/Action';
-import { ActionDispatcher, ActionStream } from 'stream-patterns/types/helpers';
+import { Action } from 'types/Action';
+import { ActionDispatcher, ActionStream } from 'types/helpers';
 import { tag } from 'rxjs-spy/operators';
 
 const actionSubject$ = new Subject<Action<any>>();

@@ -1,14 +1,8 @@
 import { equal, deepEqual } from 'assert';
 import { of, OperatorFunction } from 'rxjs';
 import { tap, reduce } from 'rxjs/operators';
-import {
-  actionWithPayload,
-  actionWithoutPayload,
-} from 'stream-patterns/testUtils';
-import {
-  ActionWithPayload,
-  ActionWithoutPayload,
-} from 'stream-patterns/types/Action';
+import { actionWithPayload, actionWithoutPayload } from 'testUtils';
+import { ActionWithPayload, ActionWithoutPayload } from 'types/Action';
 import { extractPayload, ofType } from './operators';
 
 const pipeActionWithPayload = <P, R>(

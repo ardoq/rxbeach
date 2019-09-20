@@ -1,8 +1,5 @@
-import { VoidPayload } from 'stream-patterns/types/Action';
-import {
-  ActionCreator,
-  UnknownActionCreator,
-} from 'stream-patterns/types/ActionCreator';
+import { VoidPayload } from 'types/Action';
+import { ActionCreator, UnknownActionCreator } from 'types/ActionCreator';
 
 /**
  * Create an action creator for a given payload

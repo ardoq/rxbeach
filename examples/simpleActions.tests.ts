@@ -1,9 +1,9 @@
-import { createActionCreator } from 'stream-patterns/actionCreator';
+import { createActionCreator } from 'actionCreator';
 import { equal, deepEqual } from 'assert';
 import { of } from 'rxjs';
-import { ofType, extractPayload } from 'stream-patterns/utils/operators';
+import { ofType, extractPayload } from 'utils/operators';
 import { map } from 'rxjs/operators';
-import { ExtractPayload } from 'stream-patterns/types/helpers';
+import { ExtractPayload } from 'types/helpers';
 
 describe('example', function() {
   describe('simple actions', function() {
