@@ -1,7 +1,7 @@
-import simpleActionExamples from './simpleActions.tests';
+import actionExamples from './actions.tests';
 import namespaceExamples from './namespace.tests';
 
 describe('examples', function() {
-  simpleActionExamples();
+  actionExamples();
   namespaceExamples();
 });

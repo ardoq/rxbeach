@@ -4,8 +4,8 @@ import { map } from 'rxjs/operators';
 import { createActionCreator, ExtractPayload } from 'rxbeach';
 import { ofType, extractPayload } from 'rxbeach/operators';
 
-export default function registerExamples() {
-  describe('simple actions', function() {
+export default function actionExamples() {
+  describe('actions', function() {
     const voidAction = createActionCreator('[test] void action');
     const primitiveAction = createActionCreator<number>(
       '[test] primitive action'

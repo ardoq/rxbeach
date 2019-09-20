@@ -15,7 +15,7 @@ const sumOp = reduce(
   0
 );
 
-export default function registerExamples() {
+export default function namespaceExamples() {
   describe('namespaces', function() {
     const testAction = createActionCreator<number>('[test] primitive action');
     const namespaceA = Symbol('A');
