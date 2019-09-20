@@ -25,9 +25,7 @@ export function createActionCreator(type: string): UnknownActionCreator {
   const action = (payload?: any) => ({
     type,
     payload,
-    meta: {
-      qualifiers: [],
-    },
+    meta: {},
   });
   action.type = type;
 

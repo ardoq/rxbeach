@@ -2,17 +2,17 @@ import { ActionWithPayload, ActionWithoutPayload } from 'types/Action';
 
 export const actionWithoutPayload = (
   type: string,
-  qualifiers: symbol[] = []
+  qualifier?: symbol
 ): ActionWithoutPayload => ({
-  meta: { qualifiers },
+  meta: { qualifier },
   type,
 });
 
 export const actionWithPayload = <P>(
   type: string,
   payload: P,
-  qualifiers: symbol[] = []
+  qualifier?: symbol
 ): ActionWithPayload<P> => ({
-  ...actionWithoutPayload(type, qualifiers),
+  ...actionWithoutPayload(type, qualifier),
   payload,
 });

@@ -20,5 +20,4 @@ export { createActionCreator } from './createActionCreator';
 export {
   createQualifiedActionCreator,
   createChildDispatcher,
-  createChildActionStream,
 } from './qualifiers';

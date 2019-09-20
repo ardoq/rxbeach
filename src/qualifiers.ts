@@ -1,43 +1,28 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { tag } from 'rxjs-spy/operators';
-import { Action, ActionCreator, ActionDispatcher, ActionStream } from 'rxbeach';
+import { filter } from 'rxjs/operators';
+import { Action, ActionCreator, ActionDispatcher } from 'rxbeach';
 import { UnknownAction } from 'rxbeach/internal';
 
 /**
- * Alias to create a new symbol
+ * Create a new qualifier
+ *
+ * @param description A description of this qualifier, does not need to be
+ *                    unique per instance. Usually the name of what will create
+ *                    instances of qualifiers
  */
-export const getQualifier = (name: string) => Symbol(name);
+export const createQualifier = (description: string) => Symbol(description);
 
 /**
- * Stream operator that filters out actions without the correct top qualifier
+ * Stream operator that filters for actions with the correct qualifier
  *
  * @param qualifier The qualifier to filter for
  */
-const filterQualifier = (
-  qualifier: symbol
+export const filterQualifier = (
+  targetQualifier: symbol
 ): MonoTypeOperatorFunction<Action<any>> =>
-  filter(
-    ({
-      meta: {
-        qualifiers: [actionQualifier],
-      },
-    }) => actionQualifier === qualifier
-  );
+  filter(({ meta: { qualifier } }) => qualifier === targetQualifier);
 
-/**
- * Stream operator that strips out the top qualifier of all actions
- *
- * Does no checks to ensure qualifiers exists before stripping them. Will error
- * out if no qualifers are set.
- */
-const stripQualifier = (): MonoTypeOperatorFunction<Action<any>> =>
-  map(({ meta: { qualifiers: [, ...qualifiers], ...meta }, ...action }) => ({
-    ...action,
-    meta: { ...meta, qualifiers },
-  }));
-
-export const _appendQualifierToAction = (
+const _appendQualifierToAction = (
   qualifier: symbol,
   action: UnknownAction
 ) => ({
@@ -45,26 +30,23 @@ export const _appendQualifierToAction = (
   payload: action.payload,
   meta: {
     ...action.meta,
-    qualifiers: [qualifier, ...action.meta.qualifiers],
+    qualifier,
   },
 });
 
 /**
- * Decorate an action creator so that the created actions have qualifiers
+ * Decorate an action creator so the created actions have the given qualifier
  *
- * The given qualifier is added as the top qualifier to each action created by
- * the action creator.
- *
- * Existing qualifiers on the actions will be shifted down.
+ * The given qualifier will replace existing qualifiers on the action objects.
  *
  * In contrast to `createChildDispatcher`, the function returned by this
  * function creates an action object instead of dispatching it.
  *
  * @see createChildDispatcher
- * @param qualifier The qualifier to add to the created actions
+ * @param qualifier The qualifier to set for the created actions
  * @param actionCreator The action creator to decorate
  * @returns An action creator that creates actions using the passed action
- *          creator, and adds the qualifier
+ *          creator, and sets the given qualifier
  */
 export const createQualifiedActionCreator = <Payload>(
   qualifier: symbol,
@@ -80,21 +62,19 @@ export const createQualifiedActionCreator = <Payload>(
 /**
  * Create a dispatcher that dispatches qualified actions to the parent dispatcher
  *
- * The given qualifier is added as the top qualifier to each action dispatched
- * with this function, before the action is dispatched with the action
- * dispatcher from the arguments.
- *
- * Existing qualifiers on the actions will be shifted down.
+ * The given qualifier is set as the qualifier for each action dispatched with
+ * this function, before the action is dispatched with the action dispatcher
+ * from the arguments.
  *
  * In contrast to `createQualifiedActionCreator`, the function returned by this
  * function dispatches the action, instead of creating it.
  *
  * @see createQualifiedActionCreator
- * @param parentDispatcher The dispatcher the returned  action dispatcher will
+ * @param parentDispatcher The dispatcher the returned action dispatcher will
  *                         dispatch to
- * @param qualifier The qualifier that is added as the top qualifier to each
- *                  action before they are passed on to the parent dispatcher
- * @returns An action dispatches that adds the qualifier before passing the
+ * @param qualifier The qualifier that will be set for each action before they
+ *                  are passed on to the parent dispatcher
+ * @returns An action dispatcher that sets the qualifier before passing the
  *          actions to the parent dispatcher
  */
 export const createChildDispatcher = (
@@ -102,25 +82,3 @@ export const createChildDispatcher = (
   qualifier: symbol
 ): ActionDispatcher => action =>
   parentDispatcher(_appendQualifierToAction(qualifier, action));
-
-/**
- * Create an action stream that only emits actions with the correct top qualifier
- *
- * The returned stream will only return actions that had the given qualifier as
- * top qualifier on the given action stream. The emited actions on the returned
- * stream will have the qualifier removed.
- *
- * @param action$ The action stream with qualified actions
- * @param qualifier The qualifier to filter for
- * @returns An action stream filtered on the given qualifier, but with the
- *          qualifier stripped away
- */
-export const createChildActionStream = (
-  action$: ActionStream,
-  qualifier: symbol
-): ActionStream =>
-  action$.pipe(
-    filterQualifier(qualifier),
-    stripQualifier(),
-    tag('action$ - ' + qualifier.description)
-  );

@@ -1,10 +1,8 @@
-import { of } from 'rxjs';
 import { deepEqual } from 'assert';
 import {
   createQualifiedActionCreator,
   ActionDispatcher,
   createChildDispatcher,
-  createChildActionStream,
 } from 'rxbeach';
 import {
   actionWithPayload,
@@ -19,7 +17,7 @@ describe('qualifiers', function() {
       const parentQualifier = Symbol('parent qualifier');
       const childQualifier = Symbol('child qualifier');
       const actionCreator = (payload: number) =>
-        actionWithPayload(type, payload, [parentQualifier]);
+        actionWithPayload(type, payload, parentQualifier);
       actionCreator.type = type;
 
       const qualifiedActionCreator = createQualifiedActionCreator(
@@ -29,10 +27,7 @@ describe('qualifiers', function() {
 
       const action = qualifiedActionCreator(12);
 
-      deepEqual(
-        action,
-        actionWithPayload(type, 12, [childQualifier, parentQualifier])
-      );
+      deepEqual(action, actionWithPayload(type, 12, childQualifier));
     });
   });
 
@@ -49,33 +44,13 @@ describe('qualifiers', function() {
         qualifier
       );
 
-      const action = actionWithoutPayload('action', [parentQualifier]);
+      const action = actionWithoutPayload('action', parentQualifier);
 
       childDispatcher(action);
 
       deepEqual(dispatchedAction, {
         payload: undefined,
-        ...actionWithoutPayload(action.type, [qualifier, parentQualifier]),
-      });
-    });
-  });
-
-  describe('createChildActionStream', function() {
-    it('Should filter and strip qualifiers', async function() {
-      const qualifier = Symbol('qualifier');
-      const type = 'type';
-
-      const res = await createChildActionStream(
-        of(
-          actionWithoutPayload('wrong action'),
-          actionWithoutPayload(type, [qualifier])
-        ),
-        qualifier
-      ).toPromise();
-
-      deepEqual(res, {
-        type: type,
-        meta: { qualifiers: [] },
+        ...actionWithoutPayload(action.type, qualifier),
       });
     });
   });
