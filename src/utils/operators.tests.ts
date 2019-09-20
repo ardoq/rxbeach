@@ -9,7 +9,7 @@ import {
   ActionWithPayload,
   ActionWithoutPayload,
 } from 'stream-patterns/types/Action';
-import { extractPayload, ofType, ofTypes } from './operators';
+import { extractPayload, ofType } from './operators';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
@@ -52,9 +52,7 @@ describe('operators', function() {
         )
         .toPromise();
     });
-  });
 
-  describe('ofTypes', function() {
     it('Should filter multiple action types', async function() {
       const targetType1 = 'Correct type one';
       const targetType2 = 'Correct type two';
@@ -66,7 +64,7 @@ describe('operators', function() {
         actionWithoutPayload(targetType2)
       )
         .pipe(
-          ofTypes(new Set([targetType1, targetType2])),
+          ofType(targetType1, targetType2),
           reduce((acc, { type }) => [...acc, type], [] as string[])
         )
         .toPromise();
