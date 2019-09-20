@@ -21,6 +21,9 @@ module.exports = {
       env: {
         mocha: true,
       },
+      rules: {
+        '@typescript-eslint/no-unused-vars': ['off'],
+      },
     },
   ],
   plugins: ['@typescript-eslint', 'prettier', 'import', 'sort-class-members'],

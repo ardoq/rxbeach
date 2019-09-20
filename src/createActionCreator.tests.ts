@@ -1,5 +1,5 @@
 import { equal } from 'assert';
-import { createActionCreator } from 'stream-patterns/actionCreator';
+import { createActionCreator } from 'rxbeach';
 
 describe('actionCreator', function() {
   describe('createActionCreator', function() {

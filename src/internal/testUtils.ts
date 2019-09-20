@@ -1,10 +1,7 @@
-import {
-  ActionWithPayload,
-  ActionWithoutPayload,
-} from 'stream-patterns/types/Action';
+import { ActionWithPayload, ActionWithoutPayload } from 'types/Action';
 
 export const actionWithoutPayload = (
-  type: symbol,
+  type: string,
   qualifiers: symbol[] = []
 ): ActionWithoutPayload => ({
   meta: { qualifiers },
@@ -12,7 +9,7 @@ export const actionWithoutPayload = (
 });
 
 export const actionWithPayload = <P>(
-  type: symbol,
+  type: string,
   payload: P,
   qualifiers: symbol[] = []
 ): ActionWithPayload<P> => ({

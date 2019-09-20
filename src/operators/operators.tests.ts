@@ -1,21 +1,15 @@
 import { equal, deepEqual } from 'assert';
 import { of, OperatorFunction } from 'rxjs';
 import { tap, reduce } from 'rxjs/operators';
-import {
-  actionWithPayload,
-  actionWithoutPayload,
-} from 'stream-patterns/testUtils';
-import {
-  ActionWithPayload,
-  ActionWithoutPayload,
-} from 'stream-patterns/types/Action';
-import { extractPayload, ofType } from './operators';
+import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
+import { extractPayload, ofType } from 'rxbeach/operators';
+import { actionWithPayload, actionWithoutPayload } from 'rxbeach/internal';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
   pipe: OperatorFunction<ActionWithPayload<P>, R>
 ): Promise<R> =>
-  of(actionWithPayload(Symbol(), payload))
+  of(actionWithPayload('', payload))
     .pipe(pipe)
     .toPromise();
 
@@ -38,8 +32,8 @@ describe('operators', function() {
 
   describe('ofType', function() {
     it('Should filter one action type', async function() {
-      const targetType = Symbol('Correct type');
-      const otherType = Symbol('Wrong type');
+      const targetType = 'Correct type';
+      const otherType = 'Wrong type';
 
       await of<ActionWithoutPayload>(
         actionWithoutPayload(targetType),
@@ -54,9 +48,9 @@ describe('operators', function() {
     });
 
     it('Should filter multiple action types', async function() {
-      const targetType1 = Symbol('Correct type one');
-      const targetType2 = Symbol('Correct type two');
-      const otherType = Symbol('Wrong type');
+      const targetType1 = 'Correct type one';
+      const targetType2 = 'Correct type two';
+      const otherType = 'Wrong type';
 
       const collectedTypes = await of<ActionWithoutPayload>(
         actionWithoutPayload(targetType1),
@@ -65,7 +59,7 @@ describe('operators', function() {
       )
         .pipe(
           ofType(targetType1, targetType2),
-          reduce((acc, { type }) => [...acc, type], [] as symbol[])
+          reduce((acc, { type }) => [...acc, type], [] as string[])
         )
         .toPromise();
 

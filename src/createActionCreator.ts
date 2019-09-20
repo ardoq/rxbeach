@@ -1,30 +1,27 @@
-import { VoidPayload } from 'stream-patterns/types/Action';
-import {
-  ActionCreator,
-  UnknownActionCreator,
-} from 'stream-patterns/types/ActionCreator';
+import { ActionCreator } from 'rxbeach';
+import { VoidPayload, UnknownActionCreator } from 'rxbeach/internal';
 
 /**
  * Create an action creator for a given payload
  *
- * @param debugName A name for debugging purposes
+ * @param type A name for debugging purposes
  * @template `Payload` - The payload type for the action
  * @returns An action creator function that accepts a payload as input, and
  *          returns a complete action object with that payload and a type unique
  *          to this action creator
  */
 export function createActionCreator<Payload = VoidPayload>(
-  debugName: string
+  type: string
 ): ActionCreator<Payload>;
+
 /**
  * Untyped `createActionCreator`
  *
- * **You should not hit this function**, your code should hit the overload with
- * typed payload.
+ * **You code should not hit this untyped overload**
+ * If you see this message in your IDE, you should investigate why TS did not
+ * recognize the generic, typed overload of this function.
  */
-export function createActionCreator(debugName: string): UnknownActionCreator {
-  const type = Symbol(debugName);
-
+export function createActionCreator(type: string): UnknownActionCreator {
   const action = (payload?: any) => ({
     type,
     payload,

@@ -1,21 +1,21 @@
 import { of } from 'rxjs';
 import { deepEqual } from 'assert';
 import {
+  createQualifiedActionCreator,
+  ActionDispatcher,
   createChildDispatcher,
   createChildActionStream,
-  createQualifiedActionCreator,
-} from 'stream-patterns/qualifiers';
+} from 'rxbeach';
 import {
-  actionWithoutPayload,
   actionWithPayload,
-} from 'stream-patterns/testUtils';
-import { AnyAction } from 'stream-patterns/types/Action';
-import { ActionDispatcher } from 'stream-patterns/types/helpers';
+  AnyAction,
+  actionWithoutPayload,
+} from 'rxbeach/internal';
 
 describe('qualifiers', function() {
   describe('createQualifiedActionCreator', function() {
     it('Should create actions with qualifier', function() {
-      const type = Symbol('action type');
+      const type = 'action type';
       const parentQualifier = Symbol('parent qualifier');
       const childQualifier = Symbol('child qualifier');
       const actionCreator = (payload: number) =>
@@ -49,7 +49,7 @@ describe('qualifiers', function() {
         qualifier
       );
 
-      const action = actionWithoutPayload(Symbol('action'), [parentQualifier]);
+      const action = actionWithoutPayload('action', [parentQualifier]);
 
       childDispatcher(action);
 
@@ -63,11 +63,11 @@ describe('qualifiers', function() {
   describe('createChildActionStream', function() {
     it('Should filter and strip qualifiers', async function() {
       const qualifier = Symbol('qualifier');
-      const type = Symbol('type');
+      const type = 'type';
 
       const res = await createChildActionStream(
         of(
-          actionWithoutPayload(Symbol('wrong action')),
+          actionWithoutPayload('wrong action'),
           actionWithoutPayload(type, [qualifier])
         ),
         qualifier
