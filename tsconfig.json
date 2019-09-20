@@ -12,9 +12,6 @@
     "jsx": "react",
 
     "baseUrl": "./src/",
-    "paths": {
-      "stream-patterns/*": ["./*"]
-    },
 
     "noEmit": true
   },
