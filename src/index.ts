@@ -1,17 +1,13 @@
 // TYPES
 export {
-  VoidPayload,
   ActionWithoutPayload,
   ActionWithPayload,
   Action,
-  AnyAction,
-  UnknownAction,
 } from './types/Action';
 export {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
   ActionCreator,
-  UnknownActionCreator,
 } from './types/ActionCreator';
 export {
   ActionStream,

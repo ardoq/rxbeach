@@ -1,12 +1,9 @@
 import { equal, deepEqual } from 'assert';
 import { of, OperatorFunction } from 'rxjs';
 import { tap, reduce } from 'rxjs/operators';
-import {
-  actionWithPayload,
-  actionWithoutPayload,
-} from 'rxbeach/internal/testUtils';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import { extractPayload, ofType } from 'rxbeach/operators';
+import { actionWithPayload, actionWithoutPayload } from 'rxbeach/internal';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,

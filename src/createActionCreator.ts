@@ -1,4 +1,5 @@
-import { VoidPayload, ActionCreator, UnknownActionCreator } from 'rxbeach';
+import { ActionCreator } from 'rxbeach';
+import { VoidPayload, UnknownActionCreator } from 'rxbeach/internal';
 
 /**
  * Create an action creator for a given payload

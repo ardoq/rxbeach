@@ -1,8 +1,8 @@
 import { equal, deepEqual } from 'assert';
 import { of } from 'rxjs';
-import { ofType, extractPayload } from 'rxbeach/operators';
 import { map } from 'rxjs/operators';
 import { createActionCreator, ExtractPayload } from 'rxbeach';
+import { ofType, extractPayload } from 'rxbeach/operators';
 
 describe('example', function() {
   describe('simple actions', function() {
