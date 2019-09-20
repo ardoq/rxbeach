@@ -38,8 +38,8 @@ describe('namespace', function() {
 
       const namespace = Symbol('new namespace');
       const childDispatcher = namespaceActionDispatcher(
-        parentDispatcher,
-        namespace
+        namespace,
+        parentDispatcher
       );
 
       const action = actionWithoutPayload('action', Symbol('old namespace'));

@@ -63,7 +63,7 @@ export const namespaceActionCreator = <Payload>(
  *          actions to the parent dispatcher
  */
 export const namespaceActionDispatcher = (
-  parentDispatcher: ActionDispatcher,
-  namespace: symbol
+  namespace: symbol,
+  parentDispatcher: ActionDispatcher
 ): ActionDispatcher => action =>
   parentDispatcher(_namespaceAction(namespace, action));
