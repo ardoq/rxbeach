@@ -10,7 +10,7 @@ import { ActionCreator, UnknownActionCreator } from 'types/ActionCreator';
  *          returns a complete action object with that payload and a type unique
  *          to this action creator
  */
-export function createActionCreator<Payload = VoidPayload>(
+export default function createActionCreator<Payload = VoidPayload>(
   type: string
 ): ActionCreator<Payload>;
 
@@ -21,7 +21,9 @@ export function createActionCreator<Payload = VoidPayload>(
  * If you see this message in your IDE, you should investigate why TS did not
  * recognize the generic, typed overload of this function.
  */
-export function createActionCreator(type: string): UnknownActionCreator {
+export default function createActionCreator(
+  type: string
+): UnknownActionCreator {
   const action = (payload?: any) => ({
     type,
     payload,

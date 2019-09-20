@@ -1,4 +1,4 @@
-import { createActionCreator } from 'actionCreator';
+import createActionCreator from 'createActionCreator';
 import { equal, deepEqual } from 'assert';
 import { of } from 'rxjs';
 import { ofType, extractPayload } from 'utils/operators';
