@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "target": "es5",
+    "importHelpers": false,
+    "declaration": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noEmit": false
+  },
+  "include": [
+    "src/index.ts"
+  ]
+}
