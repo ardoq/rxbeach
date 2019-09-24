@@ -1,22 +1,17 @@
 import { OperatorFunction, pipe } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { createActionCreator } from 'stream-patterns/actionCreator';
-import {
-  VoidPayload,
-  AnyAction,
-  UnknownAction,
-} from 'stream-patterns/types/Action';
-import { ActionCreator } from 'stream-patterns/types/ActionCreator';
-import { ofType } from 'stream-patterns/utils/operators';
+import { actionCreator, ActionCreator } from 'rxbeach';
+import { VoidPayload, AnyAction, UnknownAction } from 'rxbeach/internal';
+import { ofType } from 'rxbeach/operators';
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
   payload: Payload
 ) => State;
 
-export type ReducerMap<State> = Map<symbol, Reducer<State, any>>;
+export type ReducerMap<State> = Map<string, Reducer<State, any>>;
 
-type ReducerEntry<State, Payload> = [symbol, Reducer<State, Payload>];
+type ReducerEntry<State, Payload> = [string, Reducer<State, Payload>];
 
 export type ReducerDefinition<State, Payload> = ActionCreator<Payload> & {
   reducer: ReducerEntry<State, Payload>;
@@ -45,7 +40,7 @@ export const reducer = <State, Payload = VoidPayload>(
   type PartialDefinition = Partial<ReducerDefinition<State, any>> &
     ActionCreator<Payload>;
 
-  const definition: PartialDefinition = createActionCreator('');
+  const definition: PartialDefinition = actionCreator<Payload>('');
   definition.reducer = [definition.type, reducer];
 
   return definition as ReducerDefinition<State, Payload>;

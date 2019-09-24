@@ -13,7 +13,8 @@
 
     "baseUrl": "./src/",
     "paths": {
-      "stream-patterns/*": ["./*"]
+      "rxbeach": ["./index.ts"],
+      "rxbeach/*": ["./*"]
     },
 
     "noEmit": true
