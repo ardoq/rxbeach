@@ -1,8 +1,4 @@
-export {
-  actionWithoutPayload,
-  actionWithPayload,
-  beforeEach,
-} from './testUtils';
+export { actionWithoutPayload, actionWithPayload } from './testUtils';
 export {
   VoidPayload,
   AnyAction,
