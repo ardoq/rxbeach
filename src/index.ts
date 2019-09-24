@@ -15,6 +15,6 @@ export {
   ExtractPayload,
 } from './types/helpers';
 
-export { createActionCreator } from './createActionCreator';
+export { actionCreator } from './actionCreator';
 
 export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';

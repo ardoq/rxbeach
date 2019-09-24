@@ -1,17 +1,15 @@
 import { equal, deepEqual } from 'assert';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { createActionCreator, ExtractPayload } from 'rxbeach';
+import { actionCreator, ExtractPayload } from 'rxbeach';
 import { ofType, extractPayload } from 'rxbeach/operators';
 
 export default function actionExamples() {
   describe('actions', function() {
-    const voidAction = createActionCreator('[test] void action');
-    const primitiveAction = createActionCreator<number>(
-      '[test] primitive action'
-    );
+    const voidAction = actionCreator('[test] void action');
+    const primitiveAction = actionCreator<number>('[test] primitive action');
     type Payload = { foo: number };
-    const payloadAction = createActionCreator<Payload>('[test] payload action');
+    const payloadAction = actionCreator<Payload>('[test] payload action');
 
     it('creates action objects', function() {
       const a = voidAction();

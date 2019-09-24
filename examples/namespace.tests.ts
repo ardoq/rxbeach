@@ -2,7 +2,7 @@ import { equal, deepEqual } from 'assert';
 import { of, Subject } from 'rxjs';
 import { reduce } from 'rxjs/operators';
 import {
-  createActionCreator,
+  actionCreator,
   namespaceActionCreator,
   namespaceActionDispatcher,
   ActionWithPayload,
@@ -17,7 +17,7 @@ const sumOp = reduce(
 
 export default function namespaceExamples() {
   describe('namespaces', function() {
-    const testAction = createActionCreator<number>('[test] primitive action');
+    const testAction = actionCreator<number>('[test] primitive action');
     const namespaceA = Symbol('A');
     const namespaceB = Symbol('B');
 
