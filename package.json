@@ -7,14 +7,11 @@
   "license": "MIT",
   "scripts": {
     "test": "ts-mocha --paths -p tsconfig.json src/*.tests.ts src/**/*.tests.ts examples/**/*.tests.ts",
+    "check-types": "tsc -p tsconfig.json",
+    "lint": "eslint --ext .ts src examples",
     "build": "tsc -p tsconfig-build.json",
-    "type-check": "tsc -p tsconfig.json",
-    "lint": "eslint --ext .ts src examples"
+    "publish:prep": "npm run build && node prep-package.js"
   },
-  "main": "./lib/index.js",
-  "files": [
-    "/lib"
-  ],
   "author": "Tobias Laundal",
   "devDependencies": {
     "@testing-library/react-hooks": "2.0.1",
