@@ -2,6 +2,8 @@ import { of } from 'rxjs';
 import { deepEqual, equal } from 'assert';
 import { reducer, combineReducers } from 'rxbeach';
 import { actionWithPayload, beforeEach, VoidPayload } from 'rxbeach/internal';
+import { actionCreator } from './actionCreator';
+import { Reducer } from './reducer';
 
 const throwErrorFn = () => {
   throw new Error();
@@ -9,53 +11,44 @@ const throwErrorFn = () => {
 
 describe('reducers', function() {
   describe('reducer', function() {
-    const scaffolding = beforeEach(this, () => {
+    it('Should store reducer function', function() {
+      const addString = actionCreator<string>('add string');
       const reducerFn = (totalLength: number, payload: string) =>
         totalLength + payload.length;
 
-      const addString = reducer(reducerFn);
-      const reducers = combineReducers(0, addString);
+      const addStringReducer = reducer(addString, reducerFn);
 
-      return {
-        reducerFn,
-        addString,
-        reducers,
-      };
-    });
-
-    it('Should store reducer function', function() {
-      const { reducerFn, addString } = scaffolding(this);
-
-      equal(addString.reducer[1], reducerFn);
-    });
-    it('Should create functioning action creator', function() {
-      const { addString } = scaffolding(this);
-
-      const action = addString('Hello');
-
-      deepEqual(action, actionWithPayload(addString.type, 'Hello'));
+      deepEqual(addStringReducer, [addString.type, reducerFn]);
     });
   });
 
   describe('combineReducers', function() {
     it('Should reduce actions to state', async function() {
-      const incrementOne = reducer((accumulator: number) => accumulator + 1);
-      const incrementMany = reducer(
-        (accumulator: number, increment: number) => accumulator + increment
+      const incrementOne = actionCreator('[increment] one');
+      const incrementMany = actionCreator<number>('[increment] many');
+      const handleOne = reducer(
+        incrementOne,
+        (accumulator: number) => accumulator + 1
+      );
+      const handleMany = reducer(
+        incrementMany,
+        (accumulator: number, increment) => accumulator + increment
       );
 
       const res = await of(incrementOne(), incrementMany(2), incrementOne())
-        .pipe(combineReducers(1, incrementOne, incrementMany))
+        .pipe(combineReducers(1, handleOne, handleMany))
         .toPromise();
 
       equal(res, 5);
     });
     it('Should ignore reducers that throw errors', async function() {
-      const throwError = reducer<boolean, VoidPayload>(throwErrorFn);
-      const setState = reducer(() => true);
+      const fail = actionCreator('[test] throws action');
+      const succeed = actionCreator('[test] set state');
+      const handleFailure = reducer<boolean>(fail, throwErrorFn);
+      const handleSuccess = reducer(succeed, () => true);
 
-      const res = await of(throwError(), setState())
-        .pipe(combineReducers(false, throwError, setState))
+      const res = await of(fail(), succeed())
+        .pipe(combineReducers(false, handleFailure, handleSuccess))
         .toPromise();
 
       equal(res, true);
