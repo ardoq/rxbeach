@@ -15,4 +15,4 @@ export {
   ExtractPayload,
 } from './types/helpers';
 
-export { createActionCreator } from './createActionCreator';
+export { actionCreator } from './actionCreator';
