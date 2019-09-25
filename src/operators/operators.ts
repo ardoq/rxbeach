@@ -45,7 +45,7 @@ export const extractPayload = <Payload>(): OperatorFunction<
  *
  * @param namespace The namespace to filter for
  */
-export const filterNamespace = (
+export const withNamespace = (
   targetNamespace: string
 ): MonoTypeOperatorFunction<Action<any>> =>
   filter(({ meta: { namespace } }) => namespace === targetNamespace);

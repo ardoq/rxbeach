@@ -1,1 +1,1 @@
-export { ofType, extractPayload, filterNamespace } from './operators';
+export { ofType, extractPayload, withNamespace } from './operators';

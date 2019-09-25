@@ -7,7 +7,7 @@ import {
   namespaceActionDispatcher,
   ActionWithPayload,
 } from 'rxbeach';
-import { filterNamespace } from 'rxbeach/operators';
+import { withNamespace } from 'rxbeach/operators';
 import { AnyAction, actionWithPayload } from 'rxbeach/internal';
 
 const sumOp = reduce(
@@ -27,8 +27,8 @@ export default function namespaceExamples() {
 
       const action$ = of(testActionA(1), testActionB(2));
 
-      const a = await action$.pipe(filterNamespace(namespaceA)).toPromise();
-      const b = await action$.pipe(filterNamespace(namespaceB)).toPromise();
+      const a = await action$.pipe(withNamespace(namespaceA)).toPromise();
+      const b = await action$.pipe(withNamespace(namespaceB)).toPromise();
       const sum = await action$.pipe(sumOp).toPromise();
 
       deepEqual(a, actionWithPayload(testAction.type, 1, namespaceA));
@@ -43,8 +43,8 @@ export default function namespaceExamples() {
       const dispatchA = namespaceActionDispatcher(namespaceA, dispatchAction);
       const dispatchB = namespaceActionDispatcher(namespaceB, dispatchAction);
 
-      const a_p = action$.pipe(filterNamespace(namespaceA)).toPromise();
-      const b_p = action$.pipe(filterNamespace(namespaceB)).toPromise();
+      const a_p = action$.pipe(withNamespace(namespaceA)).toPromise();
+      const b_p = action$.pipe(withNamespace(namespaceB)).toPromise();
       const sum_p = action$.pipe(sumOp).toPromise();
 
       dispatchA(testAction(1));
