@@ -12,7 +12,6 @@
   },
   "include": [
     "src/index.ts",
-    "src/internal/index.ts",
     "src/operators/index.ts"
   ]
 }
