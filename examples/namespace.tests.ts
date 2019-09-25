@@ -18,8 +18,8 @@ const sumOp = reduce(
 export default function namespaceExamples() {
   describe('namespaces', function() {
     const testAction = actionCreator<number>('[test] primitive action');
-    const namespaceA = Symbol('A');
-    const namespaceB = Symbol('B');
+    const namespaceA = 'A';
+    const namespaceB = 'B';
 
     it('can namespace the action creators', async function() {
       const testActionA = namespaceActionCreator(namespaceA, testAction);

@@ -14,9 +14,9 @@ describe('namespace', function() {
   describe('namespaceActionCreator', function() {
     it('Should create actions with namespace', function() {
       const type = 'action type';
-      const namespace = Symbol('new namespace');
+      const namespace = 'new namespace';
       const actionCreator = (payload: number) =>
-        actionWithPayload(type, payload, Symbol('old namespace'));
+        actionWithPayload(type, payload, 'old namespace');
       actionCreator.type = type;
 
       const namespacedActionCreator = namespaceActionCreator(
@@ -36,13 +36,13 @@ describe('namespace', function() {
       const parentDispatcher: ActionDispatcher = action =>
         (dispatchedAction = action);
 
-      const namespace = Symbol('new namespace');
+      const namespace = 'new namespace';
       const childDispatcher = namespaceActionDispatcher(
         namespace,
         parentDispatcher
       );
 
-      const action = actionWithoutPayload('action', Symbol('old namespace'));
+      const action = actionWithoutPayload('action', 'old namespace');
 
       childDispatcher(action);
 

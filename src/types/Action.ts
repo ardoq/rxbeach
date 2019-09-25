@@ -1,7 +1,7 @@
 import { VoidPayload } from 'rxbeach/internal';
 
 type Meta = {
-  namespace?: symbol;
+  namespace?: string;
 };
 
 export type ActionWithoutPayload = {

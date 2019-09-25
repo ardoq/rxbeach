@@ -1,16 +1,7 @@
 import { ActionCreator, ActionDispatcher } from 'rxbeach';
 import { UnknownAction } from 'rxbeach/internal';
 
-/**
- * Create a new namespace
- *
- * @param description A description of this namespace, does not need to be
- *                    unique per instance. Usually the name of what will create
- *                    instances of namespaces
- */
-export const createNamespace = (description: string) => Symbol(description);
-
-const _namespaceAction = (namespace: symbol, action: UnknownAction) => ({
+const _namespaceAction = (namespace: string, action: UnknownAction) => ({
   type: action.type,
   payload: action.payload,
   meta: {
@@ -34,7 +25,7 @@ const _namespaceAction = (namespace: symbol, action: UnknownAction) => ({
  *          creator, and sets the given namespace
  */
 export const namespaceActionCreator = <Payload>(
-  namespace: symbol,
+  namespace: string,
   actionCreator: ActionCreator<Payload>
 ): ActionCreator<Payload> => {
   const creator = (payload?: any) =>
@@ -63,7 +54,7 @@ export const namespaceActionCreator = <Payload>(
  *          actions to the parent dispatcher
  */
 export const namespaceActionDispatcher = (
-  namespace: symbol,
+  namespace: string,
   parentDispatcher: ActionDispatcher
 ): ActionDispatcher => action =>
   parentDispatcher(_namespaceAction(namespace, action));
