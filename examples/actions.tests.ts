@@ -4,8 +4,8 @@ import { map } from 'rxjs/operators';
 import { actionCreator, ExtractPayload } from 'rxbeach';
 import { ofType, extractPayload } from 'rxbeach/operators';
 
-describe('example', function() {
-  describe('simple actions', function() {
+export default function actionExamples() {
+  describe('actions', function() {
     const voidAction = actionCreator('[test] void action');
     const primitiveAction = actionCreator<number>('[test] primitive action');
     type Payload = { foo: number };
@@ -45,4 +45,4 @@ describe('example', function() {
     const payload_assignable_to_extracted: Extracted = (null as any) as Payload;
     const extracted_assignable_to_payload: Payload = (null as any) as Extracted;
   });
-});
+}

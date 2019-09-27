@@ -1,15 +1,16 @@
 import { equal, deepEqual } from 'assert';
 import { of, OperatorFunction } from 'rxjs';
-import { tap, reduce } from 'rxjs/operators';
+import { reduce } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import { extractPayload, ofType } from 'rxbeach/operators';
-import { actionWithPayload, actionWithoutPayload } from 'rxbeach/internal';
+import { mockAction } from 'rxbeach/internal';
+import { withNamespace } from './operators';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
   pipe: OperatorFunction<ActionWithPayload<P>, R>
 ): Promise<R> =>
-  of(actionWithPayload('', payload))
+  of(mockAction('', '', payload) as ActionWithPayload<P>)
     .pipe(pipe)
     .toPromise();
 
@@ -35,16 +36,15 @@ describe('operators', function() {
       const targetType = 'Correct type';
       const otherType = 'Wrong type';
 
-      await of<ActionWithoutPayload>(
-        actionWithoutPayload(targetType),
-        actionWithoutPayload(otherType),
-        actionWithoutPayload(targetType)
+      const res = await of<ActionWithoutPayload>(
+        mockAction(targetType),
+        mockAction(otherType),
+        mockAction(targetType)
       )
-        .pipe(
-          ofType(targetType),
-          tap(action => equal(action.type, targetType))
-        )
+        .pipe(ofType(targetType))
         .toPromise();
+
+      equal(res.type, targetType);
     });
 
     it('Should filter multiple action types', async function() {
@@ -53,9 +53,9 @@ describe('operators', function() {
       const otherType = 'Wrong type';
 
       const collectedTypes = await of<ActionWithoutPayload>(
-        actionWithoutPayload(targetType1),
-        actionWithoutPayload(otherType),
-        actionWithoutPayload(targetType2)
+        mockAction(targetType1),
+        mockAction(otherType),
+        mockAction(targetType2)
       )
         .pipe(
           ofType(targetType1, targetType2),
@@ -64,6 +64,23 @@ describe('operators', function() {
         .toPromise();
 
       deepEqual(collectedTypes, [targetType1, targetType2]);
+    });
+  });
+
+  describe('withNamespace', function() {
+    it('Should filter actions by namespace', async function() {
+      const actionType = 'actionType';
+      const namespace = 'namespace';
+
+      const res = await of<ActionWithoutPayload>(
+        mockAction(actionType),
+        mockAction(actionType, namespace),
+        mockAction(actionType)
+      )
+        .pipe(withNamespace(namespace))
+        .toPromise();
+
+      deepEqual(res, mockAction(actionType, namespace));
     });
   });
 });

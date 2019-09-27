@@ -16,3 +16,5 @@ export {
 } from './types/helpers';
 
 export { actionCreator } from './actionCreator';
+
+export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
