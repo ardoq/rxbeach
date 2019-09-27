@@ -3,14 +3,14 @@ import { of, OperatorFunction } from 'rxjs';
 import { reduce } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import { extractPayload, ofType } from 'rxbeach/operators';
-import { actionWithPayload, actionWithoutPayload } from 'rxbeach/internal';
+import { mockAction } from 'rxbeach/internal';
 import { withNamespace } from './operators';
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
   pipe: OperatorFunction<ActionWithPayload<P>, R>
 ): Promise<R> =>
-  of(actionWithPayload('', payload))
+  of(mockAction('', '', payload) as ActionWithPayload<P>)
     .pipe(pipe)
     .toPromise();
 
@@ -37,9 +37,9 @@ describe('operators', function() {
       const otherType = 'Wrong type';
 
       const res = await of<ActionWithoutPayload>(
-        actionWithoutPayload(targetType),
-        actionWithoutPayload(otherType),
-        actionWithoutPayload(targetType)
+        mockAction(targetType),
+        mockAction(otherType),
+        mockAction(targetType)
       )
         .pipe(ofType(targetType))
         .toPromise();
@@ -53,9 +53,9 @@ describe('operators', function() {
       const otherType = 'Wrong type';
 
       const collectedTypes = await of<ActionWithoutPayload>(
-        actionWithoutPayload(targetType1),
-        actionWithoutPayload(otherType),
-        actionWithoutPayload(targetType2)
+        mockAction(targetType1),
+        mockAction(otherType),
+        mockAction(targetType2)
       )
         .pipe(
           ofType(targetType1, targetType2),
@@ -73,14 +73,14 @@ describe('operators', function() {
       const namespace = 'namespace';
 
       const res = await of<ActionWithoutPayload>(
-        actionWithoutPayload(actionType),
-        actionWithoutPayload(actionType, namespace),
-        actionWithoutPayload(actionType)
+        mockAction(actionType),
+        mockAction(actionType, namespace),
+        mockAction(actionType)
       )
         .pipe(withNamespace(namespace))
         .toPromise();
 
-      deepEqual(res, actionWithoutPayload(actionType, namespace));
+      deepEqual(res, mockAction(actionType, namespace));
     });
   });
 });

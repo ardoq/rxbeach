@@ -5,15 +5,9 @@ import {
   actionCreator,
   namespaceActionCreator,
   namespaceActionDispatcher,
-  ActionWithPayload,
 } from 'rxbeach';
 import { withNamespace } from 'rxbeach/operators';
-import { AnyAction, actionWithPayload } from 'rxbeach/internal';
-
-const sumOp = reduce(
-  (a, b) => a + ((b as ActionWithPayload<number>).payload || 0),
-  0
-);
+import { AnyAction, mockAction } from 'rxbeach/internal';
 
 export default function namespaceExamples() {
   describe('namespaces', function() {
@@ -21,41 +15,94 @@ export default function namespaceExamples() {
     const namespaceA = 'A';
     const namespaceB = 'B';
 
-    it('can namespace the action creators', async function() {
+    describe('namespacing action creators', function() {
       const testActionA = namespaceActionCreator(namespaceA, testAction);
       const testActionB = namespaceActionCreator(namespaceB, testAction);
+      const actionObjectA = testActionA(1);
+      const actionObjectB = testActionB(2);
 
-      const action$ = of(testActionA(1), testActionB(2));
+      let lastActionNamespaceA: AnyAction | undefined;
+      let lastActionNamespaceB: AnyAction | undefined;
+      let sumAllNamespaces: number | undefined;
+      this.afterEach(async function() {
+        lastActionNamespaceA = undefined;
+        lastActionNamespaceB = undefined;
+        sumAllNamespaces = undefined;
+      });
 
-      const a = await action$.pipe(withNamespace(namespaceA)).toPromise();
-      const b = await action$.pipe(withNamespace(namespaceB)).toPromise();
-      const sum = await action$.pipe(sumOp).toPromise();
+      this.beforeEach(async function() {
+        const action$ = of(actionObjectA, actionObjectB);
+        const actionA$ = action$.pipe(withNamespace(namespaceA));
+        const actionB$ = action$.pipe(withNamespace(namespaceB));
+        const sum$ = action$.pipe(reduce((a, b) => a + (b.payload || 0), 0));
 
-      deepEqual(a, actionWithPayload(testAction.type, 1, namespaceA));
-      deepEqual(b, actionWithPayload(testAction.type, 2, namespaceB));
-      equal(sum, 3);
+        lastActionNamespaceA = await actionA$.toPromise();
+        lastActionNamespaceB = await actionB$.toPromise();
+        sumAllNamespaces = await sum$.toPromise();
+      });
+
+      it('can filter namespace A', async function() {
+        equal(lastActionNamespaceA, actionObjectA);
+      });
+      it('can filter namespace B', async function() {
+        equal(lastActionNamespaceB, actionObjectB);
+      });
+      it('dispatches to main action$', async function() {
+        equal(sumAllNamespaces, 3);
+      });
     });
 
-    it('can namespace dispatchAction', async function() {
-      const action$ = new Subject<AnyAction>();
-      const dispatchAction = action$.next.bind(action$);
+    describe('namespacing action dispatchers', function() {
+      let lastActionNamespaceA: AnyAction | undefined;
+      let lastActionNamespaceB: AnyAction | undefined;
+      let sumAllNamespaces: number | undefined;
+      this.afterEach(function() {
+        lastActionNamespaceA = undefined;
+        lastActionNamespaceB = undefined;
+        sumAllNamespaces = undefined;
+      });
 
-      const dispatchA = namespaceActionDispatcher(namespaceA, dispatchAction);
-      const dispatchB = namespaceActionDispatcher(namespaceB, dispatchAction);
+      this.beforeEach(async function() {
+        const action$ = new Subject<AnyAction>();
+        const dispatchAction = action$.next.bind(action$);
 
-      const a_p = action$.pipe(withNamespace(namespaceA)).toPromise();
-      const b_p = action$.pipe(withNamespace(namespaceB)).toPromise();
-      const sum_p = action$.pipe(sumOp).toPromise();
+        const dispatchA = namespaceActionDispatcher(namespaceA, dispatchAction);
+        const dispatchB = namespaceActionDispatcher(namespaceB, dispatchAction);
 
-      dispatchA(testAction(1));
-      dispatchB(testAction(2));
-      action$.complete();
+        const a_p = action$.pipe(withNamespace(namespaceA)).toPromise();
+        const b_p = action$.pipe(withNamespace(namespaceB)).toPromise();
+        const sum_p = action$
+          .pipe(reduce((a: any, b: any) => a + (b.payload || 0), 0))
+          .toPromise();
 
-      const [a, b, sum] = await Promise.all([a_p, b_p, sum_p]);
+        dispatchA(testAction(1));
+        dispatchB(testAction(2));
+        action$.complete();
 
-      deepEqual(a, actionWithPayload(testAction.type, 1, namespaceA));
-      deepEqual(b, actionWithPayload(testAction.type, 2, namespaceB));
-      equal(sum, 3);
+        const [a, b, sum] = await Promise.all([a_p, b_p, sum_p]);
+
+        lastActionNamespaceA = a;
+        lastActionNamespaceB = b;
+        sumAllNamespaces = sum;
+      });
+
+      it('applies namespace A', function() {
+        deepEqual(
+          lastActionNamespaceA,
+          mockAction(testAction.type, namespaceA, 1)
+        );
+      });
+
+      it('applies namespace B', function() {
+        deepEqual(
+          lastActionNamespaceB,
+          mockAction(testAction.type, namespaceB, 2)
+        );
+      });
+
+      it('dispatches to root action$', function() {
+        equal(sumAllNamespaces, 3);
+      });
     });
   });
 }

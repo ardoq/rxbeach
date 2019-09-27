@@ -4,51 +4,47 @@ import {
   ActionDispatcher,
   namespaceActionDispatcher,
 } from 'rxbeach';
-import {
-  actionWithPayload,
-  AnyAction,
-  actionWithoutPayload,
-} from 'rxbeach/internal';
+import { mockAction, AnyAction } from 'rxbeach/internal';
 
 describe('namespace', function() {
   describe('namespaceActionCreator', function() {
+    const type = 'action type';
+    const namespace = 'new namespace';
+    const actionCreator = (payload: number) =>
+      mockAction(type, 'old namespace', payload);
+    actionCreator.type = type;
+
+    const namespacedActionCreator = namespaceActionCreator(
+      namespace,
+      actionCreator
+    );
+
+    const actionObject = namespacedActionCreator(12);
+
     it('Should create actions with namespace', function() {
-      const type = 'action type';
-      const namespace = 'new namespace';
-      const actionCreator = (payload: number) =>
-        actionWithPayload(type, payload, 'old namespace');
-      actionCreator.type = type;
-
-      const namespacedActionCreator = namespaceActionCreator(
-        namespace,
-        actionCreator
-      );
-
-      const action = namespacedActionCreator(12);
-
-      deepEqual(action, actionWithPayload(type, 12, namespace));
+      deepEqual(actionObject, mockAction(type, namespace, 12));
     });
   });
 
   describe('namespaceActionDispatcher', function() {
+    let dispatchedAction: AnyAction | undefined;
+    const parentDispatcher: ActionDispatcher = action =>
+      (dispatchedAction = action);
+
+    const namespace = 'new namespace';
+    const childDispatcher = namespaceActionDispatcher(
+      namespace,
+      parentDispatcher
+    );
+
+    const actionObject = mockAction('action', 'old namespace');
+
+    childDispatcher(actionObject);
+
     it('Should invoke the parent dispatcher with namespaced actions', function() {
-      let dispatchedAction: AnyAction | undefined;
-      const parentDispatcher: ActionDispatcher = action =>
-        (dispatchedAction = action);
-
-      const namespace = 'new namespace';
-      const childDispatcher = namespaceActionDispatcher(
-        namespace,
-        parentDispatcher
-      );
-
-      const action = actionWithoutPayload('action', 'old namespace');
-
-      childDispatcher(action);
-
       deepEqual(dispatchedAction, {
         payload: undefined,
-        ...actionWithoutPayload(action.type, namespace),
+        ...mockAction(actionObject.type, namespace),
       });
     });
   });
