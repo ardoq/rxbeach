@@ -9,8 +9,8 @@
     "test": "ts-mocha --paths -p tsconfig.json src/*.tests.ts src/**/*.tests.ts examples/**/*.tests.ts",
     "check-types": "tsc -p tsconfig.json",
     "lint": "eslint --ext .ts src examples",
-    "build": "tsc -p tsconfig-build.json",
-    "publish:prep": "npm run build && node prep-package.js"
+    "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
+    "publish:prep": "yarn build && node prep-package.js"
   },
   "author": "Tobias Laundal",
   "devDependencies": {
@@ -29,6 +29,7 @@
     "mocha": "6.2.0",
     "prettier": "1.18.2",
     "react-test-renderer": "16.9.0",
+    "rimraf": "^3.0.0",
     "rxjs-subscription-count": "1.0.1",
     "ts-mocha": "6.0.0",
     "ts-node": "8.3.0",
