@@ -1,0 +1,32 @@
+import React from 'react';
+import './App.css';
+import { dispatchAction, action$ } from './globalActions';
+import { createActionCreator } from 'rxbeach';
+import { ofType } from 'rxbeach/operators';
+import { scan, tap } from 'rxjs/operators';
+import { useStream } from './utils';
+import { create } from 'rxjs-spy';
+
+export const spy = create();
+const increment = createActionCreator('increment'); 
+spy.log(/action/);
+
+const incrementStream = action$.pipe(
+  ofType(increment.type),
+  tap(() => console.log('incrementing')),
+  scan((acc) => acc + 1, 0)
+);
+
+function App() {
+  const value = useStream(incrementStream, 0);
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>Value: {value}</h1>
+        <button type="text" onClick={() => dispatchAction(increment())}>Increment</button> 
+      </header>
+    </div>
+  );
+}
+
+export default App;
