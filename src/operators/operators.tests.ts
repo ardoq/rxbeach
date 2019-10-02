@@ -1,10 +1,15 @@
 import { equal, deepEqual } from 'assert';
-import { of, OperatorFunction } from 'rxjs';
+import { of, OperatorFunction, Scheduler } from 'rxjs';
 import { reduce } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import { extractPayload, ofType } from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal';
 import { withNamespace } from './operators';
+
+const testScheduler = new TestScheduler((actual, expected) => {
+  deepEqual(actual, expected);
+});
 
 const pipeActionWithPayload = <P, R>(
   payload: P,
@@ -32,19 +37,23 @@ describe('operators', function() {
   });
 
   describe('ofType', function() {
-    it('Should filter one action type', async function() {
+    it('Should filter one action type', function() {
       const targetType = 'Correct type';
       const otherType = 'Wrong type';
 
-      const res = await of<ActionWithoutPayload>(
-        mockAction(targetType),
-        mockAction(otherType),
-        mockAction(targetType)
-      )
-        .pipe(ofType(targetType))
-        .toPromise();
+      const actionMarbles = {
+        a: mockAction(targetType),
+        b: mockAction(otherType),
+      };
 
-      equal(res.type, targetType);
+      testScheduler.run(({ hot, expectObservable }) => {
+        const filteredActions = hot<ActionWithoutPayload>(
+          'aba',
+          actionMarbles
+        ).pipe(ofType(targetType));
+
+        expectObservable(filteredActions).toBe('a-a', actionMarbles);
+      });
     });
 
     it('Should filter multiple action types', async function() {
