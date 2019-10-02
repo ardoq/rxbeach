@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This example was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+As of now, it's a minimal example used to test the bundling of the package.
 
 ## Available Scripts
 

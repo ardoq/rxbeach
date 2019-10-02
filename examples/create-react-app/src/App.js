@@ -23,6 +23,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Value: {value}</h1>
+        <p>Open the console to see logging from the action stream</p> 
         <button type="text" onClick={() => dispatchAction(increment())}>Increment</button> 
       </header>
     </div>
