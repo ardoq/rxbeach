@@ -1,14 +1,14 @@
 import React from 'react';
 import './App.css';
 import { dispatchAction, action$ } from './globalActions';
-import { createActionCreator } from 'rxbeach';
+import { actionCreator } from 'rxbeach';
 import { ofType } from 'rxbeach/operators';
 import { scan, tap } from 'rxjs/operators';
 import { useStream } from './utils';
 import { create } from 'rxjs-spy';
 
 export const spy = create();
-const increment = createActionCreator('increment'); 
+const increment = actionCreator('increment');
 spy.log(/action/);
 
 const incrementStream = action$.pipe(
