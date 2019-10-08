@@ -10,10 +10,7 @@ state.
 # Contributing
 
 ## Running the test example
-1. Run the publish prep script:
-   `yarn run pack`
-2. Run the example
-   `cd examples/create-react-app/ && yarn start`
+`cd examples/create-react-app/ && yarn && yarn start`
 
 ## Publishing a new version of the package
 1. Verify that "it works":  

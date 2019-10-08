@@ -17,8 +17,7 @@
     "lint": "eslint --ext .ts src examples",
     "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
     "publish:prep": "yarn build && node prep-package.js",
-    "publish": "yarn publish:prep && cd ./dist/ && yarn publish",
-    "pack": "yarn publish:prep && cd ./dist/ && npm pack"
+    "publish": "yarn publish:prep && cd ./dist/ && yarn publish"
   },
   "author": "Tobias Laundal",
   "devDependencies": {

@@ -8400,9 +8400,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rxbeach@../../dist/rxbeach-0.0.1.tgz:
-  version "0.0.1"
-  resolved "../../dist/rxbeach-0.0.1.tgz#66e18b43606af87e6ead1c864f7234403da9bd73"
+rxbeach@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/rxbeach/-/rxbeach-0.0.2.tgz#30e0dbf5c1888aa40d80099194d2cac1fbdbda6d"
+  integrity sha512-XXcgaoTGPPHYZsZw4tybp9Qef77lydiTUZe3ON35OZ69eTinCE6ViWu1T/gi5fQyW/G6yjQBjn4f3dHP9NXt1Q==
   dependencies:
     react "16.9.0"
     rxjs "6.5.3"
