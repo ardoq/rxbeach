@@ -1,8 +1,14 @@
 {
   "name": "rxbeach",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Chill with streams at the RxBeach",
-  "keywords": ["rxjs", "reactive", "streams", "beach", "rx"],
+  "keywords": [
+    "rxjs",
+    "reactive",
+    "streams",
+    "beach",
+    "rx"
+  ],
   "company": "Ardoq AS",
   "license": "MIT",
   "scripts": {
