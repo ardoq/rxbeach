@@ -1,5 +1,5 @@
 import { ActionCreator, ActionDispatcher } from 'rxbeach';
-import { UnknownAction } from 'rxbeach/internal';
+import { UnknownAction, VoidPayload } from 'rxbeach/internal';
 
 const _namespaceAction = (namespace: string, action: UnknownAction) => ({
   type: action.type,
@@ -24,7 +24,7 @@ const _namespaceAction = (namespace: string, action: UnknownAction) => ({
  * @returns An action creator that creates actions using the passed action
  *          creator, and sets the given namespace
  */
-export const namespaceActionCreator = <Payload>(
+export const namespaceActionCreator = <Payload = VoidPayload>(
   namespace: string,
   actionCreator: ActionCreator<Payload>
 ): ActionCreator<Payload> => {

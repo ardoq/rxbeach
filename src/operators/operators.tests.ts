@@ -1,8 +1,16 @@
 import { marbles } from 'rxjs-marbles/mocha';
-import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
-import { extractPayload, ofType } from 'rxbeach/operators';
+import {
+  ActionWithPayload,
+  actionCreator,
+  namespaceActionCreator,
+} from 'rxbeach';
+import {
+  extractPayload,
+  withNamespace,
+  ofType,
+  ofTypes,
+} from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal';
-import { withNamespace } from './operators';
 
 describe('operators', function() {
   describe('extractPayload', function() {
@@ -32,55 +40,75 @@ describe('operators', function() {
     }
   });
 
-  describe('ofType', function() {
+  describe('ofTypes', function() {
+    const targetType1 = 'Correct type one';
+    const targetType2 = 'Correct type two';
+    const otherType = 'Wrong type';
+    const inputsOutputs = {
+      a: mockAction(targetType1),
+      b: mockAction(targetType2),
+      c: mockAction(otherType),
+    };
+
     it(
       'Should filter one action type',
       marbles(m => {
-        const targetType = 'Correct type';
-        const otherType = 'Wrong type';
-
-        const inputsOutputs = {
-          a: mockAction(targetType),
-          b: mockAction(otherType),
-        };
-
-        const source = m.hot('aba', inputsOutputs);
+        const source = m.hot('aca', inputsOutputs);
         const expected = m.hot('a-a', inputsOutputs);
 
-        m.expect(source.pipe(ofType(targetType))).toBeObservable(expected);
+        m.expect(source.pipe(ofTypes(targetType1))).toBeObservable(expected);
       })
     );
 
     it(
       'Should filter multiple action types',
       marbles(m => {
-        const targetType1 = 'Correct type one';
-        const targetType2 = 'Correct type two';
-        const otherType = 'Wrong type';
-
-        const inputsOutputs = {
-          a: mockAction(targetType1),
-          b: mockAction(targetType2),
-          c: mockAction(otherType),
-        };
-
         const source = m.hot('acb', inputsOutputs);
         const expected = m.hot('a-b', inputsOutputs);
 
-        const collectedTypes = source.pipe(ofType(targetType1, targetType2));
+        const collectedTypes = source.pipe(ofTypes(targetType1, targetType2));
 
         m.expect(collectedTypes).toBeObservable(expected);
       })
     );
   });
 
+  describe('ofType', function() {
+    const voidAction = actionCreator('void action');
+    const payloadAction = actionCreator<number>('payload action');
+    const actions = {
+      v: voidAction(),
+      p: payloadAction(1),
+    };
+
+    it(
+      'Should filter void action types',
+      marbles(m => {
+        const source = m.hot('pvp', actions);
+        const expected = m.hot('-v-', actions);
+
+        m.expect(source.pipe(ofType(voidAction))).toBeObservable(expected);
+      })
+    );
+
+    it(
+      'Should filter payload action types',
+      marbles(m => {
+        const source = m.hot('vpv', actions);
+        const expected = m.hot('-p-', { p: actions.p });
+
+        m.expect(source.pipe(ofType(payloadAction))).toBeObservable(expected);
+      })
+    );
+  });
+
   describe('withNamespace', function() {
+    const actionType = 'actionType';
+    const namespace = 'namespace';
+
     it(
       'Should filter actions by namespace',
       marbles(m => {
-        const actionType = 'actionType';
-        const namespace = 'namespace';
-
         const inputsOutputs = {
           a: mockAction(actionType),
           b: mockAction(actionType, namespace),
@@ -92,6 +120,40 @@ describe('operators', function() {
         m.expect(source.pipe(withNamespace(namespace))).toBeObservable(
           expected
         );
+      })
+    );
+  });
+
+  describe('INTEGRATION', function() {
+    const voidAction = actionCreator('void action');
+    const payloadAction = actionCreator<number>('payload action');
+    const voidActionNS = namespaceActionCreator('NS', voidAction);
+    const payloadActionNS = namespaceActionCreator('NS', payloadAction);
+
+    const payloads = {
+      p: 2,
+      q: 3,
+    };
+    const actions = {
+      v: voidAction(),
+      w: voidActionNS(),
+      p: payloadAction(payloads.p),
+      q: payloadActionNS(payloads.q),
+    };
+
+    it(
+      'Should be possible to chain withNamespace, ofType and extractPayload',
+      marbles(m => {
+        const source = m.hot('  pvwqwvp', actions);
+        const expected = m.hot('---q---', payloads);
+
+        m.expect(
+          source.pipe(
+            withNamespace('NS'),
+            ofType(payloadAction),
+            extractPayload()
+          )
+        ).toBeObservable(expected);
       })
     );
   });
