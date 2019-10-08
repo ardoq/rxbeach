@@ -11,16 +11,12 @@ state.
 
 ## Running the test example
 1. Run the publish prep script:
-   `yarn publish:prep`
-2. Create a tarball of the prepared package:
-   `cd dist/ && npm pack`
-3. Run the example
+   `yarn run pack`
+2. Run the example
    `cd examples/create-react-app/ && yarn start`
 
 ## Publishing a new version of the package
 1. Verify that "it works":  
    `yarn test && yarn lint && yarn check-types`
-2. Prepare the package for publishing:  
-  `yarn publish:prep`
-3. Publish:  
-   `cd dist/ && yarn publish`
+2. Publish:  
+   `yarn run publish`

@@ -8,10 +8,17 @@ const TARGET = tsBuildConfig.compilerOptions.outDir;
 // adding main and typings
 fs.writeFileSync(
   path.join(TARGET, 'package.json'),
-  JSON.stringify({
-    ...JSON.parse(fs.readFileSync('./package.json')),
-    main: './index.js',
-    typings: './index.d.ts',
-    scripts: {},
-  }, null, 2)
+  JSON.stringify(
+    {
+      ...JSON.parse(fs.readFileSync('./package.json')),
+      main: './index.js',
+      typings: './index.d.ts',
+      scripts: {},
+      devDependencies: {},
+    },
+    null,
+    2
+  )
 );
+
+fs.copyFileSync('./README.md', path.join(TARGET, './README.md'));
