@@ -15,5 +15,7 @@ state.
 ## Publishing a new version of the package
 1. Verify that "it works":  
    `yarn test && yarn lint && yarn check-types`
-2. Publish:  
+2. Bump the version
+   `yarn version`
+2. Publish (DO NOT BUMP THE VERSION HERE!):  
    `yarn run publish`
