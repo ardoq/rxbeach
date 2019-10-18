@@ -40,13 +40,16 @@ type. The action objects are created by action creator functions, sometimes
 called "action types" or even just "actions". The action types are defined by
 the help of utils.
 
-The action types are defined as part of a reducer, part of a routine or as a
-legacy action. They are defined one time each, as globals, and are then invoked
-as functions in order to get an action object. These reducers and routines that
-also create actions, are sometimes called action-reducers and action-routines.
+> *In the future:*
+> 
+> The action types are defined as part of a reducer, part of a routine or as a
+> legacy action. They are defined one time each, as globals, and are then
+> invoked as functions in order to get an action object. These reducers and
+> routines that also create actions, are sometimes called action-reducers and
+> action-routines.
 
 Action creators are functions that accept the payload as their only argument.
-Given an action-reducer called `incrementCounter`, creating the action object
+Given an action creator called `incrementCounter`, creating the action object
 example above, would probably look something like this:
 
 ```javascript
