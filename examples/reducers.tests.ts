@@ -24,7 +24,7 @@ describe('example', function() {
       (prev, inc) => prev + inc
     );
 
-    const reducers = combineReducers(0, handleOne, handleMany);
+    const reducers = combineReducers(0, [handleOne, handleMany]);
 
     it('handles incrementOne', async function() {
       const res = await of(incrementOne(), incrementOne())

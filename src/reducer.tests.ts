@@ -34,7 +34,7 @@ describe('reducers', function() {
       );
 
       const res = await of(incrementOne(), incrementMany(2), incrementOne())
-        .pipe(combineReducers(1, handleOne, handleMany))
+        .pipe(combineReducers(1, [handleOne, handleMany]))
         .toPromise();
 
       equal(res, 5);
@@ -48,7 +48,7 @@ describe('reducers', function() {
       let silenced = false;
       try {
         await of(fail(), succeed())
-          .pipe(combineReducers(false, handleFailure, handleSuccess))
+          .pipe(combineReducers(false, [handleFailure, handleSuccess]))
           .toPromise();
         silenced = true;
       } catch (err) {
