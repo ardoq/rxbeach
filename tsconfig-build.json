@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "target": "es5",
+    "importHelpers": false,
+    "declaration": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noEmit": false
+  },
+  "include": [
+    "src/index.ts",
+    "src/operators/index.ts",
+    "src/internal/index.ts"
+  ]
+}

@@ -2,7 +2,7 @@ import { OperatorFunction, pipe } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { ActionCreator } from 'rxbeach';
 import { VoidPayload, AnyAction, UnknownAction } from 'rxbeach/internal';
-import { ofType } from 'rxbeach/operators';
+import { ofType, ofTypes } from 'rxbeach/operators';
 import {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
@@ -88,7 +88,7 @@ export const combineReducers = <State>(
 ): OperatorFunction<AnyAction, State> => {
   const reducerMap = new Map(reducers);
   return pipe(
-    ofType(...reducerMap.keys()),
+    ofTypes(...reducerMap.keys()),
     scan((state: State, { type, payload }: UnknownAction) => {
       const reducer = reducerMap.get(type);
       if (reducer) {

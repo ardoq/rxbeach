@@ -16,7 +16,6 @@
       "rxbeach": ["./index.ts"],
       "rxbeach/*": ["./*"]
     },
-
     "noEmit": true
   },
   "include": ["src/**/*", "examples/**/*"],

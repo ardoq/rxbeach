@@ -1,18 +1,13 @@
-import { ActionWithPayload, ActionWithoutPayload } from 'types/Action';
+import { Action } from 'rxbeach';
+import { VoidPayload } from 'rxbeach/internal';
 
-export const actionWithoutPayload = (
+export const mockAction = <P = VoidPayload>(
   type: string,
-  qualifiers: string[] = []
-): ActionWithoutPayload => ({
-  meta: { qualifiers },
-  type,
-});
-
-export const actionWithPayload = <P>(
-  type: string,
-  payload: P,
-  qualifiers: string[] = []
-): ActionWithPayload<P> => ({
-  ...actionWithoutPayload(type, qualifiers),
-  payload,
-});
+  namespace?: string,
+  payload?: P
+): Action<P> =>
+  ({
+    meta: { namespace },
+    type,
+    payload,
+  } as Action<P>);

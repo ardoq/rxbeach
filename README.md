@@ -5,3 +5,17 @@
 
 RxBeach is a toolbox for creating applications that uses streams to manage
 state.
+
+
+# Contributing
+
+## Running the test example
+`cd examples/create-react-app/ && yarn && yarn start`
+
+## Publishing a new version of the package
+1. Verify that "it works":  
+   `yarn test && yarn lint && yarn check-types`
+2. Bump the version
+   `yarn version`
+2. Publish (DO NOT BUMP THE VERSION HERE!):  
+   `yarn run publish`

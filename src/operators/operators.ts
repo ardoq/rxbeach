@@ -1,7 +1,7 @@
 import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { ActionWithPayload } from 'rxbeach';
-import { AnyAction } from 'rxbeach/internal';
+import { ActionWithPayload, Action, ActionCreator } from 'rxbeach';
+import { AnyAction, VoidPayload } from 'rxbeach/internal';
 
 //// Routines ////
 
@@ -10,23 +10,50 @@ import { AnyAction } from 'rxbeach/internal';
  *
  * ```
  * action$.pipe(
- *   ofType(myAction.type),
+ *   ofTypes(anAction.type, anotherAction.type),
  *   tap(action => {
- *     // `action` is now guaranteed to be of myAction type
+ *     // `action` is now guaranteed to be of anAction or anotherAction type
  *     // NB: `action` will have type `AnyAction`
  *   })
  * )
  * ```
  *
- * This function has weak typings. The output type of the operator function
+ * This function has **weak typings**. The output type of the operator function
  * will be `AnyAction`.
  *
+ * @see ofType For a more strictly typed alternative
  * @param targetTypes The types to filter for
  */
-export const ofType = (
+export const ofTypes = (
   ...targetTypes: string[]
-): MonoTypeOperatorFunction<AnyAction> =>
-  filter(({ type }) => targetTypes.indexOf(type) !== -1);
+): MonoTypeOperatorFunction<AnyAction> => {
+  const types = new Set(targetTypes);
+
+  return filter(({ type }) => types.has(type));
+};
+
+/**
+ * Stream operator to filter action of a specific type
+ *
+ * ```
+ * action$.pipe(
+ *   ofType(anAction),
+ *   tap(action => {
+ *     // `action` is now guaranteed to be of anAction type
+ *   })
+ * )
+ * ```
+ *
+ * @see ofTypes For filtering of multiple types
+ * @param actionCreator The actionCreator to extract type of
+ */
+export const ofType = <Payload = VoidPayload>(
+  actionCreator: ActionCreator<Payload>
+) =>
+  filter(
+    (action: AnyAction): action is Action<Payload> =>
+      action.type === actionCreator.type
+  );
 
 /**
  * Stream operator to extract the payload from an action
@@ -39,3 +66,13 @@ export const extractPayload = <Payload>(): OperatorFunction<
   ActionWithPayload<Payload>,
   Payload
 > => map(action => action.payload);
+
+/**
+ * Stream operator that filters for actions with the correct namespace
+ *
+ * @param namespace The namespace to filter for
+ */
+export const withNamespace = (
+  targetNamespace: string
+): MonoTypeOperatorFunction<Action<any>> =>
+  filter(({ meta: { namespace } }) => namespace === targetNamespace);

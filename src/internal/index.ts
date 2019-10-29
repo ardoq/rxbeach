@@ -1,4 +1,4 @@
-export { actionWithoutPayload, actionWithPayload } from './testUtils';
+export { mockAction } from './testUtils';
 export {
   VoidPayload,
   AnyAction,
