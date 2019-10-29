@@ -1,5 +1,4 @@
-import { actionCreator, reducer, combineReducers } from 'rxbeach';
-import { Reducer } from 'rxbeach/reducer';
+import { actionCreator, reducer, combineReducers, Reducer } from 'rxbeach';
 import { marbles } from 'rxjs-marbles/mocha';
 
 describe('example', function() {

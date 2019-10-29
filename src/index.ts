@@ -17,5 +17,5 @@ export {
 
 export { actionCreator } from './actionCreator';
 
-export { reducer, combineReducers } from './reducer';
+export { reducer, combineReducers, Reducer } from './reducer';
 export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
