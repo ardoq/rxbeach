@@ -1,7 +1,6 @@
 import { actionCreator, reducer, combineReducers } from 'rxbeach';
-import { of } from 'rxjs';
-import { equal } from 'assert';
 import { Reducer } from 'rxbeach/reducer';
+import { marbles } from 'rxjs-marbles/mocha';
 
 describe('example', function() {
   describe('reducers', function() {
@@ -26,28 +25,25 @@ describe('example', function() {
 
     const reducers = combineReducers(0, [handleOne, handleMany]);
 
-    it('handles incrementOne', async function() {
-      const res = await of(incrementOne(), incrementOne())
-        .pipe(reducers)
-        .toPromise();
+    const inputs = {
+      '1': incrementOne(),
+      '3': incrementMany(3),
+      '5': incrementMany(5),
+    };
+    const outputs = {
+      '3': 3,
+      '4': 4,
+      '9': 9,
+    };
 
-      equal(res, 2);
-    });
+    it(
+      'handles actions',
+      marbles(m => {
+        const source = m.hot('  315', inputs);
+        const expected = m.hot('349', outputs);
 
-    it('handles incrementMany', async function() {
-      const res = await of(incrementMany(12), incrementMany(3))
-        .pipe(reducers)
-        .toPromise();
-
-      equal(res, 15);
-    });
-
-    it('handles mix of incrementOne and incrementMany', async function() {
-      const res = await of(incrementMany(3), incrementOne(), incrementMany(4))
-        .pipe(reducers)
-        .toPromise();
-
-      equal(res, 8);
-    });
+        m.expect(source.pipe(reducers)).toBeObservable(expected);
+      })
+    );
   });
 });

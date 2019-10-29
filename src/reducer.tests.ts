@@ -1,10 +1,10 @@
-import { of } from 'rxjs';
-import { deepEqual, equal, AssertionError } from 'assert';
+import { deepEqual } from 'assert';
 import { reducer, combineReducers } from 'rxbeach';
 import { actionCreator } from './actionCreator';
+import { marbles } from 'rxjs-marbles/mocha';
 
-const throwErrorFn = () => {
-  throw new Error();
+const throwErrorFn = (): number => {
+  throw 'error';
 };
 
 describe('reducers', function() {
@@ -21,45 +21,52 @@ describe('reducers', function() {
   });
 
   describe('combineReducers', function() {
-    it('Should reduce actions to state', async function() {
-      const incrementOne = actionCreator('[increment] one');
-      const incrementMany = actionCreator<number>('[increment] many');
-      const handleOne = reducer(
-        incrementOne,
-        (accumulator: number) => accumulator + 1
-      );
-      const handleMany = reducer(
-        incrementMany,
-        (accumulator: number, increment) => accumulator + increment
-      );
+    const incrementOne = actionCreator('[increment] one');
+    const incrementMany = actionCreator<number>('[increment] many');
+    const decrement = actionCreator('[increment] decrement');
+    const handleOne = reducer(
+      incrementOne,
+      (accumulator: number) => accumulator + 1
+    );
+    const handleMany = reducer(
+      incrementMany,
+      (accumulator: number, increment) => accumulator + increment
+    );
+    const handleDecrement = reducer(decrement, throwErrorFn);
 
-      const res = await of(incrementOne(), incrementMany(2), incrementOne())
-        .pipe(combineReducers(1, [handleOne, handleMany]))
-        .toPromise();
+    const inputs = {
+      '1': incrementOne(),
+      '2': incrementMany(2),
+      d: decrement(),
+    };
+    const outputs = {
+      '2': 2,
+      '4': 4,
+      '5': 5,
+    };
 
-      equal(res, 5);
-    });
-    it('Should not silence errors', async function() {
-      const fail = actionCreator('[test] throws action');
-      const succeed = actionCreator('[test] set state');
-      const handleFailure = reducer<boolean>(fail, throwErrorFn);
-      const handleSuccess = reducer(succeed, () => true);
+    it(
+      'Should reduce actions to state',
+      marbles(m => {
+        const source = m.hot('121', inputs);
+        const expected = m.hot('245', outputs);
 
-      let silenced = false;
-      try {
-        await of(fail(), succeed())
-          .pipe(combineReducers(false, [handleFailure, handleSuccess]))
-          .toPromise();
-        silenced = true;
-      } catch (err) {
-        silenced = false;
-      }
+        m.expect(
+          source.pipe(combineReducers(1, [handleOne, handleMany]))
+        ).toBeObservable(expected);
+      })
+    );
 
-      if (silenced) {
-        throw new AssertionError({
-          message: 'combineReducers should not silence errors',
-        });
-      }
-    });
+    it(
+      'Should not silence errors',
+      marbles(m => {
+        const source = m.hot('  1d1', inputs);
+        const expected = m.hot('2# ', outputs);
+
+        m.expect(
+          source.pipe(combineReducers(1, [handleOne, handleDecrement]))
+        ).toBeObservable(expected);
+      })
+    );
   });
 });
