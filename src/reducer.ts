@@ -92,11 +92,7 @@ export const combineReducers = <State>(
     scan((state: State, { type, payload }: UnknownAction) => {
       const reducer = reducerMap.get(type);
       if (reducer) {
-        try {
-          return reducer(state, payload);
-        } catch (_) {
-          return state;
-        }
+        return reducer(state, payload);
       } else {
         return state;
       }

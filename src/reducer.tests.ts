@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { deepEqual, equal } from 'assert';
+import { deepEqual, equal, AssertionError } from 'assert';
 import { reducer, combineReducers } from 'rxbeach';
 import { actionCreator } from './actionCreator';
 
@@ -39,17 +39,27 @@ describe('reducers', function() {
 
       equal(res, 5);
     });
-    it('Should ignore reducers that throw errors', async function() {
+    it('Should not silence errors', async function() {
       const fail = actionCreator('[test] throws action');
       const succeed = actionCreator('[test] set state');
       const handleFailure = reducer<boolean>(fail, throwErrorFn);
       const handleSuccess = reducer(succeed, () => true);
 
-      const res = await of(fail(), succeed())
-        .pipe(combineReducers(false, handleFailure, handleSuccess))
-        .toPromise();
+      let silenced = false;
+      try {
+        await of(fail(), succeed())
+          .pipe(combineReducers(false, handleFailure, handleSuccess))
+          .toPromise();
+        silenced = true;
+      } catch (err) {
+        silenced = false;
+      }
 
-      equal(res, true);
+      if (silenced) {
+        throw new AssertionError({
+          message: 'combineReducers should not silence errors',
+        });
+      }
     });
   });
 });
