@@ -4,10 +4,12 @@
 > Chill with streams at the RxBeach
 
 RxBeach is a toolbox for creating applications that uses streams to manage
-state.
+state. It is in the **very early ages** of implementation, and the API will
+change continuously.
 
 
 # Contributing
+Code is hosted in the GitHub repo [ardoq/rxbeach](https://github.com/ardoq/rxbeach).
 
 ## Running the test example
 `cd examples/create-react-app/ && yarn && yarn start`
