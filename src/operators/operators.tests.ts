@@ -4,13 +4,9 @@ import {
   actionCreator,
   namespaceActionCreator,
 } from 'rxbeach';
-import {
-  extractPayload,
-  withNamespace,
-  ofType,
-  ofTypes,
-} from 'rxbeach/operators';
+import { extractPayload, withNamespace, ofType } from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal';
+import { map } from 'rxjs/operators';
 
 describe('operators', function() {
   describe('extractPayload', function() {
@@ -40,64 +36,89 @@ describe('operators', function() {
     }
   });
 
-  describe('ofTypes', function() {
-    const targetType1 = 'Correct type one';
-    const targetType2 = 'Correct type two';
-    const otherType = 'Wrong type';
-    const inputsOutputs = {
-      a: mockAction(targetType1),
-      b: mockAction(targetType2),
-      c: mockAction(otherType),
-    };
-
-    it(
-      'Should filter one action type',
-      marbles(m => {
-        const source = m.hot('aca', inputsOutputs);
-        const expected = m.hot('a-a', inputsOutputs);
-
-        m.expect(source.pipe(ofTypes(targetType1))).toBeObservable(expected);
-      })
-    );
-
-    it(
-      'Should filter multiple action types',
-      marbles(m => {
-        const source = m.hot('acb', inputsOutputs);
-        const expected = m.hot('a-b', inputsOutputs);
-
-        const collectedTypes = source.pipe(ofTypes(targetType1, targetType2));
-
-        m.expect(collectedTypes).toBeObservable(expected);
-      })
-    );
-  });
-
   describe('ofType', function() {
-    const voidAction = actionCreator('void action');
-    const payloadAction = actionCreator<number>('payload action');
-    const actions = {
-      v: voidAction(),
-      p: payloadAction(1),
-    };
+    const voidAction = actionCreator('void');
+    const fooAction = actionCreator<{ foo: number }>('foo');
+    const barAction = actionCreator<{ bar: number }>('bar');
+    const combinedAction = actionCreator<{ foo: number; bar: number }>(
+      'extended'
+    );
+
+    const v = voidAction();
+    const f = fooAction({ foo: 1 });
+    const b = barAction({ bar: 2 });
+    const c = combinedAction({ foo: 2, bar: 3 });
 
     it(
-      'Should filter void action types',
+      'Should filter one payload action type',
       marbles(m => {
-        const source = m.hot('pvp', actions);
-        const expected = m.hot('-v-', actions);
+        const source = m.hot('fcv', { f, c, v });
+        const expected = m.hot('-c-', { c: c.payload });
+
+        m.expect(
+          source.pipe(
+            ofType(combinedAction),
+            map(({ payload }) => payload)
+          )
+        ).toBeObservable(expected);
+      })
+    );
+
+    it(
+      'Should filter one void action type',
+      marbles(m => {
+        const source = m.hot('fcv', { f, c, v });
+        const expected = m.hot('--v', { v });
 
         m.expect(source.pipe(ofType(voidAction))).toBeObservable(expected);
       })
     );
 
     it(
-      'Should filter payload action types',
+      'Should filter multiple actions that are mix of void and not void',
       marbles(m => {
-        const source = m.hot('vpv', actions);
-        const expected = m.hot('-p-', { p: actions.p });
+        const source = m.hot('fcv', { f, c, v });
+        const expected = m.hot('f-v', { f, v });
 
-        m.expect(source.pipe(ofType(payloadAction))).toBeObservable(expected);
+        m.expect(source.pipe(ofType(fooAction, voidAction))).toBeObservable(
+          expected
+        );
+      })
+    );
+
+    it(
+      'Should infer payload of multiple types that are overlapping',
+      marbles(m => {
+        const source = m.hot('fcv', { f, c, v });
+        const expected = m.hot('12-', {
+          '1': 1,
+          '2': 2,
+        });
+
+        m.expect(
+          source.pipe(
+            ofType(fooAction, combinedAction),
+            map(({ payload: { foo } }) => foo)
+          )
+        ).toBeObservable(expected);
+      })
+    );
+
+    it(
+      'Should have payload field for multiple types that have non-overlapping payloads',
+      marbles(m => {
+        const source = m.hot('fb', { f, b });
+        const expected = m.hot('fb', {
+          f: f.payload,
+          b: b.payload,
+        });
+
+        m.expect(
+          source.pipe(
+            ofType(fooAction, barAction),
+            map(({ payload }) => payload)
+          )
+        ).toBeObservable(expected);
       })
     );
   });

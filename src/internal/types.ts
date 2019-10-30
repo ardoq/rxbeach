@@ -1,4 +1,5 @@
 import { Action, ActionWithoutPayload } from 'rxbeach';
+import { ActionWithPayload } from 'rxbeach/types/Action';
 
 export type VoidPayload = void;
 
@@ -25,6 +26,17 @@ export type UnknownAction = ActionWithoutPayload & { payload?: any };
 
 export interface ActionCreatorCommon {
   type: string;
+}
+
+/**
+ * Helper type for action creator where only the returned action matters
+ *
+ * This type allows for inferring overlap of the payload type between multiple
+ * action creators with different payloads.
+ */
+export interface UnknownActionCreatorWithPayload<Payload>
+  extends ActionCreatorCommon {
+  (payload?: any): ActionWithPayload<Payload>;
 }
 
 /**

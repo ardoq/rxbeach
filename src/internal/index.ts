@@ -5,4 +5,5 @@ export {
   UnknownAction,
   ActionCreatorCommon,
   UnknownActionCreator,
+  UnknownActionCreatorWithPayload,
 } from './types';

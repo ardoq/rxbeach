@@ -2,7 +2,7 @@ import { equal, deepEqual } from 'assert';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { actionCreator, ExtractPayload } from 'rxbeach';
-import { ofTypes, extractPayload, ofType } from 'rxbeach/operators';
+import { extractPayload, ofType } from 'rxbeach/operators';
 
 export default function actionExamples() {
   describe('actions', function() {
@@ -24,7 +24,7 @@ export default function actionExamples() {
     it('can filter actions', async function() {
       const a = primitiveAction(12);
       const r = await of(voidAction(), a, payloadAction({ foo: 123 }))
-        .pipe(ofTypes(primitiveAction.type))
+        .pipe(ofType(primitiveAction))
         .toPromise();
 
       equal(r, a);
