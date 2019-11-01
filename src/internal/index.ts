@@ -7,3 +7,4 @@ export {
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
 } from './types';
+export { protect, Protected } from './readonly';

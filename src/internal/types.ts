@@ -22,7 +22,8 @@ export type AnyAction = Action<any>;
  *
  * `AnyAction` is assignable to `UnknownAction` and vice versa.
  */
-export type UnknownAction = ActionWithoutPayload & { payload?: any };
+export type UnknownAction = ActionWithoutPayload &
+  Partial<ActionWithPayload<any>>;
 
 export interface ActionCreatorCommon {
   type: string;
