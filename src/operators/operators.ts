@@ -32,6 +32,9 @@ interface OfType {
   /**
    * Stream operator to filter specific actions that have non-overlapping payload
    *
+   * You might hit this overload even when there is overlap, in those cases, you
+   * can specify the overlap manually with the generic argument.
+   *
    * ```
    * action$.pipe(
    *   ofType(anAction, anotherAction),
