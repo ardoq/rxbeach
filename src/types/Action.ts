@@ -1,16 +1,16 @@
-import { VoidPayload } from 'rxbeach/internal';
+import { VoidPayload, Protected } from 'rxbeach/internal';
 
 type Meta = {
-  namespace?: string;
+  readonly namespace?: string;
 };
 
 export type ActionWithoutPayload = {
-  type: string;
-  meta: Meta;
+  readonly type: string;
+  readonly meta: Meta;
 };
 
 export type ActionWithPayload<Payload> = ActionWithoutPayload & {
-  payload: Payload;
+  readonly payload: Protected<Payload>;
 };
 
 /**

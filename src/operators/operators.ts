@@ -6,6 +6,7 @@ import {
   UnknownActionCreatorWithPayload,
   UnknownActionCreator,
   UnknownAction,
+  Protected,
 } from 'rxbeach/internal';
 import { ActionWithoutPayload } from 'rxbeach/types/Action';
 
@@ -88,7 +89,7 @@ export const ofType: OfType = ((
  */
 export const extractPayload = <Payload>(): OperatorFunction<
   ActionWithPayload<Payload>,
-  Payload
+  Protected<Payload>
 > => map(action => action.payload);
 
 /**

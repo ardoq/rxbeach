@@ -1,5 +1,5 @@
 import { ActionCreator } from 'rxbeach';
-import { VoidPayload, UnknownActionCreator } from 'rxbeach/internal';
+import { VoidPayload, UnknownActionCreator, protect } from 'rxbeach/internal';
 
 /**
  * Create an action creator with a given payload type
@@ -22,11 +22,12 @@ export function actionCreator<Payload = VoidPayload>(
  * recognize the generic, typed overload of this function.
  */
 export function actionCreator(type: string): UnknownActionCreator {
-  const action = (payload?: any) => ({
-    type,
-    payload,
-    meta: {},
-  });
+  const action = (payload?: any) =>
+    protect({
+      type,
+      payload,
+      meta: {},
+    });
   action.type = type;
 
   return action;
