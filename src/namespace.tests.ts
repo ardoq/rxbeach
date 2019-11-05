@@ -1,12 +1,28 @@
-import { deepEqual } from 'assert';
+import { deepEqual, AssertionError } from 'assert';
 import {
   namespaceActionCreator,
   ActionDispatcher,
   namespaceActionDispatcher,
 } from 'rxbeach';
 import { mockAction, AnyAction } from 'rxbeach/internal';
+import { _namespaceAction } from './namespace';
 
 describe('namespace', function() {
+  describe('_namespaceAction', function() {
+    const namespaced = _namespaceAction('namespace', mockAction('type'));
+
+    it('creates protected actions', function() {
+      try {
+        (namespaced.meta as { namespace: string }).namespace = 'new namespace';
+        throw new AssertionError({
+          message: 'namespace should not be writable',
+        });
+      } catch (err) {
+        if (err instanceof AssertionError) throw err;
+      }
+    });
+  });
+
   describe('namespaceActionCreator', function() {
     const type = 'action type';
     const namespace = 'new namespace';

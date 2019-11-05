@@ -1,14 +1,15 @@
 import { ActionCreator, ActionDispatcher } from 'rxbeach';
-import { UnknownAction, VoidPayload } from 'rxbeach/internal';
+import { UnknownAction, VoidPayload, protect } from 'rxbeach/internal';
 
-const _namespaceAction = (namespace: string, action: UnknownAction) => ({
-  type: action.type,
-  payload: action.payload,
-  meta: {
-    ...action.meta,
-    namespace,
-  },
-});
+export const _namespaceAction = (namespace: string, action: UnknownAction) =>
+  protect({
+    type: action.type,
+    payload: action.payload,
+    meta: {
+      ...action.meta,
+      namespace,
+    },
+  });
 
 /**
  * Decorate an action creator so the created actions have the given namespace
