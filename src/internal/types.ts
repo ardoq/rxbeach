@@ -25,7 +25,7 @@ export type AnyAction = Action<any>;
 export type UnknownAction = ActionWithoutPayload & { payload?: any };
 
 export interface ActionCreatorCommon {
-  type: string;
+  readonly type: string;
 }
 
 /**

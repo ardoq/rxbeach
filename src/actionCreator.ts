@@ -22,12 +22,13 @@ export function actionCreator<Payload = VoidPayload>(
  * recognize the generic, typed overload of this function.
  */
 export function actionCreator(type: string): UnknownActionCreator {
-  const action = (payload?: any) => ({
-    type,
-    payload,
-    meta: {},
-  });
+  const action = (payload?: any) =>
+    Object.freeze({
+      type,
+      payload,
+      meta: Object.freeze({}),
+    });
   action.type = type;
 
-  return action;
+  return Object.freeze(action);
 }

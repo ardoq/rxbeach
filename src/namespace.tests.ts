@@ -4,9 +4,33 @@ import {
   ActionDispatcher,
   namespaceActionDispatcher,
 } from 'rxbeach';
-import { mockAction, AnyAction } from 'rxbeach/internal';
+import { mockAction, AnyAction, assertThrows } from 'rxbeach/internal';
+import { _namespaceAction } from './namespace';
 
 describe('namespace', function() {
+  describe('_namespaceAction', function() {
+    const namespaced = _namespaceAction('namespace', mockAction('type')) as {
+      type: string;
+      meta: {
+        namespace: string;
+      };
+    };
+    it('has unwritable type', function() {
+      assertThrows(TypeError, () => {
+        namespaced.type = 'foo';
+      });
+    });
+    it('has unwritable meta', function() {
+      assertThrows(TypeError, () => {
+        namespaced.meta = { namespace: 'bar' };
+      });
+    });
+    it('has unwritable namespace', function() {
+      assertThrows(TypeError, () => {
+        namespaced.meta.namespace = 'baz';
+      });
+    });
+  });
   describe('namespaceActionCreator', function() {
     const type = 'action type';
     const namespace = 'new namespace';

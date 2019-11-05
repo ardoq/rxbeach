@@ -1,4 +1,3 @@
-// TYPES
 export {
   ActionWithoutPayload,
   ActionWithPayload,
