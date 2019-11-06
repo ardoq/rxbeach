@@ -17,3 +17,10 @@ export {
 export { actionCreator } from './actionCreator';
 
 export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
+
+export {
+  Routine,
+  subscribeRoutine,
+  routine,
+  collectRoutines,
+} from './routines';

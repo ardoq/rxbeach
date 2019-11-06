@@ -2,7 +2,7 @@ import test from 'ava';
 import { map } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
 import { mergeOperators } from 'rxbeach/operators';
-import { coldMergeOperators } from './mergeOperators';
+import { coldMergeOperators } from 'rxbeach/internal';
 
 const double = map<number, number>(n => n * 2);
 const halve = map<number, number>(n => n / 2);

@@ -7,3 +7,5 @@ export {
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
 } from './types';
+export { RoutineFunc } from './routineFunc';
+export { coldMergeOperators } from '../operators/mergeOperators';
