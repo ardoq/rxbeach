@@ -4,7 +4,7 @@
 > Chill with streams at the RxBeach
 
 RxBeach is a toolbox for creating applications that uses streams to manage
-state. It is in the **very early ages** of implementation, and the API will
+state. It is in the **very early stages** of implementation, and the API will
 change continuously.
 
 
