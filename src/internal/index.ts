@@ -1,4 +1,4 @@
-export { mockAction, assertThrows } from './testUtils';
+export { mockAction } from './testUtils';
 export {
   VoidPayload,
   AnyAction,
