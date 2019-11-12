@@ -17,6 +17,7 @@
   "license": "MIT",
   "scripts": {
     "test": "yarn nyc ava",
+    "watch": "yarn ava --watch",
     "check-types": "tsc -p tsconfig.json",
     "lint": "eslint --ext .ts src examples",
     "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
