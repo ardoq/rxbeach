@@ -10,6 +10,10 @@
     "rx"
   ],
   "company": "Ardoq AS",
+  "homepage": "https://ardoq.github.io/rxbeach/",
+  "bugs": "https://github.com/ardoq/rxbeach/issues",
+  "repository": "github:ardoq/rxbeach",
+  "author": "Tobias Laundal",,
   "license": "MIT",
   "scripts": {
     "test": "yarn nyc ava",
@@ -19,7 +23,6 @@
     "publish:prep": "yarn build && node prep-package.js",
     "publish": "yarn publish:prep && yarn publish dist"
   },
-  "author": "Tobias Laundal",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^0.1.3",
     "@typescript-eslint/eslint-plugin": "2.2.0",
@@ -40,7 +43,6 @@
     "typescript": "3.6.2"
   },
   "dependencies": {
-    "react": "16.9.0",
     "rxjs": "6.5.3",
     "rxjs-spy": "7.5.1"
   }
