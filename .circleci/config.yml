@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -25,4 +25,21 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn test
+      - run:
+          name: Lint
+          command: |
+            mkdir -p ~/reports/eslint
+            yarn lint --format junit --output-file ~/reports/eslint/report.xml
+
+      - run:
+          name: Test
+          command: |
+            mkdir -p ~/reports/ava
+            yarn test --tap | ./node_modules/.bin/tap-xunit > ~/reports/ava/report.xml
+
+      - run:
+          name: Line coverage
+          command: ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
+
+      - store_test_results:
+          path: ~/reports
