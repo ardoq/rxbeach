@@ -1,6 +1,7 @@
 ![Beach with umbrella](docs/beach_with_umbrella.png)
 
 # RxBeach
+[![Coverage Status](https://coveralls.io/repos/github/ardoq/rxbeach/badge.svg?branch=master)](https://coveralls.io/github/ardoq/rxbeach?branch=master)
 > Chill with streams at the RxBeach
 
 RxBeach is a toolbox for creating applications that uses streams to manage
