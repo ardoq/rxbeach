@@ -1,4 +1,4 @@
-import test from 'ava';
+import test, { Macro } from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import {
   ActionWithPayload,
@@ -9,30 +9,22 @@ import { extractPayload, withNamespace, ofType } from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal';
 import { map } from 'rxjs/operators';
 
-const tests = [
-  ['primitive', 'Hello World'],
-  ['array', ['Hello', { what: 'World' }]],
-  ['object', { foo: true }],
-];
+const extractsPayload: Macro<[any]> = (t, payload) =>
+  marbles(m => {
+    const source = m.hot<ActionWithPayload<any>>('aa', {
+      a: mockAction('', '', payload) as ActionWithPayload<any>,
+    });
+    const expected = m.hot('pp', {
+      p: payload,
+    });
 
-for (const [name, payload] of tests) {
-  test(
-    `extractPayload should extract ${name} payload`,
-    marbles(m => {
-      const inputs = {
-        a: mockAction('', '', payload),
-      };
-      const outputs = {
-        p: payload,
-      };
+    m.expect(source.pipe(extractPayload())).toBeObservable(expected);
+  })(t);
+extractsPayload.title = name => `extractPayload should extract ${name} payload`;
 
-      const source = m.hot<ActionWithPayload<any>>('aa', inputs);
-      const expected = m.hot('pp', outputs);
-
-      m.expect(source.pipe(extractPayload())).toBeObservable(expected);
-    })
-  );
-}
+test('primitive', extractsPayload, 'Hello World');
+test('array', extractsPayload, ['Hello', { what: 'World' }]);
+test('object', extractsPayload, { foo: true });
 
 const voidAction = actionCreator('void');
 const fooAction = actionCreator<{ foo: number }>('foo');
