@@ -1,4 +1,4 @@
-import test from 'ava';
+import untypedTest from 'ava';
 import { Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
@@ -9,8 +9,10 @@ import {
   routine,
   collectRoutines,
 } from 'rxbeach';
-import { mockAction } from 'rxbeach/internal';
+import { mockAction, stubRethrowErrorGlobally } from 'rxbeach/internal';
 import { extractPayload } from 'rxbeach/operators';
+
+const test = stubRethrowErrorGlobally(untypedTest);
 
 const actions = {
   a: mockAction('alpha', undefined, { letter: 'A' }),
@@ -91,7 +93,7 @@ test(
 
 test(
   'subscribeRoutine resubscribes on errors',
-  marbles((m, t) => {
+  marbles(m => {
     const action$ = m.hot(actionMarbles2, actions);
 
     subscribeRoutine(action$, errorRoutine);
@@ -102,7 +104,7 @@ test(
 
 test(
   'subscribeRoutine emits errors to error subject',
-  marbles((m, t) => {
+  marbles(m => {
     const action$ = m.hot(actionMarbles2, actions);
     const error$ = new Subject<any>();
 

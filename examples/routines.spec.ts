@@ -14,7 +14,7 @@ const pongs: 'pong'[] = [];
 
 const logPongs = routine(
   ofType(pong),
-  tap(action => pongs.push('pong')) // Simulates console.log
+  tap(() => pongs.push('pong')) // Simulates console.log
 );
 const pongPings = routine(
   ofType(ping),
