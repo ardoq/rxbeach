@@ -1,10 +1,14 @@
 import { OperatorFunction, pipe, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ActionStream } from 'rxbeach';
-import { AnyAction, RoutineFunc, defaultErrorSubject } from 'rxbeach/internal';
+import {
+  RoutineFunc,
+  defaultErrorSubject,
+  UnknownAction,
+} from 'rxbeach/internal';
 import { mergeOperators } from 'rxbeach/operators';
 
-export type Routine<T> = OperatorFunction<AnyAction, T>;
+export type Routine<T> = OperatorFunction<UnknownAction, T>;
 
 /**
  * See collectRoutines for documentation

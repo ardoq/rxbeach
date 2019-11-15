@@ -1,8 +1,9 @@
 import { Subject } from 'rxjs';
-import { Action, ActionDispatcher, ActionStream } from 'rxbeach';
+import { ActionDispatcher, ActionStream } from 'rxbeach';
 import { tag } from 'rxjs-spy/operators';
+import { UnknownAction } from 'rxbeach/internal';
 
-const actionSubject$ = new Subject<Action<any>>();
+const actionSubject$ = new Subject<UnknownAction>();
 
 export const action$: ActionStream = actionSubject$.pipe(tag('action$'));
 

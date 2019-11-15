@@ -1,4 +1,4 @@
-import { Action, ActionWithoutPayload } from 'rxbeach';
+import { ActionWithoutPayload } from 'rxbeach';
 import { ActionWithPayload } from 'rxbeach/types/Action';
 
 export type VoidPayload = void;
@@ -6,23 +6,11 @@ export type VoidPayload = void;
 /**
  * Helper type for any action
  *
- * TypeScript will interpret this to a union type of `ActionWithPayload<any>`
- * and `ActionWithoutPayload`.
- *
- * Prefer this type when you need to handle actions that you don't know anything
+ * This type has payload as an optional, unknown field, and is useful if you
+ * want to extract a possible `payload` from an action you don't know anything
  * about.
  */
-export type AnyAction = Action<any>;
-
-/**
- * Helper type for any action, where `AnyAction` doesn't suffice
- *
- * This type has payload as an optional field, and is useful if you want to
- * extract a possible `payload` from an action you don't know anything about.
- *
- * `AnyAction` is assignable to `UnknownAction` and vice versa.
- */
-export type UnknownAction = ActionWithoutPayload & { payload?: any };
+export type UnknownAction = ActionWithoutPayload & { payload?: unknown };
 
 export interface ActionCreatorCommon {
   readonly type: string;

@@ -1,7 +1,6 @@
 export { mockAction, stubRethrowErrorGlobally } from './testUtils';
 export {
   VoidPayload,
-  AnyAction,
   UnknownAction,
   ActionCreatorCommon,
   UnknownActionCreator,

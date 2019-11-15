@@ -2,14 +2,14 @@ import test from 'ava';
 import { of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { actionCreator } from 'rxbeach';
-import { AnyAction } from 'rxbeach/internal';
+import { UnknownAction } from 'rxbeach/internal';
 import { ofType } from 'rxbeach/operators';
 import { routine, collectRoutines } from 'rxbeach/routines';
 
 const ping = actionCreator('[game] ping');
 const pong = actionCreator('[game] pong');
 
-const dispatched: AnyAction[] = [];
+const dispatched: UnknownAction[] = [];
 const pongs: 'pong'[] = [];
 
 const logPongs = routine(

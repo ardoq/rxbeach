@@ -4,7 +4,7 @@ import {
   ActionDispatcher,
   namespaceActionDispatcher,
 } from 'rxbeach';
-import { mockAction, AnyAction } from 'rxbeach/internal';
+import { mockAction, UnknownAction } from 'rxbeach/internal';
 import { _namespaceAction } from 'rxbeach/namespace';
 
 const namespaced = _namespaceAction('namespace', mockAction('type')) as {
@@ -48,7 +48,7 @@ test('namespaceActionCreator should create actions with namespace', t => {
 });
 
 test('namespaceActionDispatcher should invoke the parent dispatcher with namespaced actions', t => {
-  let dispatchedAction: AnyAction | undefined;
+  let dispatchedAction: UnknownAction | undefined;
   const parentDispatcher: ActionDispatcher = action =>
     (dispatchedAction = action);
 

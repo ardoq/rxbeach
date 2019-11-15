@@ -3,17 +3,17 @@ import { Subject } from 'rxjs';
 import { reduce } from 'rxjs/operators';
 import { actionCreator, namespaceActionDispatcher } from 'rxbeach';
 import { withNamespace } from 'rxbeach/operators';
-import { AnyAction, mockAction } from 'rxbeach/internal';
+import { mockAction, UnknownAction } from 'rxbeach/internal';
 const testAction = actionCreator<number>('[test] primitive action');
 const namespaceA = 'A';
 const namespaceB = 'B';
 
-let lastActionNamespaceA: AnyAction | undefined;
-let lastActionNamespaceB: AnyAction | undefined;
+let lastActionNamespaceA: UnknownAction | undefined;
+let lastActionNamespaceB: UnknownAction | undefined;
 let sumAllNamespaces: number | undefined;
 
 test.before(async function() {
-  const action$ = new Subject<AnyAction>();
+  const action$ = new Subject<UnknownAction>();
   const dispatchAction = action$.next.bind(action$);
 
   const dispatchA = namespaceActionDispatcher(namespaceA, dispatchAction);

@@ -2,7 +2,6 @@ import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { ActionWithPayload, Action } from 'rxbeach';
 import {
-  AnyAction,
   UnknownActionCreatorWithPayload,
   UnknownActionCreator,
   UnknownAction,
@@ -27,7 +26,7 @@ interface OfType {
    */
   <Payload>(
     ...targetTypes: UnknownActionCreatorWithPayload<Payload>[]
-  ): OperatorFunction<AnyAction, Action<Payload>>;
+  ): OperatorFunction<UnknownAction, Action<Payload>>;
 
   /**
    * Stream operator to filter specific actions that have non-overlapping payload
@@ -48,7 +47,7 @@ interface OfType {
    * @param targetTypes The types to filter for
    */
   (...targetTypes: UnknownActionCreatorWithPayload<{}>[]): OperatorFunction<
-    AnyAction,
+    UnknownAction,
     ActionWithPayload<{}>
   >;
 
@@ -67,16 +66,16 @@ interface OfType {
    * @param targetTypes The types to filter for
    */
   (...targetTypes: UnknownActionCreator[]): OperatorFunction<
-    AnyAction,
+    UnknownAction,
     ActionWithoutPayload
   >;
 }
 export const ofType: OfType = ((
   ...targetTypes: UnknownActionCreator[]
-): OperatorFunction<AnyAction, UnknownAction> => {
+): OperatorFunction<UnknownAction, UnknownAction> => {
   const types = new Set(targetTypes.map(({ type }) => type));
 
-  return filter((action: AnyAction) => types.has(action.type));
+  return filter((action: UnknownAction) => types.has(action.type));
 }) as any; // Implementation is untyped
 
 /**
@@ -98,5 +97,5 @@ export const extractPayload = <Payload>(): OperatorFunction<
  */
 export const withNamespace = (
   targetNamespace: string
-): MonoTypeOperatorFunction<Action<any>> =>
+): MonoTypeOperatorFunction<UnknownAction> =>
   filter(({ meta: { namespace } }) => namespace === targetNamespace);

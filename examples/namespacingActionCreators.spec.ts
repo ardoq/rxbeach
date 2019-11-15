@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { reduce } from 'rxjs/operators';
 import { actionCreator, namespaceActionCreator } from 'rxbeach';
 import { withNamespace } from 'rxbeach/operators';
-import { AnyAction } from 'rxbeach/internal';
+import { UnknownAction } from 'rxbeach/internal';
 
 const testAction = actionCreator<number>('[test] primitive action');
 const namespaceA = 'A';
@@ -14,8 +14,8 @@ const testActionB = namespaceActionCreator(namespaceB, testAction);
 const actionObjectA = testActionA(1);
 const actionObjectB = testActionB(2);
 
-let lastActionNamespaceA: AnyAction | undefined;
-let lastActionNamespaceB: AnyAction | undefined;
+let lastActionNamespaceA: UnknownAction | undefined;
+let lastActionNamespaceB: UnknownAction | undefined;
 let sumAllNamespaces: number | undefined;
 
 test.before(async function() {
