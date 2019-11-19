@@ -1,4 +1,3 @@
-export { mockAction, stubRethrowErrorGlobally } from './testUtils';
 export {
   VoidPayload,
   UnknownAction,

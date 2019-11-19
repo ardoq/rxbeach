@@ -1,8 +1,6 @@
 import untypedTest from 'ava';
-import {
-  defaultErrorSubject,
-  stubRethrowErrorGlobally,
-} from 'rxbeach/internal';
+import { defaultErrorSubject } from 'rxbeach/internal';
+import { stubRethrowErrorGlobally } from 'rxbeach/internal/testUtils';
 
 const test = stubRethrowErrorGlobally(untypedTest);
 

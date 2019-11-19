@@ -9,7 +9,10 @@ import {
   routine,
   collectRoutines,
 } from 'rxbeach';
-import { mockAction, stubRethrowErrorGlobally } from 'rxbeach/internal';
+import {
+  mockAction,
+  stubRethrowErrorGlobally,
+} from 'rxbeach/internal/testUtils';
 import { extractPayload } from 'rxbeach/operators';
 
 const test = stubRethrowErrorGlobally(untypedTest);

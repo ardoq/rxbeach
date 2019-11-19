@@ -6,7 +6,7 @@ import {
   namespaceActionCreator,
 } from 'rxbeach';
 import { extractPayload, withNamespace, ofType } from 'rxbeach/operators';
-import { mockAction } from 'rxbeach/internal';
+import { mockAction } from 'rxbeach/internal/testUtils';
 import { map } from 'rxjs/operators';
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
