@@ -95,5 +95,6 @@ module.exports = {
     radix: ['error'],
     strict: ['error', 'never'],
     'import/no-cycle': ['error'],
+    'no-restricted-imports': ['error', { patterns: ['./*', '../*'] }],
   },
 };

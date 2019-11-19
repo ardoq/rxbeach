@@ -6,7 +6,7 @@ import {
 } from 'rxbeach';
 import { UnknownAction } from 'rxbeach/internal';
 import { _namespaceAction } from 'rxbeach/namespace';
-import { mockAction } from './internal/testUtils';
+import { mockAction } from 'rxbeach/internal/testUtils';
 
 const namespaced = _namespaceAction('namespace', mockAction('type')) as {
   type: string;

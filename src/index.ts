@@ -2,25 +2,28 @@ export {
   ActionWithoutPayload,
   ActionWithPayload,
   Action,
-} from './types/Action';
+} from 'rxbeach/types/Action';
 export {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
   ActionCreator,
-} from './types/ActionCreator';
+} from 'rxbeach/types/ActionCreator';
 export {
   ActionStream,
   ActionDispatcher,
   ExtractPayload,
-} from './types/helpers';
+} from 'rxbeach/types/helpers';
 
-export { actionCreator } from './actionCreator';
+export { actionCreator } from 'rxbeach/actionCreator';
 
-export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
+export {
+  namespaceActionCreator,
+  namespaceActionDispatcher,
+} from 'rxbeach/namespace';
 
 export {
   Routine,
   subscribeRoutine,
   routine,
   collectRoutines,
-} from './routines';
+} from 'rxbeach/routines';

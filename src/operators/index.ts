@@ -1,2 +1,6 @@
-export { ofType, extractPayload, withNamespace } from './operators';
-export { mergeOperators } from './mergeOperators';
+export {
+  ofType,
+  extractPayload,
+  withNamespace,
+} from 'rxbeach/operators/operators';
+export { mergeOperators } from 'rxbeach/operators/mergeOperators';
