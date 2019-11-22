@@ -1130,6 +1130,11 @@ concordance@^4.0.0:
     semver "^5.5.1"
     well-known-symbols "^2.0.0"
 
+conditional-type-checks@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/conditional-type-checks/-/conditional-type-checks-1.0.4.tgz#491e2752006e1e049a11c8c26592b1b8535efbf9"
+  integrity sha512-3oKsfmRWuVLZ8WBmhHkCqLsa01mdX+H4aUkxesOXGYPAA2xJtrrlEfM5imvsz4Wv55RPaiSofgYEXikUQEW96g==
+
 configstore@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/configstore/-/configstore-4.0.0.tgz#5933311e95d3687efb592c528b922d9262d227e7"
