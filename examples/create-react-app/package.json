@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.10.1",
-    "react-dom": "^16.10.1",
+    "react": "16.10.1",
+    "react-dom": "16.10.1",
     "react-scripts": "3.2.0",
     "rxbeach": "0.0.8",
-    "rxjs": "^6.5.3"
+    "rxjs": "6.5.3"
   },
   "scripts": {
     "start": "react-scripts start",

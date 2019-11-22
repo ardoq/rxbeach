@@ -37,8 +37,4 @@ export const coldMergeOperators = <T, R>(
  */
 export const mergeOperators = <T, R>(
   ...operators: OperatorFunction<T, R>[]
-): OperatorFunction<T, R> =>
-  pipe(
-    share(),
-    coldMergeOperators(...operators)
-  );
+): OperatorFunction<T, R> => pipe(share(), coldMergeOperators(...operators));
