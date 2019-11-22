@@ -150,11 +150,7 @@ test(
     const expected = m.hot('---q---', payloads);
 
     m.expect(
-      source.pipe(
-        withNamespace('NS'),
-        ofType(payloadAction),
-        extractPayload()
-      )
+      source.pipe(withNamespace('NS'), ofType(payloadAction), extractPayload())
     ).toBeObservable(expected);
   })
 );
