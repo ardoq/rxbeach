@@ -97,5 +97,6 @@ module.exports = {
     strict: ['error', 'never'],
     'import/no-cycle': ['error'],
     'no-restricted-imports': ['error', { patterns: ['./*', '../*'] }],
+    'func-style': ['error', 'expression'],
   },
 };
