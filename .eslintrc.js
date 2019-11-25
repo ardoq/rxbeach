@@ -17,12 +17,13 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.tests.ts'],
+      files: ['*.tspec.ts'],
       env: {
         mocha: true,
       },
       rules: {
         '@typescript-eslint/no-unused-vars': ['off'],
+        'prefer-const': ['off'],
       },
     },
   ],

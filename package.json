@@ -30,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "2.8.0",
     "@typescript-eslint/parser": "2.8.0",
     "ava": "2.4.0",
+    "conditional-type-checks": "1.0.4",
     "coveralls": "3.0.8",
     "eslint": "6.6.0",
     "eslint-config-prettier": "6.7.0",
