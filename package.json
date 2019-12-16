@@ -27,7 +27,7 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "0.1.3",
     "@types/sinon": "7.5.1",
-    "@typescript-eslint/eslint-plugin": "2.11.0",
+    "@typescript-eslint/eslint-plugin": "2.12.0",
     "@typescript-eslint/parser": "2.11.0",
     "ava": "2.4.0",
     "conditional-type-checks": "1.0.5",
