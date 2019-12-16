@@ -18,7 +18,7 @@ interface ActionCreatorFunc {
    *          returns a complete action object with that payload and a type unique
    *          to this action creator
    */
-  <Payload extends {}>(type: string): ActionCreatorWithPayload<Payload>;
+  <Payload>(type: string): ActionCreatorWithPayload<Payload>;
 }
 
 /**
