@@ -28,3 +28,20 @@ unionFuncAction(a => !a);
 
 const voidAction = actionCreator('void');
 voidAction();
+
+const nullAction = actionCreator<string | null>('string or null');
+nullAction(null);
+nullAction('hello');
+
+const undefinedAction = actionCreator<string | undefined>(
+  'string or undefined'
+);
+
+// undefinedAction(); // Would have thought TS would allow this
+undefinedAction(undefined);
+undefinedAction('world');
+
+const optionalPayloadAction = actionCreator<string | void>('optional payload');
+
+optionalPayloadAction();
+optionalPayloadAction('payload');
