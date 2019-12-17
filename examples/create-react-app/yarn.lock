@@ -9509,10 +9509,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rxbeach@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rxbeach/-/rxbeach-0.0.8.tgz#4533a1676235f30509c3b87c04e209fee3831de0"
-  integrity sha512-JSH/Mtp3eTCj53/xUob+Juwc0xOOv97AKARhSOJ+wRNSezXHJRrRaMAzd9Fc2KQ/nvywuYIAD+VMAP4qMa08zg==
+rxbeach@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/rxbeach/-/rxbeach-0.0.10.tgz#dee1401830db934b114ff13b435d0a7c295baa0d"
+  integrity sha512-bfcf8sBMVl2UO36KlqNZaBvylGYEooprHKH/84d+7DHJNl9f3jCNwoHyh6kxQCyNXc758bmHnjLEGB+KY8GzPg==
   dependencies:
     rxjs "6.5.3"
     rxjs-spy "7.5.1"
