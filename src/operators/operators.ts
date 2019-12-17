@@ -1,12 +1,11 @@
 import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { ActionWithPayload, Action } from 'rxbeach';
+import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import {
   UnknownActionCreatorWithPayload,
   UnknownActionCreator,
   UnknownAction,
 } from 'rxbeach/internal';
-import { ActionWithoutPayload } from 'rxbeach/types/Action';
 
 interface OfType {
   /**
@@ -26,7 +25,7 @@ interface OfType {
    */
   <Payload>(
     ...targetTypes: UnknownActionCreatorWithPayload<Payload>[]
-  ): OperatorFunction<UnknownAction, Action<Payload>>;
+  ): OperatorFunction<UnknownAction, ActionWithPayload<Payload>>;
 
   /**
    * Stream operator to filter specific actions that have non-overlapping payload

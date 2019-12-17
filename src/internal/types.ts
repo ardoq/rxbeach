@@ -1,5 +1,4 @@
-import { ActionWithoutPayload } from 'rxbeach';
-import { ActionWithPayload } from 'rxbeach/types/Action';
+import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 
 export type VoidPayload = void;
 
