@@ -5,7 +5,12 @@ import {
   actionCreator,
   namespaceActionCreator,
 } from 'rxbeach';
-import { extractPayload, withNamespace, ofType } from 'rxbeach/operators';
+import {
+  extractPayload,
+  withNamespace,
+  ofType,
+  carry,
+} from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal/testUtils';
 import { map } from 'rxjs/operators';
 
@@ -26,8 +31,12 @@ test('primitive', extractsPayload, 'Hello World');
 test('array', extractsPayload, ['Hello', { what: 'World' }]);
 test('object', extractsPayload, { foo: true });
 
+type FooPayload = {
+  foo: number;
+};
+
 const voidAction = actionCreator('void');
-const fooAction = actionCreator<{ foo: number }>('foo');
+const fooAction = actionCreator<FooPayload>('foo');
 const barAction = actionCreator<{ bar: number }>('bar');
 const combinedAction = actionCreator<{ foo: number; bar: number }>('extended');
 
@@ -151,6 +160,20 @@ test(
 
     m.expect(
       source.pipe(withNamespace('NS'), ofType(payloadAction), extractPayload())
+    ).toBeObservable(expected);
+  })
+);
+
+test(
+  'carry should combine initial payload with the results of the operator',
+  marbles(m => {
+    const source = m.hot('f', { f });
+    const expected = m.hot('1', {
+      '1': [f.payload, f.payload.foo] as [FooPayload, number],
+    });
+
+    m.expect(
+      source.pipe(extractPayload(), carry(map(e => e.foo)))
     ).toBeObservable(expected);
   })
 );
