@@ -1,6 +1,6 @@
 import untypedTest from 'ava';
 import { Subject } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map, filter, tap } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
 import {
   ActionWithPayload,

@@ -1,6 +1,5 @@
-import { OperatorFunction, pipe, Subject } from 'rxjs';
+import { OperatorFunction, pipe, Subject, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ActionStream } from 'rxbeach';
 import {
   RoutineFunc,
   defaultErrorSubject,
@@ -8,7 +7,10 @@ import {
 } from 'rxbeach/internal';
 import { mergeOperators } from 'rxbeach/operators';
 
-export type Routine<T> = OperatorFunction<UnknownAction, T>;
+export type Routine<Result, Source = UnknownAction> = OperatorFunction<
+  Source,
+  Result
+>;
 
 /**
  * See collectRoutines for documentation
@@ -16,6 +18,17 @@ export type Routine<T> = OperatorFunction<UnknownAction, T>;
 export const routine: RoutineFunc = (
   ...args: OperatorFunction<any, any>[]
 ): Routine<any> => pipe(...(args as [OperatorFunction<any, any>]));
+
+/**
+ * Infer types for a routine that is not based on an action stream.
+ *
+ * @param source The observable to create a routine for. Only used for the type
+ * @param routine The routine to infer types for
+ */
+export const routineFor = <T, R>(
+  source: Observable<T>,
+  routine: Routine<R, T>
+) => routine;
 
 /**
  * Collect multiple routines to one
@@ -30,9 +43,9 @@ export const routine: RoutineFunc = (
  * @param routines The routines to collect
  * @returns A routine that calls the provided routines
  */
-export const collectRoutines = (
-  ...routines: Routine<unknown>[]
-): Routine<unknown> => mergeOperators(...routines);
+export const collectRoutines = <Source>(
+  ...routines: Routine<unknown, Source>[]
+): Routine<unknown, Source> => mergeOperators(...routines);
 
 /**
  * Subscribe a routine to an action stream
@@ -59,9 +72,9 @@ export const collectRoutines = (
  * @returns A Subscription object
  * @see defaultErrorSubject
  */
-export const subscribeRoutine = (
-  action$: ActionStream,
-  routine: Routine<unknown>,
+export const subscribeRoutine = <Source>(
+  action$: Observable<Source>,
+  routine: Routine<unknown, Source>,
   errorSubject: Subject<any> = defaultErrorSubject
 ) =>
   action$
