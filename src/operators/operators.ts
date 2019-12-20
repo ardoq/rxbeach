@@ -1,5 +1,5 @@
 import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map, filter, withLatestFrom } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import {
   UnknownActionCreatorWithPayload,
@@ -98,3 +98,27 @@ export const withNamespace = (
   targetNamespace: string
 ): MonoTypeOperatorFunction<UnknownAction> =>
   filter(({ meta: { namespace } }) => namespace === targetNamespace);
+
+/**
+ * Stream operator that carries the initial payload alongside the results
+ * from the operator parameter
+ *
+ * ```
+ * action$.pipe(
+ *   extractPayload(),
+ *   carry(map(payload => payload.foo))
+ *   tap(([payload, foo]) => {
+ *     // `payload.foo === foo` equals `true`
+ *   })
+ * )
+ * ```
+ *
+ * @param operator The operator to execute
+ */
+export const carry = <Carried, Emitted>(
+  operator: OperatorFunction<Carried, Emitted>
+): OperatorFunction<Carried, [Carried, Emitted]> => observable =>
+  observable.pipe(
+    operator,
+    withLatestFrom(observable, (emitted, carried) => [carried, emitted])
+  );
