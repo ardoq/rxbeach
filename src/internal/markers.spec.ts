@@ -9,8 +9,11 @@ import {
   markCombine,
   markWithLatest,
   NameMarker,
+  detectGlitch,
+  Marker,
 } from 'rxbeach/internal/markers';
 import { tap, map } from 'rxjs/operators';
+import { derivedStream, withStreams } from 'rxbeach/operators';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
 const TOP_MARKER: NameMarker = {
@@ -112,4 +115,80 @@ test('findMarker finds marker when before tap and map operators', t => {
   );
 
   t.deepEqual(findMarker(piped$), TOP_MARKER);
+});
+
+// remote  source
+//   |     / \
+//    \   B   C
+//     \ / \ /
+//      F  D|E
+const remote$ = new Observable<unknown>().pipe(markName('remote'));
+const bravo$ = source$.pipe(markName('B'));
+const charlie$ = source$.pipe(markName('C'));
+const delta$ = bravo$.pipe(derivedStream('D', charlie$));
+const echo$ = bravo$.pipe(withStreams('E', charlie$));
+const foxtrot$ = bravo$.pipe(derivedStream('F', remote$));
+
+const source = TOP_MARKER;
+const bravo = {
+  type: MarkerType.NAME,
+  name: 'B',
+  sources: [source],
+};
+const charlie = {
+  type: MarkerType.NAME,
+  name: 'C',
+  sources: [source],
+};
+const delta = {
+  type: MarkerType.NAME,
+  name: 'D',
+  sources: [
+    {
+      type: MarkerType.COMBINE,
+      sources: [bravo, charlie],
+    },
+  ],
+};
+const echo = {
+  type: MarkerType.NAME,
+  name: 'E',
+  sources: [
+    {
+      type: MarkerType.WITH_LATEST,
+      sources: [bravo],
+      dependencies: [charlie],
+    },
+  ],
+};
+
+test('detectGlitch detects glitches from derivedStream', t => {
+  t.deepEqual(detectGlitch(findMarker(delta$) as Marker), [
+    [delta, delta.sources[0], bravo, source],
+    [delta, delta.sources[0], charlie, source],
+  ] as [Marker[], Marker[]]);
+});
+
+test('detectGlitch detects glitches from withStreams', t => {
+  t.deepEqual(detectGlitch(findMarker(echo$) as Marker), [
+    [echo, echo.sources[0], bravo, source],
+    [echo, echo.sources[0], charlie, source],
+  ] as [Marker[], Marker[]]);
+});
+
+test('detectGlitches does not detect false glitches', t => {
+  t.false(detectGlitch(findMarker(foxtrot$) as Marker));
+});
+
+test('detectGlitches does not detect anything on marker without parent', t => {
+  t.false(detectGlitch(actionMarker('asdf')));
+  // The following test hit's the branch in detectGlitch when sources is
+  // undefined, which is not actually possible in practice, hence the INVALID
+  // marker type
+  t.false(
+    detectGlitch({
+      type: MarkerType.INVALID,
+      dependencies: [],
+    })
+  );
 });
