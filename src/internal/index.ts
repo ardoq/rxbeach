@@ -9,3 +9,11 @@ export { RoutineFunc } from 'rxbeach/internal/routineFunc';
 export { coldMergeOperators } from 'rxbeach/operators/mergeOperators';
 export { defaultErrorSubject } from 'rxbeach/internal/defaultErrorSubject';
 export { rethrowErrorGlobally } from 'rxbeach/internal/rethrowErrorGlobally';
+export {
+  actionMarker,
+  markName,
+  markOfType,
+  markCombine,
+  markWithLatest,
+} from 'rxbeach/internal/markers';
+export { CombinationOperator } from 'rxbeach/internal/CombinationOperator';
