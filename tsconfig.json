@@ -3,6 +3,7 @@
     "target": "esnext",
     "strict": true,
     "allowJs": false,
+    "downlevelIteration": true,
 
     "moduleResolution": "node",
     "isolatedModules": false,
