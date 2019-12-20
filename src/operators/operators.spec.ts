@@ -14,7 +14,9 @@ import {
 } from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal/testUtils';
 import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
+import { UnknownAction } from 'rxbeach/internal';
+import { findMarker, MarkerType } from 'rxbeach/internal/markers';
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
   marbles(m => {
@@ -71,6 +73,20 @@ test(
     m.expect(source.pipe(ofType(voidAction))).toBeObservable(expected);
   })
 );
+
+test('ofType should add a stream marker', t => {
+  const piped$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.OF_TYPE,
+    sources: [
+      {
+        type: MarkerType.ACTION,
+        name: voidAction.type,
+      },
+    ],
+  });
+});
 
 test(
   'ofType should filter multiple actions that are mix of void and not void',

@@ -1,10 +1,12 @@
-import { OperatorFunction, MonoTypeOperatorFunction, of } from 'rxjs';
+import { OperatorFunction, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
 import { map, filter, withLatestFrom, flatMap } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import {
   UnknownActionCreatorWithPayload,
   UnknownActionCreator,
   UnknownAction,
+  actionMarker,
+  markOfType,
 } from 'rxbeach/internal';
 
 interface OfType {
@@ -74,7 +76,10 @@ export const ofType: OfType = ((
 ): OperatorFunction<UnknownAction, UnknownAction> => {
   const types = new Set(targetTypes.map(({ type }) => type));
 
-  return filter((action: UnknownAction) => types.has(action.type));
+  return pipe(
+    filter((action: UnknownAction) => types.has(action.type)),
+    markOfType([...types].map(actionMarker))
+  );
 }) as any; // Implementation is untyped
 
 /**
