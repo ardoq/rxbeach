@@ -27,3 +27,5 @@ export {
   routine,
   collectRoutines,
 } from 'rxbeach/routines';
+
+export { derivedStream } from 'rxbeach/derivedStream';

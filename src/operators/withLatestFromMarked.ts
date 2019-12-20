@@ -1,26 +1,22 @@
 import { Observable, OperatorFunction } from 'rxjs';
+import { withLatestFrom } from 'rxjs/operators';
+import { markWithLatest } from 'rxbeach/internal';
 
-export type CombinationOperator = {
-  <T, A>(name: string, a: Observable<A>): OperatorFunction<T, [T, A]>;
-  <T, A, B>(name: string, a: Observable<A>, b: Observable<B>): OperatorFunction<
-    T,
-    [T, A, B]
-  >;
+export type WithLatestFromMarked = {
+  <T, A>(a: Observable<A>): OperatorFunction<T, [T, A]>;
+  <T, A, B>(a: Observable<A>, b: Observable<B>): OperatorFunction<T, [T, A, B]>;
   <T, A, B, C>(
-    name: string,
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>
   ): OperatorFunction<T, [T, A, B, C]>;
   <T, A, B, C, D>(
-    name: string,
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
     d: Observable<D>
   ): OperatorFunction<T, [T, A, B, C, D]>;
   <T, A, B, C, D, E>(
-    name: string,
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -28,7 +24,6 @@ export type CombinationOperator = {
     e: Observable<E>
   ): OperatorFunction<T, [T, A, B, C, D, E]>;
   <T, A, B, C, D, E, F>(
-    name: string,
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -37,7 +32,6 @@ export type CombinationOperator = {
     f: Observable<F>
   ): OperatorFunction<T, [T, A, B, C, D, E, F]>;
   <T, A, B, C, D, E, F, G>(
-    name: string,
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -46,8 +40,19 @@ export type CombinationOperator = {
     f: Observable<F>,
     g: Observable<G>
   ): OperatorFunction<T, [T, A, B, C, D, E, F, G]>;
-  <T>(name: string, ...dependencies: Observable<unknown>[]): OperatorFunction<
-    T,
-    unknown
-  >;
+  <T>(...dependencies: Observable<unknown>[]): OperatorFunction<T, unknown>;
 };
+
+/**
+ * withLatestFrom that also adds a marker for stream analysis.
+ *
+ * @param dependencies$ The dependencies of this stream
+ * @see withLatestFrom
+ */
+export const withLatestFromMarked: WithLatestFromMarked = (
+  ...dependencies$: Observable<unknown>[]
+): OperatorFunction<any, any> => observable$ =>
+  observable$.pipe(
+    withLatestFrom(...dependencies$),
+    markWithLatest(observable$, dependencies$)
+  );

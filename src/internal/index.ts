@@ -16,4 +16,3 @@ export {
   markCombine,
   markWithLatest,
 } from 'rxbeach/internal/markers';
-export { CombinationOperator } from 'rxbeach/internal/CombinationOperator';

@@ -1,7 +1,7 @@
 import test from 'ava';
 import { markName } from 'rxbeach/internal';
 import { Observable } from 'rxjs';
-import { withStreams } from 'rxbeach/operators';
+import { withLatestFromMarked } from 'rxbeach/operators';
 import { findMarker, MarkerType, NameMarker } from 'rxbeach/internal/markers';
 import { marbles } from 'rxjs-marbles/ava';
 
@@ -9,7 +9,10 @@ test('derivedStream adds name and combine marker', t => {
   const source$ = new Observable<unknown>().pipe(markName('source'));
   const dependency$ = source$.pipe(markName('dependency'));
 
-  const derived$ = source$.pipe(withStreams('derived', dependency$));
+  const derived$ = source$.pipe(
+    withLatestFromMarked(dependency$),
+    markName('derived')
+  );
 
   const sourceNameMarker: NameMarker = {
     type: MarkerType.NAME,
@@ -46,8 +49,8 @@ test(
     const bravo$ = m.hot('   -b-', letters);
     const combined$ = m.hot('--C', combined);
 
-    m.expect(alpha$.pipe(withStreams('combined', bravo$))).toBeObservable(
-      combined$
-    );
+    m.expect(
+      alpha$.pipe(withLatestFromMarked(bravo$), markName('combined'))
+    ).toBeObservable(combined$);
   })
 );

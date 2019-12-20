@@ -13,7 +13,8 @@ import {
   Marker,
 } from 'rxbeach/internal/markers';
 import { tap, map } from 'rxjs/operators';
-import { derivedStream, withStreams } from 'rxbeach/operators';
+import { derivedStream } from 'rxbeach';
+import { withLatestFromMarked } from 'rxbeach/operators';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
 const TOP_MARKER: NameMarker = {
@@ -125,9 +126,9 @@ test('findMarker finds marker when before tap and map operators', t => {
 const remote$ = new Observable<unknown>().pipe(markName('remote'));
 const bravo$ = source$.pipe(markName('B'));
 const charlie$ = source$.pipe(markName('C'));
-const delta$ = bravo$.pipe(derivedStream('D', charlie$));
-const echo$ = bravo$.pipe(withStreams('E', charlie$));
-const foxtrot$ = bravo$.pipe(derivedStream('F', remote$));
+const delta$ = derivedStream('D', bravo$, charlie$);
+const echo$ = bravo$.pipe(withLatestFromMarked(charlie$), markName('E'));
+const foxtrot$ = derivedStream('F', bravo$, remote$);
 
 const source = TOP_MARKER;
 const bravo = {
@@ -169,7 +170,7 @@ test('detectGlitch detects glitches from derivedStream', t => {
   ] as [Marker[], Marker[]]);
 });
 
-test('detectGlitch detects glitches from withStreams', t => {
+test('detectGlitch detects glitches from withLatestFromMarked', t => {
   t.deepEqual(detectGlitch(findMarker(echo$) as Marker), [
     [echo, echo.sources[0], bravo, source],
     [echo, echo.sources[0], charlie, source],
