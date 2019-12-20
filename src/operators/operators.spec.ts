@@ -10,9 +10,11 @@ import {
   withNamespace,
   ofType,
   carry,
+  apply,
 } from 'rxbeach/operators';
 import { mockAction } from 'rxbeach/internal/testUtils';
 import { map } from 'rxjs/operators';
+import { pipe } from 'rxjs';
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
   marbles(m => {
@@ -167,13 +169,33 @@ test(
 test(
   'carry should combine initial payload with the results of the operator',
   marbles(m => {
-    const source = m.hot('f', { f });
+    const source = m.hot(' f', { f });
     const expected = m.hot('1', {
       '1': [f.payload, f.payload.foo] as [FooPayload, number],
     });
 
     m.expect(
       source.pipe(extractPayload(), carry(map(e => e.foo)))
+    ).toBeObservable(expected);
+  })
+);
+
+test(
+  'apply should provide context to operators',
+  marbles(m => {
+    const source = m.hot('  f', { f });
+    const expected = m.hot('n', { n: f.payload.foo });
+
+    m.expect(
+      source.pipe(
+        extractPayload(),
+        apply(({ foo }) =>
+          pipe(
+            map(() => undefined),
+            map(() => foo)
+          )
+        )
+      )
     ).toBeObservable(expected);
   })
 );

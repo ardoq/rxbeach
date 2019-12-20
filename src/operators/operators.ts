@@ -1,5 +1,5 @@
-import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
-import { map, filter, withLatestFrom } from 'rxjs/operators';
+import { OperatorFunction, MonoTypeOperatorFunction, of } from 'rxjs';
+import { map, filter, withLatestFrom, flatMap } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
 import {
   UnknownActionCreatorWithPayload,
@@ -104,7 +104,7 @@ export const withNamespace = (
  * from the operator parameter
  *
  * ```
- * action$.pipe(
+ * routine(
  *   extractPayload(),
  *   carry(map(payload => payload.foo))
  *   tap(([payload, foo]) => {
@@ -122,3 +122,31 @@ export const carry = <Carried, Emitted>(
     operator,
     withLatestFrom(observable, (emitted, carried) => [carried, emitted])
   );
+
+/**
+ * A utility operator for using pipes which need a value to be present
+ * throughout the pipe.
+ *
+ * The main use for this operator is to provide context to `catchError`. `carry`
+ * should be preferred where possible.
+ *
+ * Example:
+ * ```ts
+ * routine(
+ *   ofType(myAction),
+ *   apply(action => pipe(
+ *     map(action => ...),
+ *     tap(mapped => ...),
+ *     catchError(() => {
+ *       console.log('Error from action:', action);
+ *     })
+ *   ))
+ * )
+ * ```
+ *
+ * @param operator A function that returns an operator function
+ */
+export const apply = <P, R>(
+  operator: (payload: P) => OperatorFunction<P, R>
+): OperatorFunction<P, R> =>
+  flatMap(payload => of(payload).pipe(operator(payload)));
