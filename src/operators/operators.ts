@@ -5,7 +5,6 @@ import {
   UnknownActionCreatorWithPayload,
   UnknownActionCreator,
   UnknownAction,
-  actionMarker,
   markOfType,
 } from 'rxbeach/internal';
 
@@ -78,7 +77,7 @@ export const ofType: OfType = ((
 
   return pipe(
     filter((action: UnknownAction) => types.has(action.type)),
-    markOfType([...types].map(actionMarker))
+    markOfType(targetTypes.map(({ _marker }) => _marker))
   );
 }) as any; // Implementation is untyped
 

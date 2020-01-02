@@ -1,4 +1,5 @@
 import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from 'rxbeach';
+import { actionMarker } from 'rxbeach/internal';
 
 interface ActionCreatorFunc {
   /**
@@ -36,6 +37,7 @@ export const actionCreator: ActionCreatorFunc = (type: string) => {
       meta: Object.freeze({}),
     });
   action.type = type;
+  action._marker = actionMarker(type);
 
   return Object.freeze(action);
 };

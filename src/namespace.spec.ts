@@ -4,7 +4,7 @@ import {
   ActionDispatcher,
   namespaceActionDispatcher,
 } from 'rxbeach';
-import { UnknownAction } from 'rxbeach/internal';
+import { UnknownAction, actionMarker } from 'rxbeach/internal';
 import { _namespaceAction } from 'rxbeach/namespace';
 import { mockAction } from 'rxbeach/internal/testUtils';
 
@@ -38,6 +38,7 @@ test('namespaceActionCreator should create actions with namespace', t => {
   const actionCreator = (payload: number) =>
     mockAction(type, 'old namespace', payload);
   actionCreator.type = type;
+  actionCreator._marker = actionMarker(type);
 
   const namespacedActionCreator = namespaceActionCreator(
     namespace,

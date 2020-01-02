@@ -1,4 +1,5 @@
 import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
+import { ActionMarker } from 'rxbeach/internal/markers';
 
 export type VoidPayload = void;
 
@@ -13,6 +14,7 @@ export type UnknownAction = ActionWithoutPayload & { payload?: unknown };
 
 export interface ActionCreatorCommon {
   readonly type: string;
+  readonly _marker: ActionMarker;
 }
 
 /**

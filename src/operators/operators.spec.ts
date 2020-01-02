@@ -16,7 +16,7 @@ import { mockAction } from 'rxbeach/internal/testUtils';
 import { map } from 'rxjs/operators';
 import { Observable, pipe } from 'rxjs';
 import { UnknownAction } from 'rxbeach/internal';
-import { findMarker, MarkerType } from 'rxbeach/internal/markers';
+import { findMarker, MarkerType, OfTypeMarker } from 'rxbeach/internal/markers';
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
   marbles(m => {
@@ -86,6 +86,15 @@ test('ofType should add a stream marker', t => {
       },
     ],
   });
+});
+
+test('ofType markers should have reference equality of action marker', t => {
+  const one$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
+  const two$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
+  const one = findMarker(one$) as OfTypeMarker;
+  const two = findMarker(two$) as OfTypeMarker;
+
+  t.assert(one.sources[0] === two.sources[0]);
 });
 
 test(
