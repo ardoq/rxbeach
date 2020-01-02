@@ -1,7 +1,10 @@
-import * as operators from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { markWithLatestFrom } from 'rxbeach/internal';
-import { markMerge, markCombineLatest } from 'rxbeach/internal/markers';
+import * as operators from 'rxjs/operators';
+import {
+  markMerge,
+  markCombineLatest,
+  markWithLatestFrom,
+} from 'rxbeach/internal';
 
 export const merge = ((...sources: Observable<unknown>[]) => (
   observable$: Observable<unknown>
