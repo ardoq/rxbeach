@@ -15,4 +15,6 @@ export {
   markOfType,
   markCombineLatest,
   markWithLatestFrom,
+  markMerge,
+  markZip,
 } from 'rxbeach/internal/markers';

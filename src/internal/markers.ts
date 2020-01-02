@@ -14,6 +14,7 @@ export enum MarkerType {
   COMBINE_LATEST,
   WITH_LATEST_FROM,
   MERGE,
+  ZIP,
   INVALID, // For test use
 }
 
@@ -86,13 +87,18 @@ export type MergeMarker = MarkerBase<MarkerType.MERGE> & {
   readonly sources: (Marker | null)[];
 };
 
+export type ZipMarker = MarkerBase<MarkerType.ZIP> & {
+  readonly sources: (Marker | null)[];
+};
+
 export type Marker =
   | NameMarker
   | ActionMarker
   | OfTypeMarker
   | CombineLatestMarker
   | WithLatestFromMarker
-  | MergeMarker;
+  | MergeMarker
+  | ZipMarker;
 
 export const actionMarker = (name: string): ActionMarker => ({
   type: MarkerType.ACTION,
@@ -160,6 +166,16 @@ export const markMerge = <T>(
   observable$.lift(
     new MarkerOperator({
       type: MarkerType.MERGE,
+      sources: sources$.map(findMarker),
+    })
+  );
+
+export const markZip = <T>(
+  sources$: Observable<unknown>[]
+): MonoTypeOperatorFunction<T> => observable$ =>
+  observable$.lift(
+    new MarkerOperator({
+      type: MarkerType.ZIP,
       sources: sources$.map(findMarker),
     })
   );

@@ -11,16 +11,24 @@ import {
   NameMarker,
   detectGlitch,
   Marker,
+  markMerge,
+  markZip,
 } from 'rxbeach/internal/markers';
 import { tap, map } from 'rxjs/operators';
 import { derivedStream } from 'rxbeach';
 import { withLatestFrom } from 'rxbeach/operators';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
+const dependency$ = source$.pipe(markName('dependency'));
 const TOP_MARKER: NameMarker = {
   type: MarkerType.NAME,
   name: 'source',
   sources: [null],
+};
+const dependency: NameMarker = {
+  type: MarkerType.NAME,
+  name: 'dependency',
+  sources: [TOP_MARKER],
 };
 
 test('actionMarker creates actionMarker', t => {
@@ -64,10 +72,9 @@ test('markOfType marks action dependencies', t => {
   });
 });
 
-test('combineMarker includes names of parents', t => {
+test('markCombineLatest includes sources', t => {
   const alpha$ = source$.pipe(markName('alpha'));
-  const bravo$ = source$.pipe(markName('bravo'));
-  const piped$ = source$.pipe(markCombineLatest([alpha$, bravo$]));
+  const piped$ = source$.pipe(markCombineLatest([alpha$, dependency$]));
 
   t.deepEqual(findMarker(piped$), {
     type: MarkerType.COMBINE_LATEST,
@@ -77,29 +84,38 @@ test('combineMarker includes names of parents', t => {
         name: 'alpha',
         sources: [TOP_MARKER],
       },
-      {
-        type: MarkerType.NAME,
-        name: 'bravo',
-        sources: [TOP_MARKER],
-      },
+      dependency,
     ],
   });
 });
 
-test('injectMarker includes names of source and dependencies', t => {
-  const dependency$ = source$.pipe(markName('dependency'));
+test('markWithLatestFrom includes source and dependencies', t => {
   const piped$ = source$.pipe(markWithLatestFrom(source$, [dependency$]));
 
   t.deepEqual(findMarker(piped$), {
     type: MarkerType.WITH_LATEST_FROM,
     sources: [TOP_MARKER],
-    dependencies: [
-      {
-        type: MarkerType.NAME,
-        name: 'dependency',
-        sources: [TOP_MARKER],
-      },
-    ],
+    dependencies: [dependency],
+  });
+});
+
+test('markMerge includes sources', t => {
+  const dependency$ = source$.pipe(markName('dependency'));
+  const piped$ = source$.pipe(markMerge([source$, dependency$]));
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.MERGE,
+    sources: [TOP_MARKER, dependency],
+  });
+});
+
+test('markZip includes sources', t => {
+  const dependency$ = source$.pipe(markName('dependency'));
+  const piped$ = source$.pipe(markZip([source$, dependency$]));
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.ZIP,
+    sources: [TOP_MARKER, dependency],
   });
 });
 
