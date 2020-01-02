@@ -1,7 +1,12 @@
 import test from 'ava';
 import { Observable } from 'rxjs';
 import { markName } from 'rxbeach/internal';
-import { withLatestFrom, merge, combineLatest } from 'rxbeach/operators';
+import {
+  withLatestFrom,
+  merge,
+  combineLatest,
+  startWith,
+} from 'rxbeach/operators';
 import { NameMarker, MarkerType, findMarker } from 'rxbeach/internal/markers';
 import { marbles } from 'rxjs-marbles/ava';
 
@@ -89,5 +94,21 @@ test(
     const combined$ = m.hot('-BC', combined);
 
     m.expect(alpha$.pipe(combineLatest(bravo$))).toBeObservable(combined$);
+  })
+);
+
+test('startWith adds parent marker', t => {
+  const startWith$ = source$.pipe(startWith(null));
+
+  t.deepEqual(findMarker(startWith$), source);
+});
+
+test(
+  'startWith emits',
+  marbles(m => {
+    const alpha$ = m.hot('    --c', letters);
+    const startWith$ = m.hot('a-c', letters);
+
+    m.expect(alpha$.pipe(startWith(letters.a))).toBeObservable(startWith$);
   })
 );

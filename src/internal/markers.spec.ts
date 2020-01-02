@@ -19,7 +19,6 @@ import {
   map,
   catchError,
   shareReplay,
-  startWith,
   scan,
   filter,
   debounceTime,

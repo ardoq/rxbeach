@@ -9,5 +9,6 @@ export {
   withLatestFrom,
   combineLatest,
   merge,
+  startWith,
 } from 'rxbeach/operators/decorated';
 export { mergeOperators } from 'rxbeach/operators/mergeOperators';
