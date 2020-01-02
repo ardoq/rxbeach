@@ -1,5 +1,5 @@
-import test from 'ava';
-import { Observable } from 'rxjs';
+import test, { Macro } from 'ava';
+import { Observable, OperatorFunction, pipe, noop, empty } from 'rxjs';
 import {
   findMarker,
   MarkerType,
@@ -14,7 +14,17 @@ import {
   markMerge,
   markZip,
 } from 'rxbeach/internal/markers';
-import { tap, map } from 'rxjs/operators';
+import {
+  tap,
+  map,
+  catchError,
+  shareReplay,
+  startWith,
+  scan,
+  filter,
+  debounceTime,
+  pluck,
+} from 'rxjs/operators';
 import { derivedStream } from 'rxbeach';
 import { withLatestFrom } from 'rxbeach/operators';
 
@@ -119,20 +129,21 @@ test('markZip includes sources', t => {
   });
 });
 
-test('findMarker finds marker when before tap operator', t => {
-  const piped$ = source$.pipe(tap(() => null));
+const findMarkerOver: Macro<[OperatorFunction<any, any>]> = (t, operator) =>
+  t.deepEqual(findMarker(source$.pipe(operator)), TOP_MARKER);
+findMarkerOver.title = name => `findMarker finds marker over ${name} operator`;
 
-  t.deepEqual(findMarker(piped$), TOP_MARKER);
-});
-
-test('findMarker finds marker when before tap and map operators', t => {
-  const piped$ = source$.pipe(
-    tap(() => null),
-    map(() => null)
-  );
-
-  t.deepEqual(findMarker(piped$), TOP_MARKER);
-});
+const coop = () => true;
+const emop = () => empty();
+test('debounceTime', findMarkerOver, debounceTime(0));
+test('filter', findMarkerOver, filter(coop));
+test('scan', findMarkerOver, scan(coop));
+test('shareReplay', findMarkerOver, shareReplay());
+test('catchError', findMarkerOver, catchError(emop));
+test('tap and map', findMarkerOver, pipe(tap(coop), map(coop)));
+test('tap', findMarkerOver, tap(noop));
+test('map', findMarkerOver, map(coop));
+test('pluck', findMarkerOver, pluck('key'));
 
 // remote  source
 //   |     / \
