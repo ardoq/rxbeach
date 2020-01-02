@@ -13,6 +13,6 @@ export {
   actionMarker,
   markName,
   markOfType,
-  markCombine,
-  markWithLatest,
+  markCombineLatest,
+  markWithLatestFrom,
 } from 'rxbeach/internal/markers';

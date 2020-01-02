@@ -6,15 +6,15 @@ import {
   markOfType,
   actionMarker,
   markName,
-  markCombine,
-  markWithLatest,
+  markCombineLatest,
+  markWithLatestFrom,
   NameMarker,
   detectGlitch,
   Marker,
 } from 'rxbeach/internal/markers';
 import { tap, map } from 'rxjs/operators';
 import { derivedStream } from 'rxbeach';
-import { withLatestFromMarked } from 'rxbeach/operators';
+import { withLatestFrom } from 'rxbeach/operators';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
 const TOP_MARKER: NameMarker = {
@@ -67,10 +67,10 @@ test('markOfType marks action dependencies', t => {
 test('combineMarker includes names of parents', t => {
   const alpha$ = source$.pipe(markName('alpha'));
   const bravo$ = source$.pipe(markName('bravo'));
-  const piped$ = source$.pipe(markCombine([alpha$, bravo$]));
+  const piped$ = source$.pipe(markCombineLatest([alpha$, bravo$]));
 
   t.deepEqual(findMarker(piped$), {
-    type: MarkerType.COMBINE,
+    type: MarkerType.COMBINE_LATEST,
     sources: [
       {
         type: MarkerType.NAME,
@@ -88,10 +88,10 @@ test('combineMarker includes names of parents', t => {
 
 test('injectMarker includes names of source and dependencies', t => {
   const dependency$ = source$.pipe(markName('dependency'));
-  const piped$ = source$.pipe(markWithLatest(source$, [dependency$]));
+  const piped$ = source$.pipe(markWithLatestFrom(source$, [dependency$]));
 
   t.deepEqual(findMarker(piped$), {
-    type: MarkerType.WITH_LATEST,
+    type: MarkerType.WITH_LATEST_FROM,
     sources: [TOP_MARKER],
     dependencies: [
       {
@@ -127,7 +127,7 @@ const remote$ = new Observable<unknown>().pipe(markName('remote'));
 const bravo$ = source$.pipe(markName('B'));
 const charlie$ = source$.pipe(markName('C'));
 const delta$ = derivedStream('D', bravo$, charlie$);
-const echo$ = bravo$.pipe(withLatestFromMarked(charlie$), markName('E'));
+const echo$ = bravo$.pipe(withLatestFrom(charlie$), markName('E'));
 const foxtrot$ = derivedStream('F', bravo$, remote$);
 
 const source = TOP_MARKER;
@@ -146,7 +146,7 @@ const delta = {
   name: 'D',
   sources: [
     {
-      type: MarkerType.COMBINE,
+      type: MarkerType.COMBINE_LATEST,
       sources: [bravo, charlie],
     },
   ],
@@ -156,7 +156,7 @@ const echo = {
   name: 'E',
   sources: [
     {
-      type: MarkerType.WITH_LATEST,
+      type: MarkerType.WITH_LATEST_FROM,
       sources: [bravo],
       dependencies: [charlie],
     },
@@ -170,7 +170,7 @@ test('detectGlitch detects glitches from derivedStream', t => {
   ] as [Marker[], Marker[]]);
 });
 
-test('detectGlitch detects glitches from withLatestFromMarked', t => {
+test('detectGlitch detects glitches from withLatestFrom', t => {
   t.deepEqual(detectGlitch(findMarker(echo$) as Marker), [
     [echo, echo.sources[0], bravo, source],
     [echo, echo.sources[0], charlie, source],

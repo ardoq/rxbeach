@@ -1,5 +1,5 @@
 import { Observable, combineLatest } from 'rxjs';
-import { markCombine, markName } from 'rxbeach/internal';
+import { markCombineLatest, markName } from 'rxbeach/internal';
 
 export type DerivedStream = {
   <A>(name: string, a: Observable<A>): Observable<[A]>;
@@ -62,6 +62,6 @@ export const derivedStream: DerivedStream = (
   ...dependencies: Observable<unknown>[]
 ): Observable<any> =>
   combineLatest(...dependencies).pipe(
-    markCombine(dependencies),
+    markCombineLatest(dependencies),
     markName(name)
   );

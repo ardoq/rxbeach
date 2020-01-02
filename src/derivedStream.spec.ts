@@ -26,7 +26,7 @@ test('derivedStream adds name and combine marker', t => {
     name: 'derived',
     sources: [
       {
-        type: MarkerType.COMBINE,
+        type: MarkerType.COMBINE_LATEST,
         sources: [sourceNameMarker, dependencyNameMarker],
       },
     ],

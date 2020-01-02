@@ -7,12 +7,13 @@ import {
   Observable,
 } from 'rxjs';
 
-export const enum MarkerType {
+export enum MarkerType {
+  NAME,
   ACTION,
   OF_TYPE,
-  COMBINE,
-  WITH_LATEST,
-  NAME,
+  COMBINE_LATEST,
+  WITH_LATEST_FROM,
+  MERGE,
   INVALID, // For test use
 }
 
@@ -44,20 +45,19 @@ type MarkerBase<M extends MarkerType = MarkerType> = {
   readonly type: M;
 };
 
-type NamedMarker<M extends MarkerType> = MarkerBase<M> & {
+/**
+ * A marker to name a stream
+ */
+export type NameMarker = MarkerBase<MarkerType.NAME> & {
   readonly name: string;
+  readonly sources: [Marker | null];
 };
 
 /**
  * A marker representing an action creator
  */
-export type ActionMarker = NamedMarker<MarkerType.ACTION>;
-
-/**
- * A marker to name a stream
- */
-export type NameMarker = NamedMarker<MarkerType.NAME> & {
-  readonly sources: [Marker | null];
+export type ActionMarker = MarkerBase<MarkerType.ACTION> & {
+  readonly name: string;
 };
 
 /**
@@ -70,24 +70,29 @@ export type OfTypeMarker = MarkerBase<MarkerType.OF_TYPE> & {
 /**
  * A marker for the `combineLatest` operator
  */
-export type CombineMarker = MarkerBase<MarkerType.COMBINE> & {
+export type CombineLatestMarker = MarkerBase<MarkerType.COMBINE_LATEST> & {
   readonly sources: (Marker | null)[];
 };
 
 /**
  * A marker for the `withLatestFrom` operator
  */
-export type WithLatestMarker = MarkerBase<MarkerType.WITH_LATEST> & {
+export type WithLatestFromMarker = MarkerBase<MarkerType.WITH_LATEST_FROM> & {
   readonly sources: [Marker | null];
   readonly dependencies: (Marker | null)[];
 };
 
+export type MergeMarker = MarkerBase<MarkerType.MERGE> & {
+  readonly sources: (Marker | null)[];
+};
+
 export type Marker =
-  | WithLatestMarker
-  | CombineMarker
-  | OfTypeMarker
   | NameMarker
-  | ActionMarker;
+  | ActionMarker
+  | OfTypeMarker
+  | CombineLatestMarker
+  | WithLatestFromMarker
+  | MergeMarker;
 
 export const actionMarker = (name: string): ActionMarker => ({
   type: MarkerType.ACTION,
@@ -127,25 +132,35 @@ export const markOfType = <T>(
     })
   );
 
-export const markCombine = <T>(
+export const markCombineLatest = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
   observable$.lift(
     new MarkerOperator({
-      type: MarkerType.COMBINE,
+      type: MarkerType.COMBINE_LATEST,
       sources: sources$.map(findMarker),
     })
   );
 
-export const markWithLatest = <T>(
+export const markWithLatestFrom = <T>(
   source$: Observable<unknown>,
   dependencies$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
   observable$.lift(
     new MarkerOperator({
-      type: MarkerType.WITH_LATEST,
+      type: MarkerType.WITH_LATEST_FROM,
       sources: [findMarker(source$)],
       dependencies: dependencies$.map(findMarker),
+    })
+  );
+
+export const markMerge = <T>(
+  sources$: Observable<unknown>[]
+): MonoTypeOperatorFunction<T> => observable$ =>
+  observable$.lift(
+    new MarkerOperator({
+      type: MarkerType.MERGE,
+      sources: sources$.map(findMarker),
     })
   );
 
