@@ -29,3 +29,9 @@ export {
 } from 'rxbeach/routines';
 
 export { derivedStream } from 'rxbeach/derivedStream';
+
+export {
+  combineLatest,
+  merge,
+  zip,
+} from 'rxbeach/decoratedObservableCombiners';
