@@ -1,11 +1,4 @@
-import {
-  Operator,
-  Subscriber,
-  Subscribable,
-  TeardownLogic,
-  MonoTypeOperatorFunction,
-  Observable,
-} from 'rxjs';
+import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 
 export enum MarkerType {
   NAME,
@@ -105,84 +98,82 @@ export const actionMarker = (name: string): ActionMarker => ({
   name,
 });
 
-export class MarkerOperator<T, M extends Marker> implements Operator<T, T> {
+/**
+ * An Observable with a marker field
+ *
+ * The Observable does not have it's own subscription function. Instead
+ * subscription is defered to the source. This means the marker is only visible
+ * when inspecting the Observable, and that it does not add extra function calls
+ * when subscribed.
+ */
+export class MarkedObservable<T, M extends Marker> extends Observable<T> {
   readonly marker: M;
 
-  constructor(marker: M) {
-    this.marker = marker;
-  }
+  constructor(source: Observable<T>, marker: M) {
+    // When the observable has no subscription function (empty constructor call)
+    // and no operator, but does have a source, the `subscribe` method will just
+    // subscribe the source
+    super();
+    this.source = source;
 
-  call(subscriber: Subscriber<T>, source: Subscribable<T>): TeardownLogic {
-    return source.subscribe(subscriber);
+    this.marker = marker;
   }
 }
 
 export const markName = <T>(
   name: string
 ): MonoTypeOperatorFunction<T> => observable$ =>
-  observable$.lift(
-    new MarkerOperator({
-      type: MarkerType.NAME,
-      sources: [findMarker(observable$)],
-      name,
-    })
-  );
+  new MarkedObservable(observable$, {
+    type: MarkerType.NAME,
+    sources: [findMarker(observable$)],
+    name,
+  });
 
 export const markOfType = <T>(
   sources: ActionMarker[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
-  observable$.lift(
-    new MarkerOperator({
-      type: MarkerType.OF_TYPE,
-      sources,
-    })
-  );
+  new MarkedObservable(observable$, {
+    type: MarkerType.OF_TYPE,
+    sources,
+  });
 
 export const markCombineLatest = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
-  observable$.lift(
-    new MarkerOperator({
-      type: MarkerType.COMBINE_LATEST,
-      sources: sources$.map(findMarker),
-    })
-  );
+  new MarkedObservable(observable$, {
+    type: MarkerType.COMBINE_LATEST,
+    sources: sources$.map(findMarker),
+  });
 
 export const markWithLatestFrom = <T>(
   source$: Observable<unknown>,
   dependencies$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
-  observable$.lift(
-    new MarkerOperator({
-      type: MarkerType.WITH_LATEST_FROM,
-      sources: [findMarker(source$)],
-      dependencies: dependencies$.map(findMarker),
-    })
-  );
+  new MarkedObservable(observable$, {
+    type: MarkerType.WITH_LATEST_FROM,
+    sources: [findMarker(source$)],
+    dependencies: dependencies$.map(findMarker),
+  });
 
 export const markMerge = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
-  observable$.lift(
-    new MarkerOperator({
-      type: MarkerType.MERGE,
-      sources: sources$.map(findMarker),
-    })
-  );
+  new MarkedObservable(observable$, {
+    type: MarkerType.MERGE,
+    sources: sources$.map(findMarker),
+  });
 
 export const markZip = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => observable$ =>
-  observable$.lift(
-    new MarkerOperator({
-      type: MarkerType.ZIP,
-      sources: sources$.map(findMarker),
-    })
-  );
+  new MarkedObservable(observable$, {
+    type: MarkerType.ZIP,
+    sources: sources$.map(findMarker),
+  });
 
 export const findMarker = (observable$: Observable<unknown>): Marker | null => {
-  if (observable$.operator instanceof MarkerOperator) {
-    return observable$.operator.marker;
+  if (observable$ instanceof MarkedObservable) {
+    return observable$.marker;
   } else if (observable$.source instanceof Observable) {
     return findMarker(observable$.source);
   } else {

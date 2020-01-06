@@ -4,8 +4,9 @@ import {
   markMerge,
   markCombineLatest,
   markWithLatestFrom,
+  findMarker,
+  MarkedObservable,
 } from 'rxbeach/internal';
-import { findMarker, MarkerOperator } from 'rxbeach/internal/markers';
 
 export const merge = ((...sources: Observable<unknown>[]) => (
   observable$: Observable<unknown>
@@ -37,5 +38,5 @@ export const startWith = ((...args: any) => (
   const startWith$ = observable$.pipe(operators.startWith(...args));
   const marker = findMarker(observable$);
   if (marker === null) return startWith$;
-  else return startWith$.lift(new MarkerOperator(marker));
+  else return new MarkedObservable(startWith$, marker);
 }) as typeof operators.startWith;
