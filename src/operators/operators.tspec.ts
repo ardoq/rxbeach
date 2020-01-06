@@ -11,6 +11,7 @@ type StringRoutine = AssertTrue<Has<typeof stringRoutine, Routine<string>>>;
 type Overlap = { b: boolean };
 type Left = { a: number } & Overlap;
 type Right = Overlap & { c: symbol };
+
 const inferredOverlapRoutine = routine(
   ofType(actionCreator<Overlap>('overlap'), actionCreator<Right>('right')),
   extractPayload()
