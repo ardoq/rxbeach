@@ -65,10 +65,12 @@ are not comprehensive.
 ### State streams and Derived streams
  - Should be implemented as composable as possible, probably as stream operators,
    and then maybe with some util functions to "kickstart" them
+ - Need to figure out how to deal with namespaced state streams
 
 ### Subscribing react views to streams
  - Functional first, with hook
  - Strictly typed HOC
+ - Needs to create instances of namespaced state streams
 
 ### Serializing
  - Motivation is to support child windows, serializing the app state, maybe have
