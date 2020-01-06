@@ -45,7 +45,9 @@ const setCalculatedFieldOptions = reducer<
   (, options) => options
 );
 
-export const reducers = combineReducers(defaultState, setCalculatedFieldOptions);
+export const reducers = combineReducers(defaultState, [
+  setCalculatedFieldOptions
+]);
 ```
 
 ## Reducer \$treams

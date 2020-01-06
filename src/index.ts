@@ -17,6 +17,13 @@ export {
 export { actionCreator } from 'rxbeach/actionCreator';
 
 export {
+  reducer,
+  combineReducers,
+  Reducer,
+  ReducerEntry,
+} from 'rxbeach/reducer';
+
+export {
   namespaceActionCreator,
   namespaceActionDispatcher,
 } from 'rxbeach/namespace';
