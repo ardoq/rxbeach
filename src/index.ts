@@ -1,21 +1,39 @@
-// TYPES
 export {
   ActionWithoutPayload,
   ActionWithPayload,
   Action,
-} from './types/Action';
+} from 'rxbeach/types/Action';
 export {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
   ActionCreator,
-} from './types/ActionCreator';
+} from 'rxbeach/types/ActionCreator';
 export {
   ActionStream,
   ActionDispatcher,
   ExtractPayload,
-} from './types/helpers';
+} from 'rxbeach/types/helpers';
 
-export { actionCreator } from './actionCreator';
+export { actionCreator } from 'rxbeach/actionCreator';
 
-export { reducer, combineReducers, Reducer } from './reducer';
-export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
+export { reducer, combineReducers, Reducer } from 'rxbeach/reducer';
+
+export {
+  namespaceActionCreator,
+  namespaceActionDispatcher,
+} from 'rxbeach/namespace';
+
+export {
+  Routine,
+  subscribeRoutine,
+  routine,
+  collectRoutines,
+} from 'rxbeach/routines';
+
+export { derivedStream } from 'rxbeach/derivedStream';
+
+export {
+  combineLatest,
+  merge,
+  zip,
+} from 'rxbeach/decoratedObservableCombiners';

@@ -1,59 +1,85 @@
-import { OperatorFunction, MonoTypeOperatorFunction } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
-import { ActionWithPayload, Action, ActionCreator } from 'rxbeach';
-import { AnyAction, VoidPayload } from 'rxbeach/internal';
+import { OperatorFunction, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
+import { map, filter, withLatestFrom, flatMap } from 'rxjs/operators';
+import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
+import {
+  UnknownActionCreatorWithPayload,
+  UnknownActionCreator,
+  UnknownAction,
+  markOfType,
+} from 'rxbeach/internal';
 
-//// Routines ////
+interface OfType {
+  /**
+   * Stream operator to filter specific actions that have overlapping payload
+   *
+   * ```
+   * action$.pipe(
+   *   ofType(anAction, anotherAction),
+   *   tap(action => {
+   *     // `action` is now guaranteed to be of the type overlap between
+   *     // anAction and anotherAction
+   *   })
+   * )
+   * ```
+   *
+   * @param targetTypes The types to filter for
+   */
+  <Payload>(
+    ...targetTypes: UnknownActionCreatorWithPayload<Payload>[]
+  ): OperatorFunction<UnknownAction, ActionWithPayload<Payload>>;
 
-/**
- * Stream operator to filter only actions of specific types
- *
- * ```
- * action$.pipe(
- *   ofTypes(anAction.type, anotherAction.type),
- *   tap(action => {
- *     // `action` is now guaranteed to be of anAction or anotherAction type
- *     // NB: `action` will have type `AnyAction`
- *   })
- * )
- * ```
- *
- * This function has **weak typings**. The output type of the operator function
- * will be `AnyAction`.
- *
- * @see ofType For a more strictly typed alternative
- * @param targetTypes The types to filter for
- */
-export const ofTypes = (
-  ...targetTypes: string[]
-): MonoTypeOperatorFunction<AnyAction> => {
-  const types = new Set(targetTypes);
+  /**
+   * Stream operator to filter specific actions that have non-overlapping payload
+   *
+   * You might hit this overload even when there is overlap, in those cases, you
+   * can specify the overlap manually with the generic argument.
+   *
+   * ```
+   * action$.pipe(
+   *   ofType(anAction, anotherAction),
+   *   tap(action => {
+   *     // `action` is now of type Action<{}>, meaning the payload field is
+   *     // available, but not nothing in it is.
+   *   })
+   * )
+   * ```
+   *
+   * @param targetTypes The types to filter for
+   */
+  (...targetTypes: UnknownActionCreatorWithPayload<{}>[]): OperatorFunction<
+    UnknownAction,
+    ActionWithPayload<{}>
+  >;
 
-  return filter(({ type }) => types.has(type));
-};
+  /**
+   * Stream operator to filter specific actions that does not have payloads
+   *
+   * ```
+   * action$.pipe(
+   *   ofType(anAction, anotherAction),
+   *   tap(action => {
+   *     // `action` is now of type ActionWithoutPayload
+   *   })
+   * )
+   * ```
+   *
+   * @param targetTypes The types to filter for
+   */
+  (...targetTypes: UnknownActionCreator[]): OperatorFunction<
+    UnknownAction,
+    ActionWithoutPayload
+  >;
+}
+export const ofType: OfType = ((
+  ...targetTypes: UnknownActionCreator[]
+): OperatorFunction<UnknownAction, UnknownAction> => {
+  const types = new Set(targetTypes.map(({ type }) => type));
 
-/**
- * Stream operator to filter action of a specific type
- *
- * ```
- * action$.pipe(
- *   ofType(anAction),
- *   tap(action => {
- *     // `action` is now guaranteed to be of anAction type
- *   })
- * )
- * ```
- *
- * @see ofTypes For filtering of multiple types
- * @param actionCreator The actionCreator to extract type of
- */
-export const ofType = <Payload = VoidPayload>(
-  actionCreator: ActionCreator<Payload>
-) =>
-  filter(
-    (action: AnyAction): action is Action<Payload> =>
-      action.type === actionCreator.type
+  return pipe(
+    filter((action: UnknownAction) => types.has(action.type)),
+    markOfType(targetTypes.map(({ _marker }) => _marker))
   );
+}) as any; // Implementation is untyped
 
 /**
  * Stream operator to extract the payload from an action
@@ -74,5 +100,60 @@ export const extractPayload = <Payload>(): OperatorFunction<
  */
 export const withNamespace = (
   targetNamespace: string
-): MonoTypeOperatorFunction<Action<any>> =>
+): MonoTypeOperatorFunction<UnknownAction> =>
   filter(({ meta: { namespace } }) => namespace === targetNamespace);
+
+/**
+ * Stream operator that carries the initial payload alongside the results
+ * from the operator parameter
+ *
+ * ```
+ * routine(
+ *   extractPayload(),
+ *   carry(map(payload => payload.foo))
+ *   tap(([payload, foo]) => {
+ *     // `payload.foo === foo` equals `true`
+ *   })
+ * )
+ * ```
+ *
+ * @param operator The operator to execute
+ */
+export const carry = <Carried, Emitted>(
+  operator: OperatorFunction<Carried, Emitted>
+): OperatorFunction<Carried, [Carried, Emitted]> => observable =>
+  observable.pipe(
+    operator,
+    withLatestFrom(observable, (emitted, carried) => [carried, emitted])
+  );
+
+/**
+ * A utility operator for using pipes which need a value to be present
+ * throughout the pipe.
+ *
+ * The main use for this operator is to provide context to `catchError`. `carry`
+ * should be preferred where possible.
+ *
+ * **NB** Use with caution. This is very inefficient and should only be used for
+ * providing context to `catchError`.
+ *
+ * Example:
+ * ```ts
+ * routine(
+ *   ofType(myAction),
+ *   apply(action => pipe(
+ *     map(action => ...),
+ *     tap(mapped => ...),
+ *     catchError(() => {
+ *       console.log('Error from action:', action);
+ *     })
+ *   ))
+ * )
+ * ```
+ *
+ * @param operator A function that returns an operator function
+ */
+export const apply = <P, R>(
+  operator: (payload: P) => OperatorFunction<P, R>
+): OperatorFunction<P, R> =>
+  flatMap(payload => of(payload).pipe(operator(payload)));

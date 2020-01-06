@@ -1,1 +1,14 @@
-export { ofTypes, ofType, extractPayload, withNamespace } from './operators';
+export {
+  ofType,
+  extractPayload,
+  withNamespace,
+  carry,
+  apply,
+} from 'rxbeach/operators/operators';
+export {
+  withLatestFrom,
+  combineLatest,
+  merge,
+  startWith,
+} from 'rxbeach/operators/decorated';
+export { mergeOperators } from 'rxbeach/operators/mergeOperators';

@@ -26,3 +26,9 @@ We recommend these articles to get a refresher on those subjects:
 The side bar contains all the documentation articles. We advice you read through
 all the articles under "Fundamentals" in the order they are listed, and then
 read the articles under "Recipes" and "Techniques" as you need them.
+
+## Development
+
+[The roadmap](roadmap.md) is an introduction to the goals and considerations
+behind RxBeach, and also lists some of the planned features, with specs, that
+are up for grabs.

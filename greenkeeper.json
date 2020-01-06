@@ -1,0 +1,14 @@
+{
+  "groups": {
+    "rxbeach": {
+      "packages": [
+        "package.json"
+      ]
+    },
+    "examples": {
+      "packages": [
+        "examples/create-react-app/package.json"
+      ]
+    }
+  }
+}

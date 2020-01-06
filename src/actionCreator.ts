@@ -1,18 +1,26 @@
-import { ActionCreator } from 'rxbeach';
-import { VoidPayload, UnknownActionCreator } from 'rxbeach/internal';
+import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from 'rxbeach';
+import { actionMarker } from 'rxbeach/internal';
 
-/**
- * Create an action creator with a given payload type
- *
- * @param type A name for debugging purposes
- * @template `Payload` - The payload type for the action
- * @returns An action creator function that accepts a payload as input, and
- *          returns a complete action object with that payload and a type unique
- *          to this action creator
- */
-export function actionCreator<Payload = VoidPayload>(
-  type: string
-): ActionCreator<Payload>;
+interface ActionCreatorFunc {
+  /**
+   * Create an action creator without a payload
+   *
+   * @param type A name for debugging purposes
+   * @returns An action creator function that creates complete action objects with
+   *          a type unique to this action creator
+   */
+  (type: string): ActionCreatorWithoutPayload;
+  /**
+   * Create an action creator with a given payload type
+   *
+   * @param type A name for debugging purposes
+   * @template `Payload` - The payload type for the action
+   * @returns An action creator function that accepts a payload as input, and
+   *          returns a complete action object with that payload and a type unique
+   *          to this action creator
+   */
+  <Payload>(type: string): ActionCreatorWithPayload<Payload>;
+}
 
 /**
  * Untyped `actionCreator`
@@ -21,13 +29,15 @@ export function actionCreator<Payload = VoidPayload>(
  * If you see this message in your IDE, you should investigate why TS did not
  * recognize the generic, typed overload of this function.
  */
-export function actionCreator(type: string): UnknownActionCreator {
-  const action = (payload?: any) => ({
-    type,
-    payload,
-    meta: {},
-  });
+export const actionCreator: ActionCreatorFunc = (type: string) => {
+  const action = (payload?: any) =>
+    Object.freeze({
+      type,
+      payload,
+      meta: Object.freeze({}),
+    });
   action.type = type;
+  action._marker = actionMarker(type);
 
-  return action;
-}
+  return Object.freeze(action);
+};
