@@ -134,6 +134,9 @@ export const carry = <Carried, Emitted>(
  * The main use for this operator is to provide context to `catchError`. `carry`
  * should be preferred where possible.
  *
+ * **NB** Use with caution. This is very inefficient and should only be used for
+ * providing context to `catchError`.
+ *
  * Example:
  * ```ts
  * routine(
