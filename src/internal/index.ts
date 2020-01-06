@@ -17,4 +17,6 @@ export {
   markWithLatestFrom,
   markMerge,
   markZip,
+  MarkedObservable,
+  findMarker,
 } from 'rxbeach/internal/markers';
