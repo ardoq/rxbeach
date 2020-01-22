@@ -176,9 +176,8 @@ export const findMarker = (observable$: Observable<unknown>): Marker | null => {
     return observable$.marker;
   } else if (observable$.source instanceof Observable) {
     return findMarker(observable$.source);
-  } else {
-    return null;
   }
+  return null;
 };
 
 /**

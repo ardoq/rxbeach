@@ -109,7 +109,6 @@ test('markWithLatestFrom includes source and dependencies', t => {
 });
 
 test('markMerge includes sources', t => {
-  const dependency$ = source$.pipe(markName('dependency'));
   const piped$ = source$.pipe(markMerge([source$, dependency$]));
 
   t.deepEqual(findMarker(piped$), {
@@ -119,7 +118,6 @@ test('markMerge includes sources', t => {
 });
 
 test('markZip includes sources', t => {
-  const dependency$ = source$.pipe(markName('dependency'));
   const piped$ = source$.pipe(markZip([source$, dependency$]));
 
   t.deepEqual(findMarker(piped$), {

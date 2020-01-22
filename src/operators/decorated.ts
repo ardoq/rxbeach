@@ -38,5 +38,5 @@ export const startWith = ((...args: any) => (
   const startWith$ = observable$.pipe(operators.startWith(...args));
   const marker = findMarker(observable$);
   if (marker === null) return startWith$;
-  else return new MarkedObservable(startWith$, marker);
+  return new MarkedObservable(startWith$, marker);
 }) as typeof operators.startWith;

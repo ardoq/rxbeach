@@ -20,9 +20,9 @@ test.before(async function() {
   const dispatchA = namespaceActionDispatcher(namespaceA, dispatchAction);
   const dispatchB = namespaceActionDispatcher(namespaceB, dispatchAction);
 
-  const a_p = action$.pipe(withNamespace(namespaceA)).toPromise();
-  const b_p = action$.pipe(withNamespace(namespaceB)).toPromise();
-  const sum_p = action$
+  const aP = action$.pipe(withNamespace(namespaceA)).toPromise();
+  const bP = action$.pipe(withNamespace(namespaceB)).toPromise();
+  const sumP = action$
     .pipe(reduce((a: any, b: any) => a + (b.payload || 0), 0))
     .toPromise();
 
@@ -30,7 +30,7 @@ test.before(async function() {
   dispatchB(testAction(2));
   action$.complete();
 
-  const [a, b, sum] = await Promise.all([a_p, b_p, sum_p]);
+  const [a, b, sum] = await Promise.all([aP, bP, sumP]);
 
   lastActionNamespaceA = a;
   lastActionNamespaceB = b;
