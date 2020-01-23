@@ -18,9 +18,12 @@ test('actionCreator should create action creators and append the type', t => {
   t.deepEqual(action.payload, { num: 3 });
 });
 test('actionCreator should protect the type field', t => {
-  t.throws(() => {
-    (myAction as any).type = 'lol';
-  }, TypeError);
+  t.throws(
+    () => {
+      (myAction as any).type = 'lol';
+    },
+    { instanceOf: TypeError }
+  );
 });
 test('actionCreator should create action objects with the payload', t => {
   t.deepEqual(action.payload, { num: 3 });
@@ -28,17 +31,26 @@ test('actionCreator should create action objects with the payload', t => {
   t.deepEqual(union2.payload, { text: 'hi' });
 });
 test('actionCreator should create action objects with protected type', t => {
-  t.throws(() => {
-    action.type = 'mock';
-  }, TypeError);
+  t.throws(
+    () => {
+      action.type = 'mock';
+    },
+    { instanceOf: TypeError }
+  );
 });
 test('actionCreator should create action objects with protected meta', t => {
-  t.throws(() => {
-    action.meta = {};
-  }, TypeError);
+  t.throws(
+    () => {
+      action.meta = {};
+    },
+    { instanceOf: TypeError }
+  );
 });
 test('actionCreator should create action objects with protected namespace', t => {
-  t.throws(() => {
-    action.meta.namespace = 'shim';
-  }, TypeError);
+  t.throws(
+    () => {
+      action.meta.namespace = 'shim';
+    },
+    { instanceOf: TypeError }
+  );
 });
