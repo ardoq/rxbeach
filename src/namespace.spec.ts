@@ -15,21 +15,30 @@ const namespaced = _namespaceAction('namespace', mockAction('type')) as {
   };
 };
 test('_namespaceAction has unwritable type', t => {
-  t.throws(() => {
-    namespaced.type = 'foo';
-  }, TypeError);
+  t.throws(
+    () => {
+      namespaced.type = 'foo';
+    },
+    { instanceOf: TypeError }
+  );
 });
 
 test('_namespaceAction has unwritable meta', t => {
-  t.throws(() => {
-    namespaced.meta = { namespace: 'bar' };
-  }, TypeError);
+  t.throws(
+    () => {
+      namespaced.meta = { namespace: 'bar' };
+    },
+    { instanceOf: TypeError }
+  );
 });
 
 test('_namespaceAction has unwritable namespace', t => {
-  t.throws(() => {
-    namespaced.meta.namespace = 'baz';
-  }, TypeError);
+  t.throws(
+    () => {
+      namespaced.meta.namespace = 'baz';
+    },
+    { instanceOf: TypeError }
+  );
 });
 
 test('namespaceActionCreator should create actions with namespace', t => {

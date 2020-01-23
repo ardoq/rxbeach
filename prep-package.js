@@ -6,15 +6,36 @@ const TARGET = tsBuildConfig.compilerOptions.outDir;
 
 // Copy package.json from root dir to target, while removing the scripts key and
 // adding main and typings
+const {
+  name,
+  version,
+  description,
+  keywords,
+  company,
+  homepage,
+  bugs,
+  repository,
+  author,
+  license,
+  depedencies,
+} = JSON.parse(fs.readFileSync('./package.json'));
 fs.writeFileSync(
   path.join(TARGET, 'package.json'),
   JSON.stringify(
     {
-      ...JSON.parse(fs.readFileSync('./package.json')),
       main: './index.js',
       typings: './index.d.ts',
-      scripts: {},
-      devDependencies: {},
+      name,
+      version,
+      description,
+      keywords,
+      company,
+      homepage,
+      bugs,
+      repository,
+      author,
+      license,
+      depedencies,
     },
     null,
     2

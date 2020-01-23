@@ -11,9 +11,9 @@ test.beforeEach(t => t.context.clock.reset());
 test.after(t => t.context.clock.restore());
 
 test('rethrows error globally', t => {
-  const message = 'Hello errors!';
+  const error = new Error('Hello errors!');
 
-  rethrowErrorGlobally(new Error(message));
+  rethrowErrorGlobally(error);
 
-  t.throws(() => t.context.clock.tick(1), Error, message);
+  t.throws(() => t.context.clock.tick(1), { is: error });
 });
