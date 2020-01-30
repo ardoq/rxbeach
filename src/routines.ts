@@ -48,25 +48,25 @@ export const collectRoutines = (
  * `defaultErrorSubject`, which will rethrow the errors globally, as uncaught
  * exceptions.
  *
- * **NB**: Routines should not accidentially dispatch actions to the action$
+ * **NB**: Routines should not accidentally dispatch actions to the action$
  * when they are subscribed. If a routine dispatches an action when it is
  * subscribed, only some of the routines will receive the action.
  *
  * @param action$ The action stream to subscribe the routine to
- * @param routine The routine to subscribe
- * @param errorSubject An optional Subject that will recieve errors form the
+ * @param routineToSubscribe The routine to subscribe
+ * @param errorSubject An optional Subject that will receive errors form the
  *                     routine
  * @returns A Subscription object
  * @see defaultErrorSubject
  */
 export const subscribeRoutine = (
   action$: ActionStream,
-  routine: Routine<unknown>,
+  routineToSubscribe: Routine<unknown>,
   errorSubject: Subject<any> = defaultErrorSubject
 ) =>
   action$
     .pipe(
-      routine,
+      routineToSubscribe,
       catchError((err, stream) => {
         errorSubject.next(err);
         return stream;

@@ -18,7 +18,7 @@ export type ReducerEntry<State, Payload = any> = [
   Reducer<State, Payload>
 ];
 
-type ReducerFn = {
+type ReducerCreator = {
   /**
    * Define a reducer for an action with payload
    *
@@ -106,12 +106,12 @@ type ReducerFn = {
   ): ReducerEntry<State, VoidPayload>;
 };
 
-export const reducer: ReducerFn = <State>(
+export const reducer: ReducerCreator = <State>(
   actionCreator: UnknownActionCreator | UnknownActionCreator[],
-  reducer: Reducer<State, any>
+  reducerFn: Reducer<State, any>
 ): ReducerEntry<State, unknown> => [
   Array.isArray(actionCreator) ? actionCreator : [actionCreator],
-  reducer,
+  reducerFn,
 ];
 
 /**
@@ -131,20 +131,20 @@ export const combineReducers = <State>(
   reducers: ReducerEntry<State, any>[]
 ): OperatorFunction<UnknownAction, State> => {
   const reducersByActionType = new Map(
-    reducers.flatMap(([actions, reducer]) =>
-      actions.map(action => [action.type, reducer])
+    reducers.flatMap(([actions, reducerEntry]) =>
+      actions.map(action => [action.type, reducerEntry])
     )
   );
   return pipe(
     ofType(...reducers.flatMap(([action]) => action)),
     scan((state, { type, payload }: UnknownAction) => {
-      const reducer = reducersByActionType.get(type);
-      if (reducer === undefined) {
+      const reducerEntry = reducersByActionType.get(type);
+      if (reducerEntry === undefined) {
         // This shouldn't be possible
         return state;
       }
 
-      return reducer(state, payload);
+      return reducerEntry(state, payload);
     }, seed)
   );
 };

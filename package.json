@@ -1,6 +1,6 @@
 {
   "name": "rxbeach",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Chill with streams at the RxBeach",
   "keywords": [
     "rxjs",
@@ -19,26 +19,19 @@
     "test": "yarn nyc ava",
     "watch": "yarn ava --watch",
     "check-types": "tsc -p tsconfig.json",
-    "lint": "eslint --ext .ts src examples",
+    "lint": "yarn eslint --ext .ts src examples -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
     "publish:prep": "yarn build && node prep-package.js",
     "publish": "yarn publish:prep && yarn publish dist"
   },
   "devDependencies": {
+    "@ardoq/shared-configs": "^0.0.4",
     "@istanbuljs/nyc-config-typescript": "1.0.0",
     "@types/sinon": "7.5.1",
-    "@typescript-eslint/eslint-plugin": "2.13.0",
-    "@typescript-eslint/parser": "2.13.0",
-    "ava": "3.0.0",
+    "ava": "3.1.0",
     "conditional-type-checks": "1.0.5",
     "coveralls": "3.0.9",
-    "eslint": "6.8.0",
-    "eslint-config-prettier": "6.8.0",
-    "eslint-plugin-import": "2.19.0",
-    "eslint-plugin-prettier": "3.1.2",
-    "eslint-plugin-sort-class-members": "1.6.0",
     "nyc": "15.0.0",
-    "prettier": "1.19.1",
     "rimraf": "3.0.1",
     "rxjs-marbles": "5.0.4",
     "sinon": "8.1.0",
@@ -73,7 +66,7 @@
       "!src/*.tests.ts",
       "!src/**/*.tests.ts",
       "!src/**/*.spec.ts"
-      ]
+    ]
   },
   "prettier": {
     "trailingComma": "es5",

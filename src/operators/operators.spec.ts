@@ -166,7 +166,6 @@ test(
 test(
   'it should be possible to chain withNamespace, ofType and extractPayload',
   marbles(m => {
-    const voidAction = actionCreator('void action');
     const payloadAction = actionCreator<number>('payload action');
     const voidActionNS = namespaceActionCreator('NS', voidAction);
     const payloadActionNS = namespaceActionCreator('NS', payloadAction);
