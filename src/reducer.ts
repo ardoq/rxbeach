@@ -1,26 +1,54 @@
-import { OperatorFunction, pipe } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { OperatorFunction, pipe, Observable } from 'rxjs';
+import { scan, map } from 'rxjs/operators';
 import {
   VoidPayload,
   UnknownAction,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
 } from 'rxbeach/internal';
-import { ofType } from 'rxbeach/operators';
+import { ofType, merge } from 'rxbeach/operators';
+
+const wrapInArray = <T>(val: T | T[]): T[] =>
+  Array.isArray(val) ? val : [val];
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
   payload: Payload
 ) => State;
 
-export type RegisteredReducer<State, Payload = any> = Reducer<
-  State,
-  Payload
-> & {
+type RegisteredActionReducer<State, Payload = any> = Reducer<State, Payload> & {
   trigger: {
     actions: UnknownActionCreator[];
   };
 };
+type RegisteredStreamReducer<State, Payload = any> = Reducer<State, Payload> & {
+  trigger: {
+    source$: Observable<Payload>;
+  };
+};
+
+export type RegisteredReducer<State, Payload = any> = Reducer<
+  State,
+  Payload
+> & {
+  trigger:
+    | {
+        actions: UnknownActionCreator[];
+      }
+    | {
+        source$: Observable<Payload>;
+      };
+};
+
+const isActionReducer = <State, Payload>(
+  reducerFn: RegisteredReducer<State, Payload>
+): reducerFn is RegisteredActionReducer<State, Payload> =>
+  'actions' in reducerFn.trigger;
+
+const isStreamReducer = <State, Payload>(
+  reducerFn: RegisteredReducer<State, Payload>
+): reducerFn is RegisteredStreamReducer<State, Payload> =>
+  'source$' in reducerFn.trigger;
 
 type ReducerCreator = {
   /**
@@ -108,50 +136,100 @@ type ReducerCreator = {
     actionCreator: UnknownActionCreator[],
     reducer: Reducer<State, VoidPayload>
   ): RegisteredReducer<State, VoidPayload>;
+
+  /**
+   * Define a reducer for a stream
+   *
+   * @see combineReducers
+   * @param source$ The stream which will trigger this reducer
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @template `Payload` - The type of values `source$` emits
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+  <State, Payload>(
+    source$: Observable<Payload>,
+    reducer: Reducer<State, Payload>
+  ): RegisteredReducer<State, Payload>;
 };
 
 export const reducer: ReducerCreator = <State>(
-  actionCreator: UnknownActionCreator | UnknownActionCreator[],
+  actionCreator:
+    | UnknownActionCreator
+    | UnknownActionCreator[]
+    | Observable<any>,
   reducerFn: Reducer<State, any>
-): RegisteredReducer<State, unknown> => {
+) => {
   const wrapper = (state: State, payload: any) => reducerFn(state, payload);
-  wrapper.trigger = {
-    actions: Array.isArray(actionCreator) ? actionCreator : [actionCreator],
-  };
+  if (actionCreator instanceof Observable) {
+    wrapper.trigger = {
+      source$: actionCreator,
+    };
+  } else {
+    wrapper.trigger = {
+      actions: wrapInArray(actionCreator),
+    };
+  }
   return wrapper;
 };
 
+const ACTION_ORIGIN = Symbol('Action origin');
+
 /**
- * Combine reducer entries into a stream operator
+ * Combine registered reducers into a stream operator
  *
- * The payload of each incoming action is applied to the matching reducers
- * together with the previous state (or the seed if it's the first invocation),
- * and the returned state is emitted.
+ * Each reducer will receive the previous state (or the seed if it's the first
+ * invocation) together with the payloads of the actions of the given reducer,
+ * or the emitted values from the stream of the given reducer.
+ *
+ * The behaviour is undefined if multiple reducers are registered for the same
+ * actions.
  *
  * This operator does not change whether the stream is hot or cold.
  *
+ * The order of invocation for the reducers is controlled by the rxjs operator
+ * `merge`, which is called with all the actions first and then the source
+ * streams in the order their reducers are defined in the `reducers` argument.
+ *
  * @param seed The initial input to the first reducer call
  * @param reducers The reducer entries that should be combined
+ * @see rxjs.merge
  */
 export const combineReducers = <State>(
   seed: State,
   reducers: RegisteredReducer<State, any>[]
 ): OperatorFunction<UnknownAction, State> => {
+  const actionReducers = reducers.filter(isActionReducer);
+  const streamReducers = reducers.filter(isStreamReducer);
   const reducersByActionType = new Map(
-    reducers.flatMap(reducerFn =>
+    actionReducers.flatMap(reducerFn =>
       reducerFn.trigger.actions.map(action => [action.type, reducerFn])
     )
   );
+
+  type Packet =
+    | { origin: typeof ACTION_ORIGIN; value: UnknownAction }
+    | { origin: number; value: any };
+
+  const source$s = streamReducers.map((reducerFn, i) =>
+    reducerFn.trigger.source$.pipe(
+      map((payload): Packet => ({ origin: i, value: payload }))
+    )
+  );
+
   return pipe(
-    ofType(...reducers.flatMap(reducerFn => reducerFn.trigger.actions)),
-    scan((state, { type, payload }: UnknownAction) => {
-      const RegisteredReducer = reducersByActionType.get(type);
-      if (RegisteredReducer === undefined) {
-        // This shouldn't be possible
-        return state;
+    ofType(...actionReducers.flatMap(reducerFn => reducerFn.trigger.actions)),
+    map((action): Packet => ({ origin: ACTION_ORIGIN, value: action })),
+    merge(...source$s),
+    scan((state, packet) => {
+      if (packet.origin === ACTION_ORIGIN) {
+        const reducerFn = reducersByActionType.get(packet.value.type)!;
+        return reducerFn(state, packet.value.payload);
       }
 
-      return RegisteredReducer(state, payload);
+      const reducerFn = streamReducers[packet.origin];
+      return reducerFn(state, packet.value);
     }, seed)
   );
 };
