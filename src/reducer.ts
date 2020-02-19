@@ -13,10 +13,14 @@ export type Reducer<State, Payload = VoidPayload> = (
   payload: Payload
 ) => State;
 
-export type ReducerEntry<State, Payload = any> = [
-  UnknownActionCreator[],
-  Reducer<State, Payload>
-];
+export type RegisteredReducer<State, Payload = any> = Reducer<
+  State,
+  Payload
+> & {
+  trigger: {
+    actions: UnknownActionCreator[];
+  };
+};
 
 type ReducerCreator = {
   /**
@@ -30,13 +34,13 @@ type ReducerCreator = {
    * @template `Payload` - The payload of the action, fed to the reducer together
    *                       with the state. Should be automatically extracted from
    *                       the `actionCreator` parameter
-   * @returns A reducer entry; A tuple array of actions and reducer, for passing
-   *          into `combineReducers`
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
    */
   <State, Payload>(
     actionCreator: UnknownActionCreatorWithPayload<Payload>,
     reducer: Reducer<State, Payload>
-  ): ReducerEntry<State, Payload>;
+  ): RegisteredReducer<State, Payload>;
 
   /**
    * Define a reducer for an action without payload
@@ -46,13 +50,13 @@ type ReducerCreator = {
    *                      extract payload type from
    * @param reducer The reducer function
    * @template `State` - The state the reducer reduces to
-   * @returns A reducer entry; A tuple array of actions and reducer, for passing
-   *          into `combineReducers`
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
    */
   <State>(
     actionCreator: UnknownActionCreator,
     reducer: Reducer<State, VoidPayload>
-  ): ReducerEntry<State, VoidPayload>;
+  ): RegisteredReducer<State, VoidPayload>;
 
   /**
    * Define a reducer for multiple actions with overlapping payload
@@ -65,13 +69,13 @@ type ReducerCreator = {
    * @template `Payload` - The payload of the action, fed to the reducer together
    *                       with the state. Should be automatically extracted from
    *                       the `actionCreator` parameter
-   * @returns A reducer entry; A tuple array of actions and reducer, for passing
-   *          into `combineReducers`
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
    */
   <State, Payload>(
     actionCreator: UnknownActionCreatorWithPayload<Payload>[],
     reducer: Reducer<State, Payload>
-  ): ReducerEntry<State, Payload>;
+  ): RegisteredReducer<State, Payload>;
 
   /**
    * Define a reducer for multiple actions without overlapping payload
@@ -81,13 +85,13 @@ type ReducerCreator = {
    *                      extract payload type from
    * @param reducer The reducer function
    * @template `State` - The state the reducer reduces to
-   * @returns A reducer entry; A tuple array of actions and reducer, for passing
-   *          into `combineReducers`
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
    */
   <State>(
     actionCreator: UnknownActionCreatorWithPayload<{}>[],
     reducer: Reducer<State, {}>
-  ): ReducerEntry<State, {}>;
+  ): RegisteredReducer<State, {}>;
 
   /**
    * Define a reducer for multiple actions without payloads
@@ -97,22 +101,25 @@ type ReducerCreator = {
    *                      extract payload type from
    * @param reducer The reducer function
    * @template `State` - The state the reducer reduces to
-   * @returns A reducer entry; A tuple array of actions and reducer, for passing
-   *          into `combineReducers`
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
    */
   <State>(
     actionCreator: UnknownActionCreator[],
     reducer: Reducer<State, VoidPayload>
-  ): ReducerEntry<State, VoidPayload>;
+  ): RegisteredReducer<State, VoidPayload>;
 };
 
 export const reducer: ReducerCreator = <State>(
   actionCreator: UnknownActionCreator | UnknownActionCreator[],
   reducerFn: Reducer<State, any>
-): ReducerEntry<State, unknown> => [
-  Array.isArray(actionCreator) ? actionCreator : [actionCreator],
-  reducerFn,
-];
+): RegisteredReducer<State, unknown> => {
+  const wrapper = (state: State, payload: any) => reducerFn(state, payload);
+  wrapper.trigger = {
+    actions: Array.isArray(actionCreator) ? actionCreator : [actionCreator],
+  };
+  return wrapper;
+};
 
 /**
  * Combine reducer entries into a stream operator
@@ -128,23 +135,23 @@ export const reducer: ReducerCreator = <State>(
  */
 export const combineReducers = <State>(
   seed: State,
-  reducers: ReducerEntry<State, any>[]
+  reducers: RegisteredReducer<State, any>[]
 ): OperatorFunction<UnknownAction, State> => {
   const reducersByActionType = new Map(
-    reducers.flatMap(([actions, reducerEntry]) =>
-      actions.map(action => [action.type, reducerEntry])
+    reducers.flatMap(reducerFn =>
+      reducerFn.trigger.actions.map(action => [action.type, reducerFn])
     )
   );
   return pipe(
-    ofType(...reducers.flatMap(([action]) => action)),
+    ofType(...reducers.flatMap(reducerFn => reducerFn.trigger.actions)),
     scan((state, { type, payload }: UnknownAction) => {
-      const reducerEntry = reducersByActionType.get(type);
-      if (reducerEntry === undefined) {
+      const RegisteredReducer = reducersByActionType.get(type);
+      if (RegisteredReducer === undefined) {
         // This shouldn't be possible
         return state;
       }
 
-      return reducerEntry(state, payload);
+      return RegisteredReducer(state, payload);
     }, seed)
   );
 };

@@ -1,4 +1,9 @@
-import { actionCreator, reducer, combineReducers, ReducerEntry } from 'rxbeach';
+import {
+  actionCreator,
+  reducer,
+  combineReducers,
+  RegisteredReducer,
+} from 'rxbeach';
 import test from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 
@@ -8,7 +13,7 @@ const incrementMany = actionCreator<number>('[increment] many');
 
 // Our reducers
 type CounterState = number;
-type CounterReducer = ReducerEntry<CounterState>;
+type CounterReducer = RegisteredReducer<CounterState>;
 
 // Style 1 - Define the state type on state argument
 const handleOne = reducer(incrementOne, (prev: CounterState) => prev + 1);

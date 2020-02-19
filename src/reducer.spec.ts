@@ -1,6 +1,7 @@
 import { reducer, combineReducers, actionCreator } from 'rxbeach';
 import test from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
+import sinon from 'sinon';
 
 const throwErrorFn = (): number => {
   throw 'error';
@@ -9,10 +10,8 @@ const incrementOne = actionCreator('[increment] one');
 const decrement = actionCreator('[increment] decrement');
 const incrementMany = actionCreator<number>('[increment] many');
 
-const handleOne = reducer(
-  incrementOne,
-  (accumulator: number) => accumulator + 1
-);
+const incrementOneHandler = sinon.spy((accumulator: number) => accumulator + 1);
+const handleOne = reducer(incrementOne, incrementOneHandler);
 const handleMany = reducer(
   incrementMany,
   (accumulator: number, increment) => accumulator + increment
@@ -32,7 +31,9 @@ const outputs = {
 };
 
 test('reducer should store reducer function', t => {
-  t.deepEqual(handleDecrement, [[decrement], throwErrorFn]);
+  incrementOneHandler.resetHistory();
+  handleOne(1);
+  t.assert(incrementOneHandler.called);
 });
 
 test(
