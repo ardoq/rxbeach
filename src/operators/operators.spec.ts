@@ -146,18 +146,19 @@ test(
 );
 
 test(
-  'withNamespace should filter actions by namespace',
+  'withNamespace should exclude actions with the wrong namespace',
   marbles(m => {
     const actionType = 'actionType';
     const namespace = 'namespace';
 
     const inputsOutputs = {
-      a: mockAction(actionType),
+      a: mockAction(actionType, 'wrong namespace'),
       b: mockAction(actionType, namespace),
+      c: mockAction(actionType),
     };
 
-    const source = m.hot('aba', inputsOutputs);
-    const expected = m.hot('-b-', inputsOutputs);
+    const source = m.hot('  abc', inputsOutputs);
+    const expected = m.hot('-bc', inputsOutputs);
 
     m.expect(source.pipe(withNamespace(namespace))).toBeObservable(expected);
   })
@@ -167,17 +168,19 @@ test(
   'it should be possible to chain withNamespace, ofType and extractPayload',
   marbles(m => {
     const payloadAction = actionCreator<number>('payload action');
-    const voidActionNS = namespaceActionCreator('NS', voidAction);
+    const payloadActionWS = namespaceActionCreator('WS', payloadAction);
     const payloadActionNS = namespaceActionCreator('NS', payloadAction);
+    const voidActionWS = namespaceActionCreator('WS', voidAction);
+    const voidActionNS = namespaceActionCreator('NS', voidAction);
 
     const payloads = {
       p: 2,
       q: 3,
     };
     const actions = {
-      v: voidAction(),
+      v: voidActionWS(),
       w: voidActionNS(),
-      p: payloadAction(payloads.p),
+      p: payloadActionWS(payloads.p),
       q: payloadActionNS(payloads.q),
     };
 

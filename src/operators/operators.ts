@@ -94,14 +94,17 @@ export const extractPayload = <Payload>(): OperatorFunction<
 > => map(action => action.payload);
 
 /**
- * Stream operator that filters for actions with the correct namespace
+ * Stream operator that excludes actions with the wrong namespace
  *
  * @param namespace The namespace to filter for
  */
 export const withNamespace = (
   targetNamespace: string
 ): MonoTypeOperatorFunction<UnknownAction> =>
-  filter(({ meta: { namespace } }) => namespace === targetNamespace);
+  filter(
+    ({ meta: { namespace } }) =>
+      namespace === undefined || namespace === targetNamespace
+  );
 
 /**
  * Stream operator that carries the initial payload alongside the results
