@@ -33,6 +33,7 @@
     "coveralls": "3.0.9",
     "nyc": "15.0.0",
     "rimraf": "3.0.2",
+    "rxjs": "6.5.4",
     "rxjs-marbles": "5.0.4",
     "sinon": "9.0.0",
     "source-map-support": "0.5.16",
@@ -42,8 +43,10 @@
     "typescript": "3.7.5"
   },
   "dependencies": {
-    "rxjs": "6.5.4",
     "rxjs-spy": "7.5.1"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.5.0"
   },
   "ava": {
     "files": [
