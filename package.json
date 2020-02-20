@@ -66,8 +66,7 @@
     "all": true,
     "include": [
       "src/**/*",
-      "!src/*.tests.ts",
-      "!src/**/*.tests.ts",
+      "!src/**/*.tspec.ts",
       "!src/**/*.spec.ts"
     ]
   },
