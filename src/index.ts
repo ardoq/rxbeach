@@ -20,7 +20,7 @@ export {
   reducer,
   combineReducers,
   Reducer,
-  ReducerEntry,
+  RegisteredReducer,
 } from 'rxbeach/reducer';
 
 export {
