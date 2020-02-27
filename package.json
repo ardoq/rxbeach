@@ -1,6 +1,6 @@
 {
   "name": "rxbeach",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Chill with streams at the RxBeach",
   "keywords": [
     "rxjs",
@@ -21,6 +21,7 @@
     "check-types": "tsc -p tsconfig.json",
     "lint": "yarn eslint --ext .ts src examples -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
+    "release": "standard-version",
     "publish:prep": "yarn build && node prep-package.js",
     "publish": "yarn publish:prep && yarn publish dist"
   },
@@ -37,6 +38,7 @@
     "rxjs-marbles": "5.0.4",
     "sinon": "9.0.0",
     "source-map-support": "0.5.16",
+    "standard-version": "7.1.0",
     "tap-xunit": "2.4.1",
     "ts-node": "8.6.2",
     "tsconfig-paths": "3.9.0",
