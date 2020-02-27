@@ -19,15 +19,22 @@ const handleMany = reducer(
 const handleDecrement = reducer(decrement, throwErrorFn);
 const alwaysReset = reducer([incrementOne, incrementMany, decrement], () => 5);
 
-const inputs = {
+const actions = {
   '1': incrementOne(),
   '2': incrementMany(2),
   d: decrement(),
 };
-const outputs = {
+const words = {
+  a: '1',
+  b: '12',
+};
+const numbers = {
+  '1': 1,
   '2': 2,
+  '3': 3,
   '4': 4,
   '5': 5,
+  '6': 6,
 };
 
 test('reducer should store reducer function', t => {
@@ -39,35 +46,94 @@ test('reducer should store reducer function', t => {
 test(
   'combineReducers should reduce actions to state',
   marbles(m => {
-    const source = m.hot('  121', inputs);
-    const expected = m.hot('245', outputs);
+    const action$ = m.hot('  121', actions);
+    const expected$ = m.hot('245', numbers);
 
     m.expect(
-      source.pipe(combineReducers(1, [handleOne, handleMany]))
-    ).toBeObservable(expected);
+      action$.pipe(combineReducers(1, [handleOne, handleMany]))
+    ).toBeObservable(expected$);
+  })
+);
+
+test(
+  'combineReducers should reduce state from other streams',
+  marbles(m => {
+    const action$ = m.hot('  --');
+    const word$ = m.hot('    ab', words);
+    const expected$ = m.hot('24', numbers);
+
+    const handleWord = reducer(
+      word$,
+      (state: number, word) => state + word.length
+    );
+
+    m.expect(action$.pipe(combineReducers(1, [handleWord]))).toBeObservable(
+      expected$
+    );
+  })
+);
+
+test(
+  'combineReducers should support both actions and other streams',
+  marbles(m => {
+    const action$ = m.hot('  -1-', actions);
+    const word$ = m.hot('    a-b', words);
+    const expected$ = m.hot('235', numbers);
+
+    const handleWord = reducer(
+      word$,
+      (state: number, word) => state + word.length
+    );
+
+    m.expect(
+      action$.pipe(combineReducers(1, [handleOne, handleWord]))
+    ).toBeObservable(expected$);
   })
 );
 
 test(
   'combineReducers should not silence errors',
   marbles(m => {
-    const source = m.hot('  1d1', inputs);
-    const expected = m.hot('2# ', outputs);
+    const action$ = m.hot('  1d1', actions);
+    const expected$ = m.hot('2# ', numbers);
 
     m.expect(
-      source.pipe(combineReducers(1, [handleOne, handleDecrement]))
-    ).toBeObservable(expected);
+      action$.pipe(combineReducers(1, [handleOne, handleDecrement]))
+    ).toBeObservable(expected$);
   })
 );
 
 test(
   'combineReducers should handle reducers for multiple actions',
   marbles(m => {
-    const source = m.hot('  1', inputs);
-    const expected = m.hot('5', outputs);
+    const action$ = m.hot('  12', actions);
+    const expected$ = m.hot('55', numbers);
 
-    m.expect(source.pipe(combineReducers(1, [alwaysReset]))).toBeObservable(
-      expected
+    m.expect(action$.pipe(combineReducers(1, [alwaysReset]))).toBeObservable(
+      expected$
     );
+  })
+);
+
+test(
+  'combineReducers should reduce in predictable order',
+  marbles(m => {
+    // The "predictable order" seems to be the order in which the streams emit.
+    // Eg. The ordering of these seed definitions matter, but not the order of
+    //     the reducers.
+    const action$ = m.hot('   1', actions);
+    const reset$ = m.hot('    6', numbers);
+    const divide$ = m.hot('   2', numbers);
+    const expected$ = m.hot('(263)', numbers);
+
+    const resetReducer = reducer(reset$, (_: number, state) => state);
+    const divideReducer = reducer(
+      divide$,
+      (state: number, divisor) => state / divisor
+    );
+
+    m.expect(
+      action$.pipe(combineReducers(1, [divideReducer, resetReducer, handleOne]))
+    ).toBeObservable(expected$);
   })
 );
