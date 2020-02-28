@@ -17,7 +17,7 @@ const handleMany = reducer(
   incrementMany,
   (accumulator: number, increment) => accumulator + increment
 );
-const handleDecrement = reducer(decrement, throwErrorFn);
+const handleDecrementWithError = reducer(decrement, throwErrorFn);
 const alwaysReset = reducer([incrementOne, incrementMany, decrement], () => 5);
 
 const actions = {
@@ -105,7 +105,9 @@ test(
 
     m.expect(error$).toBeObservable(errorMarbles, errors);
     m.expect(
-      action$.pipe(combineReducers(1, [handleOne, handleDecrement], error$))
+      action$.pipe(
+        combineReducers(1, [handleOne, handleDecrementWithError], error$)
+      )
     ).toBeObservable(expected$);
   })
 );
