@@ -1,10 +1,11 @@
-import { OperatorFunction, pipe, Observable } from 'rxjs';
-import { scan, map } from 'rxjs/operators';
+import { OperatorFunction, pipe, Observable, Subject } from 'rxjs';
+import { scan, map, filter } from 'rxjs/operators';
 import {
   VoidPayload,
   UnknownAction,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
+  defaultErrorSubject,
 } from 'rxbeach/internal';
 import { ofType, merge } from 'rxbeach/operators';
 
@@ -192,13 +193,20 @@ const ACTION_ORIGIN = Symbol('Action origin');
  * `merge`, which is called with all the actions first and then the source
  * streams in the order their reducers are defined in the `reducers` argument.
  *
+ * If a reducer throws an error, it will be nexted on the error subject. If the
+ * error subject is not explicitly set, it will default to
+ * `defaultErrorSubject`, which will rethrow the errors globally, as uncaught
+ * exceptions. The stream will not complete or emit any value upon an error.
+ *
+ *
  * @param seed The initial input to the first reducer call
  * @param reducers The reducer entries that should be combined
  * @see rxjs.merge
  */
 export const combineReducers = <State>(
   seed: State,
-  reducers: RegisteredReducer<State, any>[]
+  reducers: RegisteredReducer<State, any>[],
+  errorSubject: Subject<any> = defaultErrorSubject
 ): OperatorFunction<UnknownAction, State> => {
   const actionReducers = reducers.filter(isActionReducer);
   const streamReducers = reducers.filter(isStreamReducer);
@@ -222,14 +230,33 @@ export const combineReducers = <State>(
     ofType(...actionReducers.flatMap(reducerFn => reducerFn.trigger.actions)),
     map((action): Packet => ({ origin: ACTION_ORIGIN, value: action })),
     merge(...source$s),
-    scan((state, packet) => {
-      if (packet.origin === ACTION_ORIGIN) {
-        const reducerFn = reducersByActionType.get(packet.value.type)!;
-        return reducerFn(state, packet.value.payload);
-      }
+    scan(
+      ({ state }, packet) => {
+        try {
+          if (packet.origin === ACTION_ORIGIN) {
+            const reducerFn = reducersByActionType.get(packet.value.type)!;
+            return {
+              caughtError: false,
+              state: reducerFn(state, packet.value.payload),
+            };
+          }
 
-      const reducerFn = streamReducers[packet.origin];
-      return reducerFn(state, packet.value);
-    }, seed)
+          const reducerFn = streamReducers[packet.origin];
+          return {
+            caughtError: false,
+            state: reducerFn(state, packet.value),
+          };
+        } catch (e) {
+          errorSubject.next(e);
+          return {
+            caughtError: true,
+            state,
+          };
+        }
+      },
+      { state: seed, caughtError: false }
+    ),
+    filter(({ caughtError }) => caughtError === false),
+    map(({ state }) => state)
   );
 };
