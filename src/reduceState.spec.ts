@@ -45,11 +45,12 @@ test(
   marbles(m => {
     const defaultState = 3;
     const action$ = m.hot('  -');
+    const sub = '            ^';
     const expected$ = m.hot('3', numbers);
     const state$ = action$.pipe(reduceState('testStream', defaultState, []));
 
-    m.expect(action$).toHaveSubscriptions(['^']);
-    m.expect(state$).toBeObservable(expected$);
+    m.expect(state$, sub).toBeObservable(expected$);
+    m.expect(action$).toHaveSubscriptions([sub]);
   })
 );
 
@@ -91,20 +92,20 @@ test(
   'reduceState should share state and not reset as long as it has one subscriber',
   marbles(m => {
     const defaultState = 1;
-    const action$ = m.hot('      ----1-----1', actions);
-    const sub1 = '               --^--!';
-    const sub2 = '               ---------^--!';
-    const foreverSub = '         ^---------------';
-    const expected$ = m.hot('    1---2-----3-----', numbers);
-    const sub1Expected$ = m.hot('--1-2-----------', numbers);
-    const sub2Expected$ = m.hot('---------23-----', numbers);
+    const action$ = m.hot('      ----1-----1-', actions);
+    const sub1 = '               ^-----------';
+    const sub1Expected$ = m.hot('1---2-----3-', numbers);
+    const sub2 = '               --^--!------';
+    const sub2Expected$ = m.hot('--1-2-------', numbers);
+    const sub3 = '               ---------^-!';
+    const sub3Expected$ = m.hot('---------23-', numbers);
     const state$ = action$.pipe(
       reduceState('testStream', defaultState, [handleOne])
     );
 
-    m.expect(state$, foreverSub).toBeObservable(expected$);
     m.expect(state$, sub1).toBeObservable(sub1Expected$);
     m.expect(state$, sub2).toBeObservable(sub2Expected$);
+    m.expect(state$, sub3).toBeObservable(sub3Expected$);
   })
 );
 
@@ -114,8 +115,8 @@ test(
     const defaultState = 1;
     const action$ = m.hot('      1--1---1---1-', actions);
     const sub1 = '               --^--!--------';
-    const sub2 = '               ---------^---!';
     const sub1Expected$ = m.hot('--12----------', numbers);
+    const sub2 = '               ---------^---!';
     const sub2Expected$ = m.hot('---------1-2-', numbers);
     const state$ = action$.pipe(
       reduceState('testStream', defaultState, [handleOne])
