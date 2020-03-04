@@ -90,7 +90,7 @@ export interface RoutineFunc {
   /**
    * See collectRoutines for documentation
    */
-  <A, B, C, D, E, F, G, H, I>(
+  <A, B, C, D, E, F, G, H, I, J>(
     fn1: Routine<A>,
     fn2: OperatorFunction<A, B>,
     fn3: OperatorFunction<B, C>,
@@ -100,6 +100,22 @@ export interface RoutineFunc {
     fn7: OperatorFunction<F, G>,
     fn8: OperatorFunction<G, H>,
     fn9: OperatorFunction<H, I>,
+    fn10: OperatorFunction<I, J>
+  ): Routine<J>;
+  /**
+   * See collectRoutines for documentation
+   */
+  <A, B, C, D, E, F, G, H, I, J>(
+    fn1: Routine<A>,
+    fn2: OperatorFunction<A, B>,
+    fn3: OperatorFunction<B, C>,
+    fn4: OperatorFunction<C, D>,
+    fn5: OperatorFunction<D, E>,
+    fn6: OperatorFunction<E, F>,
+    fn7: OperatorFunction<F, G>,
+    fn8: OperatorFunction<G, H>,
+    fn9: OperatorFunction<H, I>,
+    fn10: OperatorFunction<I, J>,
     ...fns: OperatorFunction<any, any>[]
   ): Routine<{}>;
 }
