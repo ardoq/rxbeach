@@ -1,7 +1,7 @@
 import { reducer } from 'rxbeach';
 import untypedTest from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
-import { reduceState } from 'rxbeach/reduceState';
+import { reduceState } from 'rxbeach/operators/reduceState';
 import { of, Subject } from 'rxjs';
 import { stubRethrowErrorGlobally } from 'rxbeach/internal/testing/utils';
 import { incrementMocks } from 'rxbeach/internal/testing/mock';

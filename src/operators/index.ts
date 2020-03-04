@@ -12,3 +12,4 @@ export {
   startWith,
 } from 'rxbeach/operators/decorated';
 export { mergeOperators } from 'rxbeach/operators/mergeOperators';
+export { reduceState } from 'rxbeach/operators/reduceState';
