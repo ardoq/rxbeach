@@ -8,7 +8,6 @@
     "moduleResolution": "node",
     "isolatedModules": false,
     "esModuleInterop": true,
-    "downlevelIteration": true,
 
     "lib": ["esnext", "dom"],
     "jsx": "react",
