@@ -1,44 +1,15 @@
-import { reducer, actionCreator } from 'rxbeach';
+import { reducer } from 'rxbeach';
 import untypedTest from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
-import sinon from 'sinon';
 import { reduceState } from 'rxbeach/reduceState';
 import { of, Subject } from 'rxjs';
 import { stubRethrowErrorGlobally } from 'rxbeach/internal/testing/utils';
+import { incrementMocks } from 'rxbeach/internal/testing/mock';
 
-const throwErrorFn = (): number => {
-  throw errors.e;
-};
-const incrementOne = actionCreator('[increment] one');
-const decrement = actionCreator('[increment] decrement');
-const incrementMany = actionCreator<number>('[increment] many');
-
-const incrementOneHandler = sinon.spy((accumulator: number) => accumulator + 1);
-const handleOne = reducer(incrementOne, incrementOneHandler);
+const { reducers, actionCreators, handlers } = incrementMocks;
+const { actions, words, numbers, errors } = incrementMocks.marbles;
+const reducerArray = Object.values(reducers);
 const test = stubRethrowErrorGlobally(untypedTest);
-const handleDecrementWithError = reducer(decrement, throwErrorFn);
-
-const actions = {
-  '1': incrementOne(),
-  '2': incrementMany(2),
-  d: decrement(),
-};
-const words = {
-  a: '1',
-  b: '12',
-};
-const numbers = {
-  '1': 1,
-  '2': 2,
-  '3': 3,
-  '4': 4,
-  '5': 5,
-  '6': 6,
-  '7': 7,
-};
-const errors = {
-  e: 'error',
-};
 
 test(
   'reduceState should subscribe to action$ and emit initial state synchronously upon subscription',
@@ -67,23 +38,23 @@ test(
       (state: number, word) => state + word.length
     );
     const state$ = action$.pipe(
-      reduceState('testStream', defaultState, [handleOne, handleWord])
+      reduceState('testStream', defaultState, [...reducerArray, handleWord])
     );
 
     m.expect(state$).toBeObservable(expected$);
   })
 );
 
-test('reduceState should call reducer once when there are multiple subs', async t => {
+test('reduceState should call reducer once when there are multiple subs', t => {
   const defaultState = 1;
-  incrementOneHandler.resetHistory();
-  const action$ = of(incrementOne());
+  handlers.incrementOne.resetHistory();
+  const action$ = of(actionCreators.incrementOne());
   const state$ = action$.pipe(
-    reduceState('testStream', defaultState, [handleOne])
+    reduceState('testStream', defaultState, reducerArray)
   );
   const sub1 = state$.subscribe();
   const sub2 = state$.subscribe();
-  t.assert(incrementOneHandler.calledOnce);
+  t.assert(handlers.incrementOne.calledOnce);
   sub1.unsubscribe();
   sub2.unsubscribe();
 });
@@ -100,7 +71,7 @@ test(
     const sub3 = '               ---------^-!';
     const sub3Expected$ = m.hot('---------23-', numbers);
     const state$ = action$.pipe(
-      reduceState('testStream', defaultState, [handleOne])
+      reduceState('testStream', defaultState, reducerArray)
     );
 
     m.expect(state$, sub1).toBeObservable(sub1Expected$);
@@ -119,7 +90,7 @@ test(
     const sub2 = '               ---------^---!';
     const sub2Expected$ = m.hot('---------1-2-', numbers);
     const state$ = action$.pipe(
-      reduceState('testStream', defaultState, [handleOne])
+      reduceState('testStream', defaultState, reducerArray)
     );
 
     m.expect(state$, sub1).toBeObservable(sub1Expected$);
@@ -137,14 +108,7 @@ test(
 
     m.expect(error$).toBeObservable(errorMarbles, errors);
     m.expect(
-      action$.pipe(
-        reduceState(
-          'testStream',
-          1,
-          [handleOne, handleDecrementWithError],
-          error$
-        )
-      )
+      action$.pipe(reduceState('testStream', 1, reducerArray, error$))
     ).toBeObservable(expected$);
   })
 );

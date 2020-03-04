@@ -1,50 +1,25 @@
-import { reducer, combineReducers, actionCreator } from 'rxbeach';
+import { reducer, combineReducers } from 'rxbeach';
 import test from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
-import sinon from 'sinon';
 import { Subject } from 'rxjs';
+import { incrementMocks } from 'rxbeach/internal/testing/mock';
 
-const throwErrorFn = (): number => {
-  throw errors.e;
-};
-const incrementOne = actionCreator('[increment] one');
-const decrement = actionCreator('[increment] decrement');
-const incrementMany = actionCreator<number>('[increment] many');
-
-const incrementOneHandler = sinon.spy((accumulator: number) => accumulator + 1);
-const handleOne = reducer(incrementOne, incrementOneHandler);
-const handleMany = reducer(
-  incrementMany,
-  (accumulator: number, increment) => accumulator + increment
+const { reducers, actionCreators, handlers } = incrementMocks;
+const { actions, words, numbers, errors } = incrementMocks.marbles;
+const reducerArray = Object.values(reducers);
+const alwaysReset = reducer(
+  [
+    actionCreators.incrementOne,
+    actionCreators.incrementMany,
+    actionCreators.decrement,
+  ],
+  () => 5
 );
-const handleDecrementWithError = reducer(decrement, throwErrorFn);
-const alwaysReset = reducer([incrementOne, incrementMany, decrement], () => 5);
-
-const actions = {
-  '1': incrementOne(),
-  '2': incrementMany(2),
-  d: decrement(),
-};
-const words = {
-  a: '1',
-  b: '12',
-};
-const numbers = {
-  '1': 1,
-  '2': 2,
-  '3': 3,
-  '4': 4,
-  '5': 5,
-  '6': 6,
-};
-const errors = {
-  e: 'error',
-};
 
 test('reducer should store reducer function', t => {
-  incrementOneHandler.resetHistory();
-  handleOne(1);
-  t.assert(incrementOneHandler.called);
+  handlers.incrementOne.resetHistory();
+  reducers.handleOne(1);
+  t.assert(handlers.incrementOne.called);
 });
 
 test(
@@ -53,9 +28,9 @@ test(
     const action$ = m.hot('  121', actions);
     const expected$ = m.hot('245', numbers);
 
-    m.expect(
-      action$.pipe(combineReducers(1, [handleOne, handleMany]))
-    ).toBeObservable(expected$);
+    m.expect(action$.pipe(combineReducers(1, reducerArray))).toBeObservable(
+      expected$
+    );
   })
 );
 
@@ -90,7 +65,7 @@ test(
     );
 
     m.expect(
-      action$.pipe(combineReducers(1, [handleOne, handleWord]))
+      action$.pipe(combineReducers(1, [...reducerArray, handleWord]))
     ).toBeObservable(expected$);
   })
 );
@@ -105,9 +80,7 @@ test(
 
     m.expect(error$).toBeObservable(errorMarbles, errors);
     m.expect(
-      action$.pipe(
-        combineReducers(1, [handleOne, handleDecrementWithError], error$)
-      )
+      action$.pipe(combineReducers(1, reducerArray, error$))
     ).toBeObservable(expected$);
   })
 );
@@ -142,7 +115,9 @@ test(
     );
 
     m.expect(
-      action$.pipe(combineReducers(1, [divideReducer, resetReducer, handleOne]))
+      action$.pipe(
+        combineReducers(1, [divideReducer, resetReducer, ...reducerArray])
+      )
     ).toBeObservable(expected$);
   })
 );
