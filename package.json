@@ -27,7 +27,7 @@
   "devDependencies": {
     "@ardoq/shared-configs": "^0.0.13",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
-    "@types/sinon": "7.5.1",
+    "@types/sinon": "7.5.2",
     "ava": "3.5.0",
     "conditional-type-checks": "1.0.5",
     "coveralls": "3.0.9",
