@@ -2,9 +2,10 @@ import { reducer, combineReducers, actionCreator } from 'rxbeach';
 import test from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import sinon from 'sinon';
+import { Subject } from 'rxjs';
 
 const throwErrorFn = (): number => {
-  throw 'error';
+  throw errors.e;
 };
 const incrementOne = actionCreator('[increment] one');
 const decrement = actionCreator('[increment] decrement');
@@ -35,6 +36,9 @@ const numbers = {
   '4': 4,
   '5': 5,
   '6': 6,
+};
+const errors = {
+  e: 'error',
 };
 
 test('reducer should store reducer function', t => {
@@ -92,13 +96,16 @@ test(
 );
 
 test(
-  'combineReducers should not silence errors',
+  'combineReducers catches errors and emits them to error subject',
   marbles(m => {
     const action$ = m.hot('  1d1', actions);
-    const expected$ = m.hot('2# ', numbers);
+    const expected$ = m.hot('2-3', numbers);
+    const errorMarbles = '   -e-';
+    const error$ = new Subject<any>();
 
+    m.expect(error$).toBeObservable(errorMarbles, errors);
     m.expect(
-      action$.pipe(combineReducers(1, [handleOne, handleDecrement]))
+      action$.pipe(combineReducers(1, [handleOne, handleDecrement], error$))
     ).toBeObservable(expected$);
   })
 );
