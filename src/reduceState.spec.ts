@@ -4,7 +4,7 @@ import { marbles } from 'rxjs-marbles/ava';
 import sinon from 'sinon';
 import { reduceState } from 'rxbeach/reduceState';
 import { of, Subject } from 'rxjs';
-import { stubRethrowErrorGlobally } from 'rxbeach/internal/testUtils';
+import { stubRethrowErrorGlobally } from 'rxbeach/internal/testing/utils';
 
 const throwErrorFn = (): number => {
   throw errors.e;

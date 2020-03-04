@@ -12,7 +12,7 @@ import {
 import {
   mockAction,
   stubRethrowErrorGlobally,
-} from 'rxbeach/internal/testUtils';
+} from 'rxbeach/internal/testing/utils';
 import { extractPayload } from 'rxbeach/operators';
 
 const test = stubRethrowErrorGlobally(untypedTest);

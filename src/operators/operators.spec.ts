@@ -12,7 +12,7 @@ import {
   carry,
   apply,
 } from 'rxbeach/operators';
-import { mockAction } from 'rxbeach/internal/testUtils';
+import { mockAction } from 'rxbeach/internal/testing/utils';
 import { map } from 'rxjs/operators';
 import { Observable, pipe } from 'rxjs';
 import { UnknownAction } from 'rxbeach/internal';

@@ -4,7 +4,7 @@ import { reduce } from 'rxjs/operators';
 import { actionCreator, namespaceActionDispatcher } from 'rxbeach';
 import { withNamespace } from 'rxbeach/operators';
 import { UnknownAction } from 'rxbeach/internal';
-import { mockAction } from 'rxbeach/internal/testUtils';
+import { mockAction } from 'rxbeach/internal/testing/utils';
 const testAction = actionCreator<number>('[test] primitive action');
 const namespaceA = 'A';
 const namespaceB = 'B';
