@@ -19,6 +19,6 @@ Code is hosted in the GitHub repo [ardoq/rxbeach](https://github.com/ardoq/rxbea
 1. Verify that "it works":  
    `yarn test && yarn lint && yarn check-types`
 2. Bump the version
-   `yarn version`
+   `yarn standard-version`
 2. Publish (DO NOT BUMP THE VERSION HERE!):  
    `yarn run publish`
