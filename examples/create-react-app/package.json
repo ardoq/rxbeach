@@ -6,7 +6,7 @@
     "react": "16.13.0",
     "react-dom": "16.13.0",
     "react-scripts": "3.4.0",
-    "rxbeach": "0.3.3",
+    "rxbeach": "0.3.4",
     "rxjs": "6.5.4"
   },
   "scripts": {
