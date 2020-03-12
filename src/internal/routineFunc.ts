@@ -1,5 +1,7 @@
 import { OperatorFunction } from 'rxjs';
-import { Routine } from 'rxbeach/routines';
+import { UnknownAction } from './types';
+
+export type Routine<T> = OperatorFunction<UnknownAction, T>;
 
 export interface RoutineFunc {
   /**

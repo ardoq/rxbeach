@@ -1,7 +1,7 @@
-import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
-import { ActionMarker } from 'rxbeach/internal/markers';
+import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
+import { ActionMarker } from './markers';
 
-export type VoidPayload = void;
+export { VoidPayload } from '../types/Action';
 
 /**
  * Helper type for any action

@@ -2,43 +2,36 @@ export {
   ActionWithoutPayload,
   ActionWithPayload,
   Action,
-} from 'rxbeach/types/Action';
+} from './types/Action';
 export {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
   ActionCreator,
-} from 'rxbeach/types/ActionCreator';
+} from './types/ActionCreator';
 export {
   ActionStream,
   ActionDispatcher,
   ExtractPayload,
-} from 'rxbeach/types/helpers';
+} from './types/helpers';
 
-export { actionCreator } from 'rxbeach/actionCreator';
+export { actionCreator } from './actionCreator';
 
 export {
   reducer,
   combineReducers,
   Reducer,
   RegisteredReducer,
-} from 'rxbeach/reducer';
+} from './reducer';
 
-export {
-  namespaceActionCreator,
-  namespaceActionDispatcher,
-} from 'rxbeach/namespace';
+export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
 
 export {
   Routine,
   subscribeRoutine,
   routine,
   collectRoutines,
-} from 'rxbeach/routines';
+} from './routines';
 
-export { derivedStream } from 'rxbeach/derivedStream';
+export { derivedStream } from './derivedStream';
 
-export {
-  combineLatest,
-  merge,
-  zip,
-} from 'rxbeach/decoratedObservableCombiners';
+export { combineLatest, merge, zip } from './decoratedObservableCombiners';

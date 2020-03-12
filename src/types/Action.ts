@@ -1,4 +1,4 @@
-import { VoidPayload } from 'rxbeach/internal';
+export type VoidPayload = void;
 
 type Meta = {
   readonly namespace?: string;

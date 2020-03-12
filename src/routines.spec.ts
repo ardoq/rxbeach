@@ -2,18 +2,15 @@ import untypedTest from 'ava';
 import { Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
+import { ActionWithPayload } from './types/Action';
 import {
-  ActionWithPayload,
   Routine,
   subscribeRoutine,
   routine,
   collectRoutines,
-} from 'rxbeach';
-import {
-  mockAction,
-  stubRethrowErrorGlobally,
-} from 'rxbeach/internal/testing/utils';
-import { extractPayload } from 'rxbeach/operators';
+} from './routines';
+import { mockAction, stubRethrowErrorGlobally } from './internal/testing/utils';
+import { extractPayload } from './operators/operators';
 
 const test = stubRethrowErrorGlobally(untypedTest);
 

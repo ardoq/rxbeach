@@ -1,12 +1,12 @@
 import { OperatorFunction, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
 import { map, filter, withLatestFrom, flatMap } from 'rxjs/operators';
-import { ActionWithPayload, ActionWithoutPayload } from 'rxbeach';
+import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
 import {
   UnknownActionCreatorWithPayload,
   UnknownActionCreator,
   UnknownAction,
-  markOfType,
-} from 'rxbeach/internal';
+} from '../internal/types';
+import { markOfType } from '../internal/markers';
 
 interface OfType {
   /**

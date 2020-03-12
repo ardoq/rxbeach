@@ -1,8 +1,8 @@
-import { reducer, combineReducers } from 'rxbeach';
+import { reducer, combineReducers } from './reducer';
 import test from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import { Subject } from 'rxjs';
-import { incrementMocks } from 'rxbeach/internal/testing/mock';
+import { incrementMocks } from './internal/testing/mock';
 
 const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, words, numbers, errors } = incrementMocks.marbles;

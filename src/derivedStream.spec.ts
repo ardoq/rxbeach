@@ -1,8 +1,12 @@
 import test from 'ava';
-import { markName } from 'rxbeach/internal';
+import {
+  markName,
+  findMarker,
+  MarkerType,
+  NameMarker,
+} from './internal/markers';
 import { Observable } from 'rxjs';
-import { derivedStream } from 'rxbeach';
-import { findMarker, MarkerType, NameMarker } from 'rxbeach/internal/markers';
+import { derivedStream } from './derivedStream';
 import { marbles } from 'rxjs-marbles/ava';
 
 test('derivedStream adds name and combine marker', t => {

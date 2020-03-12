@@ -1,5 +1,6 @@
-import { routine, actionCreator, Routine } from 'rxbeach';
-import { extractPayload, ofType } from 'rxbeach/operators';
+import { routine, Routine } from '../routines';
+import { actionCreator } from '../actionCreator';
+import { extractPayload, ofType } from './operators';
 import { AssertTrue, Has } from 'conditional-type-checks';
 
 const stringRoutine = routine(

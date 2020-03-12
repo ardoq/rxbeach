@@ -1,15 +1,14 @@
 import { Has, AssertFalse } from 'conditional-type-checks';
+import { ActionWithoutPayload, ActionWithPayload } from '../types/Action';
 import {
-  ActionWithoutPayload,
-  ActionWithPayload,
   ActionCreatorWithPayload,
   ActionCreatorWithoutPayload,
-} from 'rxbeach';
+} from '../types/ActionCreator';
 import {
   UnknownAction,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
-} from 'rxbeach/internal';
+} from './types';
 
 const any = undefined as any;
 const actionWithPayload = any as ActionWithPayload<any>;

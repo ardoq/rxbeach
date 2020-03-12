@@ -1,5 +1,5 @@
 import test from 'ava';
-import { actionCreator } from 'rxbeach';
+import { actionCreator } from './actionCreator';
 
 type Payload = { num: number };
 const myAction = actionCreator<Payload>('three');

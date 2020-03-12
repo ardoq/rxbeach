@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { rethrowErrorGlobally } from 'rxbeach/internal';
+import { rethrowErrorGlobally } from './rethrowErrorGlobally';
 
 /**
  * The default error subject is where errors that RxBeach has silenced will go

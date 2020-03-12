@@ -5,9 +5,10 @@ import {
   UnknownAction,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
-  defaultErrorSubject,
-} from 'rxbeach/internal';
-import { ofType, merge } from 'rxbeach/operators';
+} from './internal/types';
+import { defaultErrorSubject } from './internal/defaultErrorSubject';
+import { ofType } from './operators/operators';
+import { merge } from './operators/decorated';
 
 const wrapInArray = <T>(val: T | T[]): T[] =>
   Array.isArray(val) ? val : [val];

@@ -13,10 +13,7 @@
     "jsx": "react",
 
     "baseUrl": "./src/",
-    "paths": {
-      "rxbeach": ["./index.ts"],
-      "rxbeach/*": ["./*"]
-    },
+
     "noEmit": true
   },
   "include": ["src/**/*"],

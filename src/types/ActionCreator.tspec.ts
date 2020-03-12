@@ -3,8 +3,8 @@ import {
   ActionCreatorWithPayload,
   ActionCreatorWithoutPayload,
   ActionCreator,
-} from 'rxbeach';
-import { ActionCreatorCommon } from 'rxbeach/internal';
+} from './ActionCreator';
+import { ActionCreatorCommon } from '../internal/types';
 
 type ActionCreatorWithPayload_extends_ActionCreatorCommon = AssertTrue<
   Has<ActionCreatorWithPayload<unknown>, ActionCreatorCommon>

@@ -1,5 +1,5 @@
-import { ActionWithoutPayload, ActionWithPayload } from 'rxbeach';
-import { ActionCreatorCommon, VoidPayload } from 'rxbeach/internal';
+import { ActionWithoutPayload, ActionWithPayload } from './Action';
+import { ActionCreatorCommon, VoidPayload } from '../internal/types';
 
 export interface ActionCreatorWithoutPayload extends ActionCreatorCommon {
   (): ActionWithoutPayload;
