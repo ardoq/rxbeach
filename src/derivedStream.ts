@@ -68,6 +68,19 @@ export type DerivedStream = {
     h: Observable<H>,
     i: Observable<I>
   ): Observable<[A, B, C, D, E, F, G, H, I]>;
+  <A, B, C, D, E, F, G, H, I, J>(
+    name: string,
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+    d: Observable<D>,
+    e: Observable<E>,
+    f: Observable<F>,
+    g: Observable<G>,
+    h: Observable<H>,
+    i: Observable<I>,
+    j: Observable<J>
+  ): Observable<[A, B, C, D, E, F, G, H, I, J]>;
   (name: string, ...dependencies: Observable<unknown>[]): Observable<unknown>;
 };
 
