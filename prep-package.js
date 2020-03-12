@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const tsBuildConfig = require('./tsconfig-build.json');
+const tsBuildConfig = require('./tsconfig.json');
 
 const TARGET = tsBuildConfig.compilerOptions.outDir;
 

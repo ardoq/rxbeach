@@ -20,8 +20,9 @@
     "watch": "yarn ava --watch",
     "check-types": "tsc -p tsconfig.json",
     "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
-    "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
-    "publish:prep": "yarn build && node prep-package.js",
+    "build": "rimraf dist && yarn tsc",
+    "watch": "yarn tsc -w",
+    "publish:prep": "yarn build -p tsconfig-publish.json && node prep-package.js",
     "publish": "yarn publish:prep && yarn publish dist"
   },
   "devDependencies": {
