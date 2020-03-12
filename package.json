@@ -19,7 +19,7 @@
     "test": "yarn nyc ava",
     "watch": "yarn ava --watch",
     "check-types": "tsc -p tsconfig.json",
-    "lint": "yarn eslint --ext .ts src examples -c .eslintrc.js",
+    "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc -p tsconfig-build.json",
     "publish:prep": "yarn build && node prep-package.js",
     "publish": "yarn publish:prep && yarn publish dist"
@@ -54,8 +54,7 @@
   },
   "ava": {
     "files": [
-      "src/**/*.spec.ts",
-      "examples/*.spec.ts"
+      "src/**/*.spec.ts"
     ],
     "extensions": [
       "ts"

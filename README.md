@@ -12,9 +12,6 @@ change continuously.
 # Contributing
 Code is hosted in the GitHub repo [ardoq/rxbeach](https://github.com/ardoq/rxbeach).
 
-## Running the test example
-`cd examples/create-react-app/ && yarn && yarn start`
-
 ## Publishing a new version of the package
 1. Verify that "it works":  
    `yarn test && yarn lint && yarn check-types`
