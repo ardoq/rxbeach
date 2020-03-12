@@ -13,8 +13,9 @@ type Action_dispatches_to_ActionWithoutPayload = AssertTrue<
 >;
 
 // Typescript does expansion of union types when they are generic arguments to
-// conditional types. This means that `Action<boolean>` is not the same as
-// `ActionWithPayload<boolean>`, but `ActionWithPayload<true> | ActionWithPayload<false>`
+// conditional types. This means that `Action<Foo | Bar>` is not the same as
+// `ActionWithPayload<Foo | Bar>`, but `ActionWithPayload<Foo> |
+// ActionWithPayload<Bar>`
 // This is not what we want for RxBeach, but here we at least document how TS
 // actually treats union types for actions.
 

@@ -17,8 +17,7 @@
   "license": "MIT",
   "scripts": {
     "test": "yarn nyc ava",
-    "watch": "yarn ava --watch",
-    "check-types": "tsc -p tsconfig.json",
+    "test:watch": "yarn ava --watch",
     "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
@@ -26,25 +25,22 @@
     "publish": "yarn publish:prep && yarn publish dist"
   },
   "devDependencies": {
-    "@ardoq/shared-configs": "^0.0.13",
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@istanbuljs/nyc-config-typescript": "1.0.1",
+    "@ardoq/shared-configs": "0.0.13",
+    "@ava/typescript": "1.1.1",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
     "@types/sinon": "7.5.2",
     "ava": "3.5.0",
     "conditional-type-checks": "1.0.5",
-    "coveralls": "3.0.9",
-    "husky": "^4.2.3",
+    "husky": "4.2.3",
     "nyc": "15.0.0",
     "rimraf": "3.0.2",
     "rxjs": "6.5.4",
     "rxjs-marbles": "5.0.4",
     "sinon": "9.0.1",
     "source-map-support": "0.5.16",
-    "standard-version": "^7.1.0",
+    "standard-version": "7.1.0",
     "tap-xunit": "2.4.1",
-    "ts-node": "8.6.2",
-    "tsconfig-paths": "3.9.0",
     "typescript": "3.8.3"
   },
   "dependencies": {
@@ -57,21 +53,22 @@
     "files": [
       "src/**/*.spec.ts"
     ],
-    "extensions": [
-      "ts"
-    ],
-    "require": [
-      "tsconfig-paths/register",
-      "ts-node/register"
-    ]
+    "typescript": {
+      "rewritePaths": {
+        "src/": "dist/"
+      }
+    }
   },
   "nyc": {
-    "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
+    "sourceMap": true,
+    "produce-source-map": false,
+    "exclude-after-remap": false,
     "include": [
-      "src/**/*",
-      "!src/**/*.tspec.ts",
-      "!src/**/*.spec.ts"
+      "dist/**/*",
+      "!dist/**/index.js",
+      "!dist/**/*.tspec.js",
+      "!dist/**/*.spec.js"
     ]
   },
   "prettier": {
@@ -81,7 +78,9 @@
     "parser": "typescript"
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "husky": {
     "hooks": {
