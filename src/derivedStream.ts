@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { combineLatest } from 'rxbeach';
-import { markName } from 'rxbeach/internal';
+import { combineLatest } from './decoratedObservableCombiners';
+import { markName } from './internal/markers';
 
 export type DerivedStream = {
   <A>(name: string, a: Observable<A>): Observable<[A]>;

@@ -1,5 +1,5 @@
-import { actionCreator } from 'rxbeach/actionCreator';
-import { reducer } from 'rxbeach/reducer';
+import { actionCreator } from '../../actionCreator';
+import { reducer } from '../../reducer';
 import sinon from 'sinon';
 
 const incrementOne = actionCreator('[increment] one');

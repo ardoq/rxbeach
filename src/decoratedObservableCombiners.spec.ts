@@ -1,8 +1,12 @@
 import test from 'ava';
 import { Observable } from 'rxjs';
-import { markName } from 'rxbeach/internal';
-import { merge, combineLatest, zip } from 'rxbeach';
-import { NameMarker, MarkerType, findMarker } from 'rxbeach/internal/markers';
+import {
+  NameMarker,
+  MarkerType,
+  findMarker,
+  markName,
+} from './internal/markers';
+import { merge, combineLatest, zip } from './decoratedObservableCombiners';
 import { marbles } from 'rxjs-marbles/ava';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));

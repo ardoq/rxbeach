@@ -1,7 +1,7 @@
 module.exports = {
   extends: './node_modules/@ardoq/shared-configs/eslint-lib',
   rules: {
-    'no-restricted-imports': ['error', { patterns: ['./*', '../*'] }],
+    'no-restricted-imports': ['error', { patterns: ['rxbeach', 'rxbeach/*'] }],
     'func-style': ['error', 'expression'],
   },
   overrides: [

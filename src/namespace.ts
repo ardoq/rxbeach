@@ -1,5 +1,6 @@
-import { ActionCreator, ActionDispatcher } from 'rxbeach';
-import { UnknownAction, VoidPayload } from 'rxbeach/internal';
+import { ActionCreator } from './types/ActionCreator';
+import { ActionDispatcher } from './types/helpers';
+import { UnknownAction, VoidPayload } from './internal/types';
 
 export const _namespaceAction = (namespace: string, action: UnknownAction) =>
   Object.freeze({

@@ -4,11 +4,11 @@ export {
   ActionCreatorCommon,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
-} from 'rxbeach/internal/types';
-export { RoutineFunc } from 'rxbeach/internal/routineFunc';
-export { coldMergeOperators } from 'rxbeach/operators/mergeOperators';
-export { defaultErrorSubject } from 'rxbeach/internal/defaultErrorSubject';
-export { rethrowErrorGlobally } from 'rxbeach/internal/rethrowErrorGlobally';
+} from './types';
+export { RoutineFunc } from './routineFunc';
+export { coldMergeOperators } from '../operators/mergeOperators';
+export { defaultErrorSubject } from './defaultErrorSubject';
+export { rethrowErrorGlobally } from './rethrowErrorGlobally';
 export {
   actionMarker,
   markName,
@@ -19,4 +19,4 @@ export {
   markZip,
   MarkedObservable,
   findMarker,
-} from 'rxbeach/internal/markers';
+} from './markers';

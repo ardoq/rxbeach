@@ -1,7 +1,9 @@
-import { markName, UnknownAction, defaultErrorSubject } from 'rxbeach/internal';
+import { markName } from '../internal/markers';
+import { UnknownAction } from '../internal/types';
+import { defaultErrorSubject } from '../internal/defaultErrorSubject';
 import { tag } from 'rxjs-spy/operators';
 import { shareReplay, startWith, debounceTime } from 'rxjs/operators';
-import { combineReducers, RegisteredReducer } from 'rxbeach/reducer';
+import { combineReducers, RegisteredReducer } from '../reducer';
 import { OperatorFunction, pipe, Subject } from 'rxjs';
 
 /**

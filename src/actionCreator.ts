@@ -1,5 +1,8 @@
-import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from 'rxbeach';
-import { actionMarker } from 'rxbeach/internal';
+import {
+  ActionCreatorWithoutPayload,
+  ActionCreatorWithPayload,
+} from './types/ActionCreator';
+import { actionMarker } from './internal/markers';
 
 interface ActionCreatorFunc {
   /**

@@ -1,6 +1,6 @@
 import * as rxjs from 'rxjs';
 import { Observable } from 'rxjs';
-import { markMerge, markCombineLatest, markZip } from 'rxbeach/internal';
+import { markMerge, markCombineLatest, markZip } from './internal/markers';
 
 export const combineLatest = ((...sources: Observable<unknown>[]) =>
   rxjs

@@ -1,12 +1,10 @@
 import test from 'ava';
-import {
-  namespaceActionCreator,
-  ActionDispatcher,
-  namespaceActionDispatcher,
-} from 'rxbeach';
-import { UnknownAction, actionMarker } from 'rxbeach/internal';
-import { _namespaceAction } from 'rxbeach/namespace';
-import { mockAction } from 'rxbeach/internal/testing/utils';
+import { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
+import { ActionDispatcher } from './types/helpers';
+import { UnknownAction } from './internal/types';
+import { actionMarker } from './internal/markers';
+import { _namespaceAction } from './namespace';
+import { mockAction } from './internal/testing/utils';
 
 const namespaced = _namespaceAction('namespace', mockAction('type')) as {
   type: string;

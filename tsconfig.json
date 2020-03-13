@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2019",
     "strict": true,
     "allowJs": false,
     "downlevelIteration": true,
@@ -9,16 +9,13 @@
     "isolatedModules": false,
     "esModuleInterop": true,
 
-    "lib": ["esnext", "dom"],
+    "lib": ["es2019", "dom"],
     "jsx": "react",
 
-    "baseUrl": "./src/",
-    "paths": {
-      "rxbeach": ["./index.ts"],
-      "rxbeach/*": ["./*"]
-    },
-    "noEmit": true
+    "outDir": "./dist",
+    "declaration": true,
+    "module": "commonjs",
+    "sourceMap": true
   },
-  "include": ["src/**/*", "examples/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"]
 }

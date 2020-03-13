@@ -6,7 +6,7 @@ import {
   markWithLatestFrom,
   findMarker,
   MarkedObservable,
-} from 'rxbeach/internal';
+} from '../internal/markers';
 
 export const merge = ((...sources: Observable<unknown>[]) => (
   observable$: Observable<unknown>

@@ -1,4 +1,4 @@
-import { actionCreator } from 'rxbeach';
+import { actionCreator } from './actionCreator';
 
 const booleanAction = actionCreator<boolean>('boolean');
 booleanAction(true);

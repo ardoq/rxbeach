@@ -1,6 +1,6 @@
-import { Action } from 'rxbeach';
-import { VoidPayload } from 'rxbeach/internal';
-import * as internals from 'rxbeach/internal';
+import { Action } from '../../types/Action';
+import { VoidPayload } from '../types';
+import * as rethrowErrorGloballyModule from '../rethrowErrorGlobally';
 import sinon, { SinonStub } from 'sinon';
 import { TestInterface } from 'ava';
 
@@ -23,7 +23,7 @@ export const stubRethrowErrorGlobally = (untypedTest: TestInterface) => {
   const test = untypedTest as TestInterface<TestContextRethrowErrorGlobally>;
   test.before(t => {
     t.context.rethrowErrorGlobally = sinon.stub(
-      internals,
+      rethrowErrorGloballyModule,
       'rethrowErrorGlobally'
     );
   });

@@ -13,7 +13,7 @@ import {
   Marker,
   markMerge,
   markZip,
-} from 'rxbeach/internal/markers';
+} from './markers';
 import {
   tap,
   map,
@@ -24,8 +24,8 @@ import {
   debounceTime,
   pluck,
 } from 'rxjs/operators';
-import { derivedStream } from 'rxbeach';
-import { withLatestFrom } from 'rxbeach/operators';
+import { derivedStream } from '../derivedStream';
+import { withLatestFrom } from '../operators/decorated';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
 const dependency$ = source$.pipe(markName('dependency'));

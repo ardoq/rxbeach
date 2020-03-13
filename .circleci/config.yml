@@ -15,21 +15,23 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+            - v2-dependencies-{{ checksum "yarn.lock" }}
+            - v2-dependencies-
 
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
 
       - run:
           name: Lint
           command: |
             mkdir -p ~/reports/eslint
             yarn lint --format junit --output-file ~/reports/eslint/report.xml
+
+      - run: yarn build
 
       - run:
           name: Test
@@ -39,7 +41,7 @@ jobs:
 
       - run:
           name: Line coverage
-          command: ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
+          command: ./node_modules/.bin/nyc report --reporter=text-lcov | npx coveralls
 
       - store_test_results:
           path: ~/reports

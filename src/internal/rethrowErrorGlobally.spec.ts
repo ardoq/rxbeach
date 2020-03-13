@@ -1,6 +1,6 @@
 import untypedTest, { TestInterface } from 'ava';
 import sinon from 'sinon';
-import { rethrowErrorGlobally } from 'rxbeach/internal';
+import { rethrowErrorGlobally } from '../internal/rethrowErrorGlobally';
 
 const test = untypedTest as TestInterface<{ clock: sinon.SinonFakeTimers }>;
 

@@ -1,22 +1,20 @@
 import test, { Macro } from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
-import {
-  ActionWithPayload,
-  actionCreator,
-  namespaceActionCreator,
-} from 'rxbeach';
+import { ActionWithPayload } from '../types/Action';
+import { actionCreator } from '../actionCreator';
+import { namespaceActionCreator } from '../namespace';
 import {
   extractPayload,
   withNamespace,
   ofType,
   carry,
   apply,
-} from 'rxbeach/operators';
-import { mockAction } from 'rxbeach/internal/testing/utils';
+} from './operators';
+import { mockAction } from '../internal/testing/utils';
 import { map } from 'rxjs/operators';
 import { Observable, pipe } from 'rxjs';
-import { UnknownAction } from 'rxbeach/internal';
-import { findMarker, MarkerType, OfTypeMarker } from 'rxbeach/internal/markers';
+import { UnknownAction } from '../internal/types';
+import { findMarker, MarkerType, OfTypeMarker } from '../internal/markers';
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
   marbles(m => {

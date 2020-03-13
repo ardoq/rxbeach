@@ -4,12 +4,7 @@ export {
   withNamespace,
   carry,
   apply,
-} from 'rxbeach/operators/operators';
-export {
-  withLatestFrom,
-  combineLatest,
-  merge,
-  startWith,
-} from 'rxbeach/operators/decorated';
-export { mergeOperators } from 'rxbeach/operators/mergeOperators';
-export { reduceState } from 'rxbeach/operators/reduceState';
+} from './operators';
+export { withLatestFrom, combineLatest, merge, startWith } from './decorated';
+export { mergeOperators } from './mergeOperators';
+export { reduceState } from './reduceState';
