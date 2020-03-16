@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/ardoq/rxbeach/compare/v0.3.4...v0.3.5) (2020-03-16)
+
+
+### Bug Fixes
+
+* **package:** update rxbeach to version 0.3.4 ([bb308cc](https://github.com/ardoq/rxbeach/commit/bb308ccfecf8ee6259de0e5111bf1ecb76b6825d))
+
 ### [0.3.4](https://github.com/ardoq/rxbeach/compare/v0.3.3...v0.3.4) (2020-03-05)
 
 ## [0.3.3](https://github.com/ardoq/rxbeach/compare/v0.2.1...v0.3.3) (2020-03-05)
