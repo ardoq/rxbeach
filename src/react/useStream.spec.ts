@@ -1,20 +1,19 @@
 import test from 'ava';
 import { renderHook } from '@testing-library/react-hooks';
-import { useStream } from './useStream';
+import { useStream, NOT_YET_EMITTED } from './useStream';
 import { empty, Subject } from 'rxjs';
 
-const initial = 'x';
 const second = 'A';
 
 test('useStream return initial value right away', t => {
-  const { result } = renderHook(() => useStream(empty(), initial));
+  const { result } = renderHook(() => useStream(empty()));
 
-  t.deepEqual(result.current, 'x');
+  t.deepEqual(result.current, NOT_YET_EMITTED);
 });
 
 test('useStream return value from stream', t => {
   const source$ = new Subject<string>();
-  const { result } = renderHook(() => useStream(source$, initial));
+  const { result } = renderHook(() => useStream(source$));
 
   source$.next(second);
 
@@ -23,7 +22,7 @@ test('useStream return value from stream', t => {
 
 test('useStream unsubscribes on unmount', t => {
   const source$ = new Subject<string>();
-  const { unmount } = renderHook(() => useStream(source$, initial));
+  const { unmount } = renderHook(() => useStream(source$));
 
   unmount();
 
@@ -32,7 +31,7 @@ test('useStream unsubscribes on unmount', t => {
 
 test('useStream does not resubscribe on rerender', t => {
   const source$ = new Subject<string>();
-  const { rerender } = renderHook(() => useStream(source$, initial));
+  const { rerender } = renderHook(() => useStream(source$));
 
   const subscription = source$.observers[0];
   rerender();
@@ -40,36 +39,18 @@ test('useStream does not resubscribe on rerender', t => {
   t.assert(source$.observers[0] === subscription);
 });
 
-test('useStream does not update for changed initial value', t => {
-  const source$ = new Subject<string>();
-  const { rerender, result } = renderHook(
-    props => useStream(source$, props.initial),
-    {
-      initialProps: { initial },
-    }
-  );
-
-  source$.next(second);
-  rerender({ initial: 'something' });
-
-  t.deepEqual(result.current, second);
-});
-
 test('useStream unsubscribes, keeps latest value and subscribes new stream', t => {
-  const source1$ = new Subject<string>();
-  const source2$ = new Subject<string>();
+  const alpha = new Subject<string>();
+  const bravo = new Subject<string>();
 
-  const { rerender, result } = renderHook(
-    props => useStream(props.source$, initial),
-    {
-      initialProps: { source$: source1$ },
-    }
-  );
+  const { rerender, result } = renderHook(({ source$ }) => useStream(source$), {
+    initialProps: { source$: alpha },
+  });
 
-  source1$.next(second);
-  rerender({ source$: source2$ });
+  alpha.next(second);
+  rerender({ source$: bravo });
 
   t.deepEqual(result.current, second);
-  t.deepEqual(source1$.observers, []);
-  t.deepEqual(source2$.observers.length, 1);
+  t.deepEqual(alpha.observers, []);
+  t.deepEqual(bravo.observers.length, 1);
 });
