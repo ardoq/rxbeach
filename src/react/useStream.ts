@@ -10,8 +10,21 @@ import { Observable } from 'rxjs';
  *
  * This hook passes the `source$` argument as a dependency to `useEffect`, which
  * means you will need to take care that it is referentially equal between each
- * render (unless you want to resubscribe, of course). Generally, you should
- * only use this hook for static/global streams.
+ * render (unless you want to resubscribe, of course).
+ *
+ * For using this hook with streams defined (created, piped, etc.) inside a
+ * component, you need to wrap the stream definition in `useMemo`:
+ * ```tsx
+ * const LatestPayload = ({ action }: { action: ActionWithPayload<any> }) => {
+ *   const payload$ = useMemo(() => action$.pipe(
+ *     ofType(action),
+ *     extractPayload()
+ *   ), [action]);
+ *   const payload = useStream(payload$, null);
+ *
+ *   return <p> Latest payload: { payload } </p>;
+ * }
+ * ```
  *
  * @param source$ Stream that provides the needed values
  * @param initial Initial value to return
