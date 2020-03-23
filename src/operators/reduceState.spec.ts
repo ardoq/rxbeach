@@ -5,6 +5,8 @@ import { reduceState } from '../operators/reduceState';
 import { of, Subject } from 'rxjs';
 import { stubRethrowErrorGlobally } from '../internal/testing/utils';
 import { incrementMocks } from '../internal/testing/mock';
+import { withLatestFrom, map } from 'rxjs/operators';
+import { ofType } from './operators';
 
 const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, words, numbers, errors } = incrementMocks.marbles;
@@ -110,5 +112,71 @@ test(
     m.expect(
       action$.pipe(reduceState('testStream', 1, reducerArray, error$))
     ).toBeObservable(expected$);
+  })
+);
+
+test(
+  'reduceState replays values to new subscribers',
+  marbles(m => {
+    const defaultState = 1;
+    const action$ = m.hot('      1--1----------', actions);
+    const sub1 = '               ^-------------';
+    const sub1Expected$ = m.hot('2--3--------', numbers);
+    const sub2 = '               ------^-------';
+    const sub2Expected$ = m.hot('------3-------', numbers);
+    const state$ = action$.pipe(
+      reduceState('testStream', defaultState, reducerArray)
+    );
+
+    m.expect(state$, sub1).toBeObservable(sub1Expected$);
+    m.expect(state$, sub2).toBeObservable(sub2Expected$);
+  })
+);
+
+test(
+  'reduceState replays values to derived streams',
+  marbles(m => {
+    const defaultState = 1;
+    const action$ = m.hot('      -2-1-', actions);
+    const sub1 = '               ^----';
+    const sub1Expected$ = m.hot('1--2-', numbers);
+    const sub2 = '               -^---';
+    const sub2Expected$ = m.hot('-1---', numbers);
+
+    const state$ = action$.pipe(
+      reduceState('testStream', defaultState, [reducers.handleOne])
+    );
+    const routine$ = action$.pipe(
+      ofType(incrementMocks.actionCreators.incrementMany),
+      withLatestFrom(state$),
+      map(([, s]) => s)
+    );
+
+    m.expect(state$, sub1).toBeObservable(sub1Expected$);
+    m.expect(routine$, sub2).toBeObservable(sub2Expected$);
+  })
+);
+
+test(
+  'reduceState emits outdated value to derived streams due to debouncing',
+  marbles(m => {
+    const defaultState = 1;
+    const action$ = m.hot('      -2-(12)-2-', actions);
+    const sub1 = '               ^---------';
+    const sub1Expected$ = m.hot('1--2------', numbers);
+    const sub2 = '               -^--------';
+    const sub2Expected$ = m.hot('-1-1----2-', numbers);
+
+    const state$ = action$.pipe(
+      reduceState('testStream', defaultState, [reducers.handleOne])
+    );
+    const routine$ = action$.pipe(
+      ofType(incrementMocks.actionCreators.incrementMany),
+      withLatestFrom(state$),
+      map(([, s]) => s)
+    );
+
+    m.expect(state$, sub1).toBeObservable(sub1Expected$);
+    m.expect(routine$, sub2).toBeObservable(sub2Expected$);
   })
 );

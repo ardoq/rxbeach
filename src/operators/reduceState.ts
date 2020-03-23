@@ -20,10 +20,16 @@ import { OperatorFunction, pipe, Subject } from 'rxjs';
  * The values emitted from the stream are shared between the subscribers,
  * and the reducers are only ran once per input action.
  *
+ * All emissions from the state stream are debounced to ensure that the stream
+ * doesn't emit redundant state when multiple reducers are triggered in the same
+ * frame. Note that this might have impliciations for listeners that are reading
+ * the latest value of the stream directly after the reducers have been triggered.
+ *
  * @param name A name for debugging purposes
  * @param action$ The action stream
  * @param defaultState The initial state of the state stream,
- *                     which is emitted synchronously upon subscription
+ *                     which is typically emitted upon subscription
+ *                     unless one of the stream reducers emit straight away
  * @param reducers The reducer entries that are combined with `combineReducers`
  * @see rxbeach.combineReducers
  * @returns An stream that emits the reduced state
@@ -37,11 +43,11 @@ export const reduceState = <State>(
   pipe(
     combineReducers(defaultState, reducers, errorSubject),
     startWith(defaultState),
+    debounceTime(0),
     shareReplay({
       refCount: true,
       bufferSize: 1,
     }),
-    debounceTime(0),
     markName(name),
     tag(name)
   );
