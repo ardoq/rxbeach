@@ -30,7 +30,7 @@
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@types/sinon": "7.5.2",
-    "ava": "3.5.0",
+    "ava": "3.5.1",
     "conditional-type-checks": "1.0.5",
     "husky": "4.2.3",
     "nyc": "15.0.0",
