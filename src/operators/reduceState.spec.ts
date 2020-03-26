@@ -28,11 +28,11 @@ test(
 );
 
 test(
-  'reduceState should only emit the latest state processed at the current frame',
+  'reduceState always emits defaultState and every subsequent calculation',
   marbles(m => {
-    const action$ = m.hot('  --1-', actions);
-    const word$ = m.hot('    a-a ', words);
-    const expected$ = m.hot('2-4', numbers);
+    const action$ = m.hot('  -----1-', actions);
+    const word$ = m.hot('    a----a ', words);
+    const expected$ = m.hot('(12)-(34)', numbers);
     const defaultState = 1;
 
     const handleWord = reducer(
@@ -103,9 +103,9 @@ test(
 test(
   'reduceState catches errors and emits them to error subject',
   marbles(m => {
-    const action$ = m.hot('  1d1', actions);
-    const expected$ = m.hot('2-3', numbers);
-    const errorMarbles = '   -e-';
+    const action$ = m.hot('  -1d--1', actions);
+    const expected$ = m.hot('12---3', numbers);
+    const errorMarbles = '   --e-';
     const error$ = new Subject<any>();
 
     m.expect(error$).toBeObservable(errorMarbles, errors);
@@ -119,9 +119,9 @@ test(
   'reduceState replays values to new subscribers',
   marbles(m => {
     const defaultState = 1;
-    const action$ = m.hot('      1--1----------', actions);
+    const action$ = m.hot('      -1-1----------', actions);
     const sub1 = '               ^-------------';
-    const sub1Expected$ = m.hot('2--3--------', numbers);
+    const sub1Expected$ = m.hot('12-3--------', numbers);
     const sub2 = '               ------^-------';
     const sub2Expected$ = m.hot('------3-------', numbers);
     const state$ = action$.pipe(
@@ -158,14 +158,14 @@ test(
 );
 
 test(
-  'reduceState emits outdated value to derived streams due to debouncing',
+  'reduceState emits updated value to derived streams',
   marbles(m => {
     const defaultState = 1;
     const action$ = m.hot('      -2-(12)-2-', actions);
     const sub1 = '               ^---------';
     const sub1Expected$ = m.hot('1--2------', numbers);
     const sub2 = '               -^--------';
-    const sub2Expected$ = m.hot('-1-1----2-', numbers);
+    const sub2Expected$ = m.hot('-1-2----2-', numbers);
 
     const state$ = action$.pipe(
       reduceState('testStream', defaultState, [reducers.handleOne])
@@ -178,5 +178,49 @@ test(
 
     m.expect(state$, sub1).toBeObservable(sub1Expected$);
     m.expect(routine$, sub2).toBeObservable(sub2Expected$);
+  })
+);
+
+test(
+  'reduceState emits updated value to derived streams if routine subscribes first',
+  marbles(m => {
+    const defaultState = 1;
+    const action$ = m.hot('      2--(12)-2-', actions);
+    const sub1 = '               -^--------';
+    const sub1Expected$ = m.hot('-1-2------', numbers);
+    const sub2 = '               ^---------';
+    const sub2Expected$ = m.hot('1--2----2-', numbers);
+
+    const state$ = action$.pipe(
+      reduceState('testStream', defaultState, [reducers.handleOne])
+    );
+    const routine$ = action$.pipe(
+      ofType(incrementMocks.actionCreators.incrementMany),
+      withLatestFrom(state$),
+      map(([, s]) => s)
+    );
+
+    m.expect(state$, sub1).toBeObservable(sub1Expected$);
+    m.expect(routine$, sub2).toBeObservable(sub2Expected$);
+  })
+);
+
+test.failing(
+  'reduceState should only emit the latest state processed at the current frame to prevent glitches',
+  marbles(m => {
+    const action$ = m.hot('  --1-', actions);
+    const word$ = m.hot('    a-a ', words);
+    const expected$ = m.hot('2-4', numbers);
+    const defaultState = 1;
+
+    const handleWord = reducer(
+      word$,
+      (state: number, word) => state + word.length
+    );
+    const state$ = action$.pipe(
+      reduceState('testStream', defaultState, [...reducerArray, handleWord])
+    );
+
+    m.expect(state$).toBeObservable(expected$);
   })
 );

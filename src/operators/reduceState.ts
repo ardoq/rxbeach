@@ -2,7 +2,7 @@ import { markName } from '../internal/markers';
 import { UnknownAction } from '../internal/types';
 import { defaultErrorSubject } from '../internal/defaultErrorSubject';
 import { tag } from 'rxjs-spy/operators';
-import { shareReplay, startWith, debounceTime } from 'rxjs/operators';
+import { shareReplay, startWith } from 'rxjs/operators';
 import { combineReducers, RegisteredReducer } from '../reducer';
 import { OperatorFunction, pipe, Subject } from 'rxjs';
 
@@ -19,11 +19,7 @@ import { OperatorFunction, pipe, Subject } from 'rxjs';
  *
  * The values emitted from the stream are shared between the subscribers,
  * and the reducers are only ran once per input action.
- *
- * All emissions from the state stream are debounced to ensure that the stream
- * doesn't emit redundant state when multiple reducers are triggered in the same
- * frame. Note that this might have impliciations for listeners that are reading
- * the latest value of the stream directly after the reducers have been triggered.
+ *.
  *
  * @param name A name for debugging purposes
  * @param action$ The action stream
@@ -43,7 +39,6 @@ export const reduceState = <State>(
   pipe(
     combineReducers(defaultState, reducers, errorSubject),
     startWith(defaultState),
-    debounceTime(0),
     shareReplay({
       refCount: true,
       bufferSize: 1,
