@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/ardoq/rxbeach/compare/v0.3.6...v0.4.0) (2020-03-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **reducers:** removed debouncing in reduceState and started
+  emitting all state calculations.
+
+  This has some implications in the sense that defaultState will
+  always be emitted and reduceState might sometimes have some
+  "redundant" emissions. See the tests (and the failing test)
+  in the commit for details.
+
+  Debouncing state streams made it unsafe to use withLatestFrom,
+  since the stream calculations were debounced.
+
+### Features
+
+* **react:** add useState React hook ([417fc48](https://github.com/ardoq/rxbeach/commit/417fc486af4841829d5609ed39b9e0bb36fd5a86))
+
+
+### Bug Fixes
+
+* **reducers:** removed debouncing from reduceState ([60f9b99](https://github.com/ardoq/rxbeach/commit/60f9b99b3bfcf402865063a1ac8592504fafa87a))
+
 ### [0.3.6](https://github.com/ardoq/rxbeach/compare/v0.3.3...v0.3.6) (2020-03-24)
 
 
