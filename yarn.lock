@@ -3905,10 +3905,10 @@ run-parallel@^1.1.9:
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.9.tgz#c9dd3a7cf9f4b2c4b6244e173a6ed866e61dd679"
   integrity sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q==
 
-rxjs-marbles@5.0.5:
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/rxjs-marbles/-/rxjs-marbles-5.0.5.tgz#374aa289f5488b6c6a99d7d164d96a8db1df40e1"
-  integrity sha512-Ni1AAVdq28CEIZaAQpD2+WhoaaRQ7FOObLVf26rc7g7S/QEc6GmfoG8lZicyy2KKxsExhJzTnyUCcLBG28/0zA==
+rxjs-marbles@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/rxjs-marbles/-/rxjs-marbles-6.0.0.tgz#b8862b20e94cf0e685222dddc248eb8bceaf4f31"
+  integrity sha512-d9EzhUc0VWeY8OaF/qpZNmunelzE6tml+dOPlyJ7bUWFnmUrQuHAvIOP9C5eJil36dkANNqna1Ev/aPtAd5joA==
   dependencies:
     fast-equals "^2.0.0"
 
