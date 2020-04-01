@@ -12,6 +12,12 @@ change continuously.
 # Contributing
 Code is hosted in the GitHub repo [ardoq/rxbeach](https://github.com/ardoq/rxbeach).
 
+We have a `.git-blame-ignore-revs` file for ignoring commits with style changes
+in git blame. You can configure git to use it, and VSCode and others will
+respect the setting:
+
+    git config blame.ignoreRevsFile .git-blame-ignore-revs
+
 ## Publishing a new version of the package
 1. Verify that "it works":  
    `yarn lint && yarn build && yarn test`
