@@ -36,7 +36,7 @@ const combined = {
   D: ['C', 'D'] as [string, string],
 };
 
-test('merge adds name and merge marker', t => {
+test('merge adds name and merge marker', (t) => {
   const merged$ = merge(source$, dependency1$, dependency2$);
 
   t.deepEqual(findMarker(merged$), {
@@ -47,7 +47,7 @@ test('merge adds name and merge marker', t => {
 
 test(
   'merge emits for each emit from source',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot(' a-c', letters);
     const bravo$ = m.hot(' -b-', letters);
     const merged$ = m.hot('abc', letters);
@@ -56,7 +56,7 @@ test(
   })
 );
 
-test('zip adds name and combine marker', t => {
+test('zip adds name and combine marker', (t) => {
   const derived$ = zip(source$, dependency1$, dependency2$);
 
   t.deepEqual(findMarker(derived$), {
@@ -67,7 +67,7 @@ test('zip adds name and combine marker', t => {
 
 test(
   'zip emits on emit from sources',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot('   a-c-', letters);
     const bravo$ = m.hot('   -b-d', letters);
     const combined$ = m.hot('-B-D', combined);
@@ -76,7 +76,7 @@ test(
   })
 );
 
-test('combineLatest adds name and merge marker', t => {
+test('combineLatest adds name and merge marker', (t) => {
   const combined$ = combineLatest(source$, dependency1$, dependency2$);
 
   t.deepEqual(findMarker(combined$), {
@@ -87,7 +87,7 @@ test('combineLatest adds name and merge marker', t => {
 
 test(
   'combineLatest emits for each emit from source',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot('   a-c', letters);
     const bravo$ = m.hot('   -b-', letters);
     const combined$ = m.hot('-BC', combined);

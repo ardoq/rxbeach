@@ -35,7 +35,7 @@ const combined = {
   C: ['C', 'B'] as [string, string],
 };
 
-test('merge adds name and merge marker', t => {
+test('merge adds name and merge marker', (t) => {
   const merged$ = source$.pipe(merge(dependency1$, dependency2$));
 
   t.deepEqual(findMarker(merged$), {
@@ -46,7 +46,7 @@ test('merge adds name and merge marker', t => {
 
 test(
   'merge emits for each emit from source',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot(' a-c', letters);
     const bravo$ = m.hot(' -b-', letters);
     const merged$ = m.hot('abc', letters);
@@ -55,7 +55,7 @@ test(
   })
 );
 
-test('withLatestFrom adds name and combine marker', t => {
+test('withLatestFrom adds name and combine marker', (t) => {
   const derived$ = source$.pipe(withLatestFrom(dependency1$, dependency2$));
 
   t.deepEqual(findMarker(derived$), {
@@ -67,7 +67,7 @@ test('withLatestFrom adds name and combine marker', t => {
 
 test(
   'withLatestFrom emits on emit from source',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot('   a-c', letters);
     const bravo$ = m.hot('   -b-', letters);
     const combined$ = m.hot('--C', combined);
@@ -76,7 +76,7 @@ test(
   })
 );
 
-test('combineLatest adds name and merge marker', t => {
+test('combineLatest adds name and merge marker', (t) => {
   const combined$ = source$.pipe(combineLatest(dependency1$, dependency2$));
 
   t.deepEqual(findMarker(combined$), {
@@ -87,7 +87,7 @@ test('combineLatest adds name and merge marker', t => {
 
 test(
   'combineLatest emits for each emit from source',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot('   a-c', letters);
     const bravo$ = m.hot('   -b-', letters);
     const combined$ = m.hot('-BC', combined);
@@ -96,7 +96,7 @@ test(
   })
 );
 
-test('startWith adds parent marker', t => {
+test('startWith adds parent marker', (t) => {
   const startWith$ = source$.pipe(startWith(null));
 
   t.deepEqual(findMarker(startWith$), source);
@@ -104,7 +104,7 @@ test('startWith adds parent marker', t => {
 
 test(
   'startWith emits',
-  marbles(m => {
+  marbles((m) => {
     const alpha$ = m.hot('    --c', letters);
     const startWith$ = m.hot('a-c', letters);
 

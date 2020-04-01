@@ -5,13 +5,13 @@ import { empty, Subject } from 'rxjs';
 
 const second = 'A';
 
-test('useStream return initial value right away', t => {
+test('useStream return initial value right away', (t) => {
   const { result } = renderHook(() => useStream(empty()));
 
   t.deepEqual(result.current, NOT_YET_EMITTED);
 });
 
-test('useStream return value from stream', t => {
+test('useStream return value from stream', (t) => {
   const source$ = new Subject<string>();
   const { result } = renderHook(() => useStream(source$));
 
@@ -20,7 +20,7 @@ test('useStream return value from stream', t => {
   t.deepEqual(result.current, second);
 });
 
-test('useStream unsubscribes on unmount', t => {
+test('useStream unsubscribes on unmount', (t) => {
   const source$ = new Subject<string>();
   const { unmount } = renderHook(() => useStream(source$));
 
@@ -29,7 +29,7 @@ test('useStream unsubscribes on unmount', t => {
   t.deepEqual(source$.observers, []);
 });
 
-test('useStream does not resubscribe on rerender', t => {
+test('useStream does not resubscribe on rerender', (t) => {
   const source$ = new Subject<string>();
   const { rerender } = renderHook(() => useStream(source$));
 
@@ -39,7 +39,7 @@ test('useStream does not resubscribe on rerender', t => {
   t.assert(source$.observers[0] === subscription);
 });
 
-test('useStream unsubscribes, keeps latest value and subscribes new stream', t => {
+test('useStream unsubscribes, keeps latest value and subscribes new stream', (t) => {
   const alpha = new Subject<string>();
   const bravo = new Subject<string>();
 

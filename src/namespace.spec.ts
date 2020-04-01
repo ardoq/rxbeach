@@ -12,7 +12,7 @@ const namespaced = _namespaceAction('namespace', mockAction('type')) as {
     namespace: string;
   };
 };
-test('_namespaceAction has unwritable type', t => {
+test('_namespaceAction has unwritable type', (t) => {
   t.throws(
     () => {
       namespaced.type = 'foo';
@@ -21,7 +21,7 @@ test('_namespaceAction has unwritable type', t => {
   );
 });
 
-test('_namespaceAction has unwritable meta', t => {
+test('_namespaceAction has unwritable meta', (t) => {
   t.throws(
     () => {
       namespaced.meta = { namespace: 'bar' };
@@ -30,7 +30,7 @@ test('_namespaceAction has unwritable meta', t => {
   );
 });
 
-test('_namespaceAction has unwritable namespace', t => {
+test('_namespaceAction has unwritable namespace', (t) => {
   t.throws(
     () => {
       namespaced.meta.namespace = 'baz';
@@ -39,7 +39,7 @@ test('_namespaceAction has unwritable namespace', t => {
   );
 });
 
-test('namespaceActionCreator should create actions with namespace', t => {
+test('namespaceActionCreator should create actions with namespace', (t) => {
   const type = 'action type';
   const namespace = 'new namespace';
   const actionCreator = (payload: number) =>
@@ -56,9 +56,9 @@ test('namespaceActionCreator should create actions with namespace', t => {
   t.deepEqual(actionObject, mockAction(type, namespace, 12));
 });
 
-test('namespaceActionDispatcher should invoke the parent dispatcher with namespaced actions', t => {
+test('namespaceActionDispatcher should invoke the parent dispatcher with namespaced actions', (t) => {
   let dispatchedAction: UnknownAction | undefined;
-  const parentDispatcher: ActionDispatcher = action =>
+  const parentDispatcher: ActionDispatcher = (action) =>
     (dispatchedAction = action);
 
   const namespace = 'new namespace';

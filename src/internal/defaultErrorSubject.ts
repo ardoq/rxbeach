@@ -12,4 +12,4 @@ import { rethrowErrorGlobally } from './rethrowErrorGlobally';
  */
 export const defaultErrorSubject = new Subject<any>();
 
-defaultErrorSubject.subscribe(error => rethrowErrorGlobally(error));
+defaultErrorSubject.subscribe((error) => rethrowErrorGlobally(error));

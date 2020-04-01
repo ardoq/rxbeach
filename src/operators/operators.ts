@@ -91,7 +91,7 @@ export const ofType: OfType = ((
 export const extractPayload = <Payload>(): OperatorFunction<
   ActionWithPayload<Payload>,
   Payload
-> => map(action => action.payload);
+> => map((action) => action.payload);
 
 /**
  * Stream operator that excludes actions with the wrong namespace
@@ -124,7 +124,7 @@ export const withNamespace = (
  */
 export const carry = <Carried, Emitted>(
   operator: OperatorFunction<Carried, Emitted>
-): OperatorFunction<Carried, [Carried, Emitted]> => observable =>
+): OperatorFunction<Carried, [Carried, Emitted]> => (observable) =>
   observable.pipe(
     operator,
     withLatestFrom(observable, (emitted, carried) => [carried, emitted])
@@ -159,4 +159,4 @@ export const carry = <Carried, Emitted>(
 export const apply = <P, R>(
   operator: (payload: P) => OperatorFunction<P, R>
 ): OperatorFunction<P, R> =>
-  flatMap(payload => of(payload).pipe(operator(payload)));
+  flatMap((payload) => of(payload).pipe(operator(payload)));

@@ -120,9 +120,9 @@ export class MarkedObservable<T, M extends Marker> extends Observable<T> {
   }
 }
 
-export const markName = <T>(
-  name: string
-): MonoTypeOperatorFunction<T> => observable$ =>
+export const markName = <T>(name: string): MonoTypeOperatorFunction<T> => (
+  observable$
+) =>
   new MarkedObservable(observable$, {
     type: MarkerType.NAME,
     sources: [findMarker(observable$)],
@@ -131,7 +131,7 @@ export const markName = <T>(
 
 export const markOfType = <T>(
   sources: ActionMarker[]
-): MonoTypeOperatorFunction<T> => observable$ =>
+): MonoTypeOperatorFunction<T> => (observable$) =>
   new MarkedObservable(observable$, {
     type: MarkerType.OF_TYPE,
     sources,
@@ -139,7 +139,7 @@ export const markOfType = <T>(
 
 export const markCombineLatest = <T>(
   sources$: Observable<unknown>[]
-): MonoTypeOperatorFunction<T> => observable$ =>
+): MonoTypeOperatorFunction<T> => (observable$) =>
   new MarkedObservable(observable$, {
     type: MarkerType.COMBINE_LATEST,
     sources: sources$.map(findMarker),
@@ -148,7 +148,7 @@ export const markCombineLatest = <T>(
 export const markWithLatestFrom = <T>(
   source$: Observable<unknown>,
   dependencies$: Observable<unknown>[]
-): MonoTypeOperatorFunction<T> => observable$ =>
+): MonoTypeOperatorFunction<T> => (observable$) =>
   new MarkedObservable(observable$, {
     type: MarkerType.WITH_LATEST_FROM,
     sources: [findMarker(source$)],
@@ -157,7 +157,7 @@ export const markWithLatestFrom = <T>(
 
 export const markMerge = <T>(
   sources$: Observable<unknown>[]
-): MonoTypeOperatorFunction<T> => observable$ =>
+): MonoTypeOperatorFunction<T> => (observable$) =>
   new MarkedObservable(observable$, {
     type: MarkerType.MERGE,
     sources: sources$.map(findMarker),
@@ -165,7 +165,7 @@ export const markMerge = <T>(
 
 export const markZip = <T>(
   sources$: Observable<unknown>[]
-): MonoTypeOperatorFunction<T> => observable$ =>
+): MonoTypeOperatorFunction<T> => (observable$) =>
   new MarkedObservable(observable$, {
     type: MarkerType.ZIP,
     sources: sources$.map(findMarker),

@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { derivedStream } from './derivedStream';
 import { marbles } from 'rxjs-marbles/ava';
 
-test('derivedStream adds name and combine marker', t => {
+test('derivedStream adds name and combine marker', (t) => {
   const source$ = new Observable<unknown>().pipe(markName('source'));
   const dependency$ = source$.pipe(markName('dependency'));
 
@@ -39,7 +39,7 @@ test('derivedStream adds name and combine marker', t => {
 
 test(
   'derivedStream emits on emit from either source',
-  marbles(m => {
+  marbles((m) => {
     const letters = { a: 'A', b: 'B', c: 'C' };
     const combined = {
       B: ['A', 'B'] as [string, string],

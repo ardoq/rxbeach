@@ -15,7 +15,7 @@ const test = stubRethrowErrorGlobally(untypedTest);
 
 test(
   'reduceState should subscribe to action$ and emit initial state synchronously upon subscription',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 3;
     const action$ = m.hot('  -');
     const sub = '            ^';
@@ -29,7 +29,7 @@ test(
 
 test(
   'reduceState always emits defaultState and every subsequent calculation',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  -----1-', actions);
     const word$ = m.hot('    a----a ', words);
     const expected$ = m.hot('(12)-(34)', numbers);
@@ -47,7 +47,7 @@ test(
   })
 );
 
-test('reduceState should call reducer once when there are multiple subs', t => {
+test('reduceState should call reducer once when there are multiple subs', (t) => {
   const defaultState = 1;
   handlers.incrementOne.resetHistory();
   const action$ = of(actionCreators.incrementOne());
@@ -63,7 +63,7 @@ test('reduceState should call reducer once when there are multiple subs', t => {
 
 test(
   'reduceState should share state and not reset as long as it has one subscriber',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 1;
     const action$ = m.hot('      ----1-----1-', actions);
     const sub1 = '               ^-----------';
@@ -84,7 +84,7 @@ test(
 
 test(
   'reduceState should reset state when it has no subscribers',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 1;
     const action$ = m.hot('      1--1---1---1-', actions);
     const sub1 = '               --^--!--------';
@@ -102,7 +102,7 @@ test(
 
 test(
   'reduceState catches errors and emits them to error subject',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  -1d--1', actions);
     const expected$ = m.hot('12---3', numbers);
     const errorMarbles = '   --e-';
@@ -117,7 +117,7 @@ test(
 
 test(
   'reduceState replays values to new subscribers',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 1;
     const action$ = m.hot('      -1-1----------', actions);
     const sub1 = '               ^-------------';
@@ -135,7 +135,7 @@ test(
 
 test(
   'reduceState replays values to derived streams',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 1;
     const action$ = m.hot('      -2-1-', actions);
     const sub1 = '               ^----';
@@ -159,7 +159,7 @@ test(
 
 test(
   'reduceState emits updated value to derived streams',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 1;
     const action$ = m.hot('      -2-(12)-2-', actions);
     const sub1 = '               ^---------';
@@ -183,7 +183,7 @@ test(
 
 test(
   'reduceState emits updated value to derived streams if routine subscribes first',
-  marbles(m => {
+  marbles((m) => {
     const defaultState = 1;
     const action$ = m.hot('      2--(12)-2-', actions);
     const sub1 = '               -^--------';
@@ -207,7 +207,7 @@ test(
 
 test.failing(
   'reduceState should only emit the latest state processed at the current frame to prevent glitches',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  --1-', actions);
     const word$ = m.hot('    a-a ', words);
     const expected$ = m.hot('2-4', numbers);

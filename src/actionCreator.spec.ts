@@ -13,11 +13,11 @@ const unionAction = actionCreator<Payload | AlternativePayload>('union');
 const union1 = unionAction({ num: 4 });
 const union2 = unionAction({ text: 'hi' });
 
-test('actionCreator should create action creators and append the type', t => {
+test('actionCreator should create action creators and append the type', (t) => {
   t.is(action.type, myAction.type);
   t.deepEqual(action.payload, { num: 3 });
 });
-test('actionCreator should protect the type field', t => {
+test('actionCreator should protect the type field', (t) => {
   t.throws(
     () => {
       (myAction as any).type = 'lol';
@@ -25,12 +25,12 @@ test('actionCreator should protect the type field', t => {
     { instanceOf: TypeError }
   );
 });
-test('actionCreator should create action objects with the payload', t => {
+test('actionCreator should create action objects with the payload', (t) => {
   t.deepEqual(action.payload, { num: 3 });
   t.deepEqual(union1.payload, { num: 4 });
   t.deepEqual(union2.payload, { text: 'hi' });
 });
-test('actionCreator should create action objects with protected type', t => {
+test('actionCreator should create action objects with protected type', (t) => {
   t.throws(
     () => {
       action.type = 'mock';
@@ -38,7 +38,7 @@ test('actionCreator should create action objects with protected type', t => {
     { instanceOf: TypeError }
   );
 });
-test('actionCreator should create action objects with protected meta', t => {
+test('actionCreator should create action objects with protected meta', (t) => {
   t.throws(
     () => {
       action.meta = {};
@@ -46,7 +46,7 @@ test('actionCreator should create action objects with protected meta', t => {
     { instanceOf: TypeError }
   );
 });
-test('actionCreator should create action objects with protected namespace', t => {
+test('actionCreator should create action objects with protected namespace', (t) => {
   t.throws(
     () => {
       action.meta.namespace = 'shim';

@@ -212,8 +212,8 @@ export const combineReducers = <State>(
   const actionReducers = reducers.filter(isActionReducer);
   const streamReducers = reducers.filter(isStreamReducer);
   const reducersByActionType = new Map(
-    actionReducers.flatMap(reducerFn =>
-      reducerFn.trigger.actions.map(action => [action.type, reducerFn])
+    actionReducers.flatMap((reducerFn) =>
+      reducerFn.trigger.actions.map((action) => [action.type, reducerFn])
     )
   );
 
@@ -228,7 +228,7 @@ export const combineReducers = <State>(
   );
 
   return pipe(
-    ofType(...actionReducers.flatMap(reducerFn => reducerFn.trigger.actions)),
+    ofType(...actionReducers.flatMap((reducerFn) => reducerFn.trigger.actions)),
     map((action): Packet => ({ origin: ACTION_ORIGIN, value: action })),
     merge(...source$s),
     scan(
