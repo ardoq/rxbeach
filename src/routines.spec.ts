@@ -41,7 +41,7 @@ const errorMarbles = '   ------e';
 const errorSub1 = '      ^-----!';
 const errorSub2 = '      ------^--------';
 
-const errorRoutine: Routine<string> = map(a => {
+const errorRoutine: Routine<string> = map((a) => {
   if (a.type === 'error') throw 'error';
   return 'passed';
 });
@@ -57,7 +57,7 @@ const lengthRoutine = routine(map(({ type }) => type.length));
 
 test(
   'routine pipes multiple operator functions',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot(actionMarbles1, actions);
     const expected$ = m.hot(letterMarbles, letters);
 
@@ -69,7 +69,7 @@ test(
 
 test(
   'collectRoutines runs all routines',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot(actionMarbles1, actions);
     const expected$ = m.hot(combinedMarbles, lengths);
 
@@ -83,7 +83,7 @@ test(
 
 test(
   'subscribeRoutine subscribes action$',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot(actionMarbles1, actions);
     subscribeRoutine(action$, lettersRoutine);
 
@@ -93,7 +93,7 @@ test(
 
 test(
   'subscribeRoutine resubscribes on errors',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot(actionMarbles2, actions);
 
     subscribeRoutine(action$, errorRoutine);
@@ -104,7 +104,7 @@ test(
 
 test(
   'subscribeRoutine emits errors to error subject',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot(actionMarbles2, actions);
     const error$ = new Subject<any>();
 

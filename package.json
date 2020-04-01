@@ -25,7 +25,7 @@
     "publish": "yarn publish:prep && yarn publish dist"
   },
   "devDependencies": {
-    "@ardoq/shared-configs": "0.0.13",
+    "@ardoq/shared-configs": "0.1.1",
     "@ava/typescript": "1.1.1",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
@@ -77,7 +77,6 @@
     ]
   },
   "prettier": {
-    "trailingComma": "es5",
     "singleQuote": true,
     "printWidth": 80,
     "parser": "typescript"

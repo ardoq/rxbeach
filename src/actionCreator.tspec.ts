@@ -24,7 +24,7 @@ type NumberGenerator = () => number;
 type BoolFunc = (a: boolean) => boolean;
 const unionFuncAction = actionCreator<NumberGenerator | BoolFunc>('functinos');
 unionFuncAction(() => 1);
-unionFuncAction(a => !a);
+unionFuncAction((a) => !a);
 
 const voidAction = actionCreator('void');
 voidAction();

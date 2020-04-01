@@ -40,18 +40,18 @@ const dependency: NameMarker = {
   sources: [TOP_MARKER],
 };
 
-test('actionMarker creates actionMarker', t => {
+test('actionMarker creates actionMarker', (t) => {
   t.deepEqual(actionMarker('heyo'), {
     type: MarkerType.ACTION,
     name: 'heyo',
   });
 });
 
-test('markName marks name', t => {
+test('markName marks name', (t) => {
   t.deepEqual(findMarker(source$), TOP_MARKER);
 });
 
-test('markName includes parent marker', t => {
+test('markName includes parent marker', (t) => {
   const piped$ = source$.pipe(markName('piped'));
 
   t.deepEqual(findMarker(piped$), {
@@ -61,7 +61,7 @@ test('markName includes parent marker', t => {
   });
 });
 
-test('markOfType marks action dependencies', t => {
+test('markOfType marks action dependencies', (t) => {
   const piped$ = source$.pipe(
     markOfType([actionMarker('alpha'), actionMarker('bravo')])
   );
@@ -81,7 +81,7 @@ test('markOfType marks action dependencies', t => {
   });
 });
 
-test('markCombineLatest includes sources', t => {
+test('markCombineLatest includes sources', (t) => {
   const alpha$ = source$.pipe(markName('alpha'));
   const piped$ = source$.pipe(markCombineLatest([alpha$, dependency$]));
 
@@ -98,7 +98,7 @@ test('markCombineLatest includes sources', t => {
   });
 });
 
-test('markWithLatestFrom includes source and dependencies', t => {
+test('markWithLatestFrom includes source and dependencies', (t) => {
   const piped$ = source$.pipe(markWithLatestFrom(source$, [dependency$]));
 
   t.deepEqual(findMarker(piped$), {
@@ -108,7 +108,7 @@ test('markWithLatestFrom includes source and dependencies', t => {
   });
 });
 
-test('markMerge includes sources', t => {
+test('markMerge includes sources', (t) => {
   const piped$ = source$.pipe(markMerge([source$, dependency$]));
 
   t.deepEqual(findMarker(piped$), {
@@ -117,7 +117,7 @@ test('markMerge includes sources', t => {
   });
 });
 
-test('markZip includes sources', t => {
+test('markZip includes sources', (t) => {
   const piped$ = source$.pipe(markZip([source$, dependency$]));
 
   t.deepEqual(findMarker(piped$), {
@@ -128,7 +128,8 @@ test('markZip includes sources', t => {
 
 const findMarkerOver: Macro<[OperatorFunction<any, any>]> = (t, operator) =>
   t.deepEqual(findMarker(source$.pipe(operator)), TOP_MARKER);
-findMarkerOver.title = name => `findMarker finds marker over ${name} operator`;
+findMarkerOver.title = (name) =>
+  `findMarker finds marker over ${name} operator`;
 
 const coop = () => true;
 const emop = () => empty();
@@ -187,25 +188,25 @@ const echo = {
   ],
 };
 
-test('detectGlitch detects glitches from derivedStream', t => {
+test('detectGlitch detects glitches from derivedStream', (t) => {
   t.deepEqual(detectGlitch(findMarker(delta$) as Marker), [
     [delta, delta.sources[0], bravo, source],
     [delta, delta.sources[0], charlie, source],
   ] as [Marker[], Marker[]]);
 });
 
-test('detectGlitch detects glitches from withLatestFrom', t => {
+test('detectGlitch detects glitches from withLatestFrom', (t) => {
   t.deepEqual(detectGlitch(findMarker(echo$) as Marker), [
     [echo, echo.sources[0], bravo, source],
     [echo, echo.sources[0], charlie, source],
   ] as [Marker[], Marker[]]);
 });
 
-test('detectGlitches does not detect false glitches', t => {
+test('detectGlitches does not detect false glitches', (t) => {
   t.false(detectGlitch(findMarker(foxtrot$) as Marker));
 });
 
-test('detectGlitches does not detect anything on marker without parent', t => {
+test('detectGlitches does not detect anything on marker without parent', (t) => {
   t.false(detectGlitch(actionMarker('asdf')));
   // The following test hit's the branch in detectGlitch when sources is
   // undefined, which is not actually possible in practice, hence the INVALID

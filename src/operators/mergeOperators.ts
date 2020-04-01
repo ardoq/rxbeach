@@ -19,8 +19,8 @@ import { share } from 'rxjs/operators';
  */
 export const coldMergeOperators = <T, R>(
   ...operators: OperatorFunction<T, R>[]
-): OperatorFunction<T, R> => source =>
-  merge(...operators.map(operator => source.pipe(operator)));
+): OperatorFunction<T, R> => (source) =>
+  merge(...operators.map((operator) => source.pipe(operator)));
 
 /**
  * Runs operators in parallel and merges their results

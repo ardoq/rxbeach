@@ -21,14 +21,14 @@ export type TestContextRethrowErrorGlobally = {
 
 export const stubRethrowErrorGlobally = (untypedTest: TestInterface) => {
   const test = untypedTest as TestInterface<TestContextRethrowErrorGlobally>;
-  test.before(t => {
+  test.before((t) => {
     t.context.rethrowErrorGlobally = sinon.stub(
       rethrowErrorGloballyModule,
       'rethrowErrorGlobally'
     );
   });
-  test.after(t => t.context.rethrowErrorGlobally.restore());
-  test.beforeEach(t => t.context.rethrowErrorGlobally.reset());
+  test.after((t) => t.context.rethrowErrorGlobally.restore());
+  test.beforeEach((t) => t.context.rethrowErrorGlobally.reset());
 
   return test;
 };

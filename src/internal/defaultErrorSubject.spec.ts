@@ -4,7 +4,7 @@ import { stubRethrowErrorGlobally } from './testing/utils';
 
 const test = stubRethrowErrorGlobally(untypedTest);
 
-test('defaultErrorSubject rethrows errors globally', t => {
+test('defaultErrorSubject rethrows errors globally', (t) => {
   const error = new Error('Hello errors');
   defaultErrorSubject.next(error);
 

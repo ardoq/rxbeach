@@ -58,5 +58,5 @@ export const namespaceActionCreator = <Payload = VoidPayload>(
 export const namespaceActionDispatcher = (
   namespace: string,
   parentDispatcher: ActionDispatcher
-): ActionDispatcher => action =>
+): ActionDispatcher => (action) =>
   parentDispatcher(_namespaceAction(namespace, action));

@@ -16,7 +16,7 @@ const alwaysReset = reducer(
   () => 5
 );
 
-test('reducer should store reducer function', t => {
+test('reducer should store reducer function', (t) => {
   handlers.incrementOne.resetHistory();
   reducers.handleOne(1);
   t.assert(handlers.incrementOne.called);
@@ -24,7 +24,7 @@ test('reducer should store reducer function', t => {
 
 test(
   'combineReducers should reduce actions to state',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  121', actions);
     const expected$ = m.hot('245', numbers);
 
@@ -36,7 +36,7 @@ test(
 
 test(
   'combineReducers should reduce state from other streams',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  --');
     const word$ = m.hot('    ab', words);
     const expected$ = m.hot('24', numbers);
@@ -54,7 +54,7 @@ test(
 
 test(
   'combineReducers should support both actions and other streams',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  -1-', actions);
     const word$ = m.hot('    a-b', words);
     const expected$ = m.hot('235', numbers);
@@ -72,7 +72,7 @@ test(
 
 test(
   'combineReducers catches errors and emits them to error subject',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  1d1', actions);
     const expected$ = m.hot('2-3', numbers);
     const errorMarbles = '   -e-';
@@ -87,7 +87,7 @@ test(
 
 test(
   'combineReducers should handle reducers for multiple actions',
-  marbles(m => {
+  marbles((m) => {
     const action$ = m.hot('  12', actions);
     const expected$ = m.hot('55', numbers);
 
@@ -99,7 +99,7 @@ test(
 
 test(
   'combineReducers should reduce in predictable order',
-  marbles(m => {
+  marbles((m) => {
     // The "predictable order" seems to be the order in which the streams emit.
     // Eg. The ordering of these seed definitions matter, but not the order of
     //     the reducers.

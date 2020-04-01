@@ -17,7 +17,7 @@ import { UnknownAction } from '../internal/types';
 import { findMarker, MarkerType, OfTypeMarker } from '../internal/markers';
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot<ActionWithPayload<any>>('aa', {
       a: mockAction('', '', payload) as ActionWithPayload<any>,
     });
@@ -27,7 +27,8 @@ const extractsPayload: Macro<[any]> = (t, payload) =>
 
     m.expect(source.pipe(extractPayload())).toBeObservable(expected);
   })(t);
-extractsPayload.title = name => `extractPayload should extract ${name} payload`;
+extractsPayload.title = (name) =>
+  `extractPayload should extract ${name} payload`;
 
 test('primitive', extractsPayload, 'Hello World');
 test('array', extractsPayload, ['Hello', { what: 'World' }]);
@@ -49,7 +50,7 @@ const c = combinedAction({ foo: 2, bar: 3 });
 
 test(
   'ofType should filter one payload action type',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot('fcv', { f, c, v });
     const expected = m.hot('-c-', { c: c.payload });
 
@@ -64,7 +65,7 @@ test(
 
 test(
   'ofType should filter one void action type',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot('fcv', { f, c, v });
     const expected = m.hot('--v', { v });
 
@@ -72,7 +73,7 @@ test(
   })
 );
 
-test('ofType should add a stream marker', t => {
+test('ofType should add a stream marker', (t) => {
   const piped$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
 
   t.deepEqual(findMarker(piped$), {
@@ -86,7 +87,7 @@ test('ofType should add a stream marker', t => {
   });
 });
 
-test('ofType markers should have reference equality of action marker', t => {
+test('ofType markers should have reference equality of action marker', (t) => {
   const one$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
   const two$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
   const one = findMarker(one$) as OfTypeMarker;
@@ -97,7 +98,7 @@ test('ofType markers should have reference equality of action marker', t => {
 
 test(
   'ofType should filter multiple actions that are mix of void and not void',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot('fcv', { f, c, v });
     const expected = m.hot('f-v', { f, v });
 
@@ -109,7 +110,7 @@ test(
 
 test(
   'ofType should infer payload of multiple types that are overlapping',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot('fcv', { f, c, v });
     const expected = m.hot('12-', {
       '1': 1,
@@ -127,7 +128,7 @@ test(
 
 test(
   'ofType should have payload field for multiple types that have non-overlapping payloads',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot('fb', { f, b });
     const expected = m.hot('fb', {
       f: f.payload,
@@ -145,7 +146,7 @@ test(
 
 test(
   'withNamespace should exclude actions with the wrong namespace',
-  marbles(m => {
+  marbles((m) => {
     const actionType = 'actionType';
     const namespace = 'namespace';
 
@@ -164,7 +165,7 @@ test(
 
 test(
   'it should be possible to chain withNamespace, ofType and extractPayload',
-  marbles(m => {
+  marbles((m) => {
     const payloadAction = actionCreator<number>('payload action');
     const payloadActionWS = namespaceActionCreator('WS', payloadAction);
     const payloadActionNS = namespaceActionCreator('NS', payloadAction);
@@ -193,21 +194,21 @@ test(
 
 test(
   'carry should combine initial payload with the results of the operator',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot(' f', { f });
     const expected = m.hot('1', {
       '1': [f.payload, f.payload.foo] as [FooPayload, number],
     });
 
     m.expect(
-      source.pipe(extractPayload(), carry(map(e => e.foo)))
+      source.pipe(extractPayload(), carry(map((e) => e.foo)))
     ).toBeObservable(expected);
   })
 );
 
 test(
   'apply should provide context to operators',
-  marbles(m => {
+  marbles((m) => {
     const source = m.hot('  f', { f });
     const expected = m.hot('n', { n: f.payload.foo });
 
