@@ -15,14 +15,18 @@
   "repository": "github:ardoq/rxbeach",
   "author": "Tobias Laundal",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "test": "yarn nyc ava",
     "test:watch": "yarn ava --watch",
     "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
-    "deploy:prep": "yarn build -p tsconfig-publish.json && node prep-package.js",
-    "deploy": "yarn deploy:prep && yarn publish dist"
+    "prepack": "yarn build"
   },
   "devDependencies": {
     "@ardoq/shared-configs": "0.1.1",

@@ -24,4 +24,4 @@ respect the setting:
 2. Bump the version
    `yarn standard-version`
 2. Publish to NPM (DO NOT BUMP THE VERSION HERE!):  
-   `yarn deploy`
+   `yarn publish`
