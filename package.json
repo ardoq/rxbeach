@@ -21,8 +21,8 @@
     "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
-    "publish:prep": "yarn build -p tsconfig-publish.json && node prep-package.js",
-    "publish": "yarn publish:prep && yarn publish dist"
+    "deploy:prep": "yarn build -p tsconfig-publish.json && node prep-package.js",
+    "deploy": "yarn deploy:prep && yarn publish dist"
   },
   "devDependencies": {
     "@ardoq/shared-configs": "0.1.1",
