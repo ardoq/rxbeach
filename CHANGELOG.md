@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/ardoq/rxbeach/compare/v0.4.2...v0.4.3) (2020-04-02)
+
+
+### Bug Fixes
+
+* expose react utils through rxbeach/react package ([33f00e7](https://github.com/ardoq/rxbeach/commit/33f00e71850dcff106e6b5c479a3365afc771b31))
+
 ### [0.4.2](https://github.com/ardoq/rxbeach/compare/v0.4.1...v0.4.2) (2020-04-02)
 
 ### [0.4.1](https://github.com/ardoq/rxbeach/compare/v0.4.0...v0.4.1) (2020-04-02)
