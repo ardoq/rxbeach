@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/ardoq/rxbeach/compare/v0.4.0...v0.4.1) (2020-04-02)
+
+
+### Features
+
+* **react:** add connect React HOC ([42e5767](https://github.com/ardoq/rxbeach/commit/42e5767d105639005fb6145e38cebdcdfb6d5f66))
+
 ## [0.4.0](https://github.com/ardoq/rxbeach/compare/v0.3.6...v0.4.0) (2020-03-26)
 
 
