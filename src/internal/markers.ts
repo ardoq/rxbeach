@@ -168,44 +168,44 @@ export const markView = <T>(name?: string): MonoTypeOperatorFunction<T> => (
 export const markOfType = <T>(
   sources: ActionMarker[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-    new MarkedObservable(observable$, {
-      type: MarkerType.OF_TYPE,
-      sources,
-    });
+  new MarkedObservable(observable$, {
+    type: MarkerType.OF_TYPE,
+    sources,
+  });
 
 export const markCombineLatest = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-    new MarkedObservable(observable$, {
-      type: MarkerType.COMBINE_LATEST,
-      sources: sources$.map(findMarker),
-    });
+  new MarkedObservable(observable$, {
+    type: MarkerType.COMBINE_LATEST,
+    sources: sources$.map(findMarker),
+  });
 
 export const markWithLatestFrom = <T>(
   source$: Observable<unknown>,
   dependencies$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-    new MarkedObservable(observable$, {
-      type: MarkerType.WITH_LATEST_FROM,
-      sources: [findMarker(source$)],
-      dependencies: dependencies$.map(findMarker),
-    });
+  new MarkedObservable(observable$, {
+    type: MarkerType.WITH_LATEST_FROM,
+    sources: [findMarker(source$)],
+    dependencies: dependencies$.map(findMarker),
+  });
 
 export const markMerge = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-    new MarkedObservable(observable$, {
-      type: MarkerType.MERGE,
-      sources: sources$.map(findMarker),
-    });
+  new MarkedObservable(observable$, {
+    type: MarkerType.MERGE,
+    sources: sources$.map(findMarker),
+  });
 
 export const markZip = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-    new MarkedObservable(observable$, {
-      type: MarkerType.ZIP,
-      sources: sources$.map(findMarker),
-    });
+  new MarkedObservable(observable$, {
+    type: MarkerType.ZIP,
+    sources: sources$.map(findMarker),
+  });
 
 export const findMarker = (observable$: Observable<unknown>): Marker | null => {
   if (observable$ instanceof MarkedObservable) {

@@ -21,7 +21,7 @@ import { merge } from '../decoratedObservableCombiners';
 export const coldMergeOperators = <T, R>(
   ...operators: OperatorFunction<T, R>[]
 ): OperatorFunction<T, R> => (source) =>
-    merge(...operators.map((operator) => source.pipe(operator)));
+  merge(...operators.map((operator) => source.pipe(operator)));
 
 /**
  * Runs operators in parallel and merges their results
