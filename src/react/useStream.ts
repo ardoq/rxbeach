@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Observable } from 'rxjs';
+import { notifyStreamSubscribed } from '../hooks';
+import { markView } from '../internal/markers';
 
 /**
  * Returned from `useStream` before first emit from the provided stream
@@ -47,10 +49,14 @@ export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
  * @see useEffect
  * @see NOT_YET_EMITTED
  */
-export const useStream = <T>(source$: Observable<T>): T | NOT_YET_EMITTED => {
+export const useStream = <T>(
+  source$: Observable<T>,
+  name?: string
+): T | NOT_YET_EMITTED => {
   const [value, setValue] = useState<T | NOT_YET_EMITTED>(NOT_YET_EMITTED);
 
   useEffect(() => {
+    notifyStreamSubscribed(source$.pipe(markView(name)));
     const subscription = source$.subscribe(setValue);
 
     return () => subscription.unsubscribe();

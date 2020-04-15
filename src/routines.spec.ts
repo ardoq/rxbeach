@@ -1,5 +1,5 @@
 import untypedTest from 'ava';
-import { Subject } from 'rxjs';
+import { Subject, never } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
 import { ActionWithPayload } from './types/Action';
@@ -11,6 +11,9 @@ import {
 } from './routines';
 import { mockAction, stubRethrowErrorGlobally } from './internal/testing/utils';
 import { extractPayload } from './operators/operators';
+import { ActionStream } from '.';
+import { hookMarkers } from './hooks';
+import { MarkerType } from './internal/markers';
 
 const test = stubRethrowErrorGlobally(untypedTest);
 
@@ -113,3 +116,10 @@ test(
     m.expect(error$).toBeObservable(errorMarbles, errors);
   })
 );
+
+test('subscribeRoutine invokes hooks', (t) => {
+  hookMarkers((marker) => {
+    t.deepEqual(marker.type, MarkerType.ROUTINE);
+  });
+  subscribeRoutine(never() as ActionStream, lettersRoutine);
+});

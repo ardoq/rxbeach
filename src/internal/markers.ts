@@ -3,6 +3,8 @@ import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 export enum MarkerType {
   NAME,
   ACTION,
+  ROUTINE,
+  VIEW,
   OF_TYPE,
   COMBINE_LATEST,
   WITH_LATEST_FROM,
@@ -55,6 +57,21 @@ export type ActionMarker = MarkerBase<MarkerType.ACTION> & {
 };
 
 /**
+ * A marker representing a view, such as a connected react component
+ */
+export type RoutineMarker = MarkerBase<MarkerType.ROUTINE> & {
+  readonly sources: [Marker | null];
+};
+
+/**
+ * A marker representing a view, such as a connected react component
+ */
+export type ViewMarker = MarkerBase<MarkerType.VIEW> & {
+  readonly name?: string;
+  readonly sources: [Marker | null];
+};
+
+/**
  * A marker for the `ofType` operator
  */
 export type OfTypeMarker = MarkerBase<MarkerType.OF_TYPE> & {
@@ -87,6 +104,8 @@ export type ZipMarker = MarkerBase<MarkerType.ZIP> & {
 export type Marker =
   | NameMarker
   | ActionMarker
+  | RoutineMarker
+  | ViewMarker
   | OfTypeMarker
   | CombineLatestMarker
   | WithLatestFromMarker
@@ -129,47 +148,64 @@ export const markName = <T>(name: string): MonoTypeOperatorFunction<T> => (
     name,
   });
 
+export const markRoutine = <T>(): MonoTypeOperatorFunction<T> => (
+  observable$
+) =>
+  new MarkedObservable(observable$, {
+    type: MarkerType.ROUTINE,
+    sources: [findMarker(observable$)],
+  });
+
+export const markView = <T>(name?: string): MonoTypeOperatorFunction<T> => (
+  observable$
+) =>
+  new MarkedObservable(observable$, {
+    type: MarkerType.VIEW,
+    sources: [findMarker(observable$)],
+    name,
+  });
+
 export const markOfType = <T>(
   sources: ActionMarker[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-  new MarkedObservable(observable$, {
-    type: MarkerType.OF_TYPE,
-    sources,
-  });
+    new MarkedObservable(observable$, {
+      type: MarkerType.OF_TYPE,
+      sources,
+    });
 
 export const markCombineLatest = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-  new MarkedObservable(observable$, {
-    type: MarkerType.COMBINE_LATEST,
-    sources: sources$.map(findMarker),
-  });
+    new MarkedObservable(observable$, {
+      type: MarkerType.COMBINE_LATEST,
+      sources: sources$.map(findMarker),
+    });
 
 export const markWithLatestFrom = <T>(
   source$: Observable<unknown>,
   dependencies$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-  new MarkedObservable(observable$, {
-    type: MarkerType.WITH_LATEST_FROM,
-    sources: [findMarker(source$)],
-    dependencies: dependencies$.map(findMarker),
-  });
+    new MarkedObservable(observable$, {
+      type: MarkerType.WITH_LATEST_FROM,
+      sources: [findMarker(source$)],
+      dependencies: dependencies$.map(findMarker),
+    });
 
 export const markMerge = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-  new MarkedObservable(observable$, {
-    type: MarkerType.MERGE,
-    sources: sources$.map(findMarker),
-  });
+    new MarkedObservable(observable$, {
+      type: MarkerType.MERGE,
+      sources: sources$.map(findMarker),
+    });
 
 export const markZip = <T>(
   sources$: Observable<unknown>[]
 ): MonoTypeOperatorFunction<T> => (observable$) =>
-  new MarkedObservable(observable$, {
-    type: MarkerType.ZIP,
-    sources: sources$.map(findMarker),
-  });
+    new MarkedObservable(observable$, {
+      type: MarkerType.ZIP,
+      sources: sources$.map(findMarker),
+    });
 
 export const findMarker = (observable$: Observable<unknown>): Marker | null => {
   if (observable$ instanceof MarkedObservable) {

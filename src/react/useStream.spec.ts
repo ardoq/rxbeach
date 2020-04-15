@@ -1,7 +1,9 @@
 import test from 'ava';
 import { renderHook } from '@testing-library/react-hooks';
 import { useStream, NOT_YET_EMITTED } from './useStream';
-import { empty, Subject } from 'rxjs';
+import { empty, Subject, never } from 'rxjs';
+import { hookMarkers } from '../hooks';
+import { ViewMarker } from '../internal/markers';
 
 const second = 'A';
 
@@ -53,4 +55,12 @@ test('useStream unsubscribes, keeps latest value and subscribes new stream', (t)
   t.deepEqual(result.current, second);
   t.deepEqual(alpha.observers, []);
   t.deepEqual(bravo.observers.length, 1);
+});
+
+test('useStream invokes marker hooks', (t) => {
+  hookMarkers((marker) => {
+    t.deepEqual((marker as ViewMarker).name, 'Name');
+  });
+
+  renderHook(() => useStream(never(), 'Name'));
 });

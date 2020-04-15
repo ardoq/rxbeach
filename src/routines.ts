@@ -4,6 +4,8 @@ import { ActionStream } from './types/helpers';
 import { Routine, RoutineFunc } from './internal/routineFunc';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { mergeOperators } from './operators/mergeOperators';
+import { notifyStreamSubscribed } from './hooks';
+import { markRoutine } from './internal/markers';
 
 export { Routine } from './internal/routineFunc';
 
@@ -12,7 +14,8 @@ export { Routine } from './internal/routineFunc';
  */
 export const routine: RoutineFunc = (
   ...args: OperatorFunction<any, any>[]
-): Routine<any> => pipe(...(args as [OperatorFunction<any, any>]));
+): Routine<any> =>
+  pipe(...([...args, markRoutine()] as [OperatorFunction<any, any>]));
 
 /**
  * Collect multiple routines to one
@@ -60,13 +63,14 @@ export const subscribeRoutine = (
   action$: ActionStream,
   routineToSubscribe: Routine<unknown>,
   errorSubject: Subject<any> = defaultErrorSubject
-) =>
-  action$
-    .pipe(
-      routineToSubscribe,
-      catchError((err, stream) => {
-        errorSubject.next(err);
-        return stream;
-      })
-    )
-    .subscribe();
+) => {
+  const routine$ = action$.pipe(
+    routineToSubscribe,
+    catchError((err, stream) => {
+      errorSubject.next(err);
+      return stream;
+    })
+  );
+  notifyStreamSubscribed(routine$);
+  return routine$.subscribe();
+};

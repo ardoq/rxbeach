@@ -13,6 +13,8 @@ import {
   Marker,
   markMerge,
   markZip,
+  markView,
+  markRoutine,
 } from './markers';
 import {
   tap,
@@ -56,6 +58,25 @@ test('markName includes parent marker', (t) => {
 
   t.deepEqual(findMarker(piped$), {
     type: MarkerType.NAME,
+    name: 'piped',
+    sources: [TOP_MARKER],
+  });
+});
+
+test('markRoutine includes parent marker', (t) => {
+  const piped$ = source$.pipe(markRoutine());
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.ROUTINE,
+    sources: [TOP_MARKER],
+  });
+});
+
+test('markView includes name and parent marker', (t) => {
+  const piped$ = source$.pipe(markView('piped'));
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.VIEW,
     name: 'piped',
     sources: [TOP_MARKER],
   });

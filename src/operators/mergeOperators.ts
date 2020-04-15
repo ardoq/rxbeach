@@ -1,5 +1,6 @@
-import { OperatorFunction, merge, pipe } from 'rxjs';
+import { OperatorFunction, pipe } from 'rxjs';
 import { share } from 'rxjs/operators';
+import { merge } from '../decoratedObservableCombiners';
 
 /**
  * Runs operators in parallel and merges their results
@@ -20,7 +21,7 @@ import { share } from 'rxjs/operators';
 export const coldMergeOperators = <T, R>(
   ...operators: OperatorFunction<T, R>[]
 ): OperatorFunction<T, R> => (source) =>
-  merge(...operators.map((operator) => source.pipe(operator)));
+    merge(...operators.map((operator) => source.pipe(operator)));
 
 /**
  * Runs operators in parallel and merges their results

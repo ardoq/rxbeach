@@ -2,6 +2,9 @@ import { useStream, NOT_YET_EMITTED } from './useStream';
 import { Observable } from 'rxjs';
 import React, { ComponentType } from 'react';
 
+const getComponentName = (Component: ComponentType<any>): string | undefined =>
+  Component.displayName || Component.name || undefined;
+
 /**
  * Higher order component for connecting a component to a stream
  *
@@ -22,7 +25,7 @@ export const connect = <Props, Observed extends Partial<Props>>(
   Component: ComponentType<Props>,
   stream$: Observable<Observed>
 ) => (props: Omit<Props, keyof Observed>) => {
-  const value = useStream(stream$);
+  const value = useStream(stream$, getComponentName(Component));
 
   if (value === NOT_YET_EMITTED) return null;
 

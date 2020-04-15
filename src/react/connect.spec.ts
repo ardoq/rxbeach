@@ -1,10 +1,12 @@
 import testUntyped from 'ava';
 import { act, create, ReactTestRenderer } from 'react-test-renderer';
 import React from 'react';
-import { empty, of, BehaviorSubject } from 'rxjs';
+import { empty, of, BehaviorSubject, never } from 'rxjs';
 import { connect } from './connect';
 import { spy, SinonSpy } from 'sinon';
 import { TestInterface } from 'ava';
+import { hookMarkers } from '../hooks';
+import { ViewMarker } from '../internal/markers';
 
 type Props = { msg: string; num?: number };
 const initialProps = { msg: 'hello' };
@@ -67,7 +69,7 @@ test('connect should re-render wrapped component on emitted props', (t) => {
   t.deepEqual(WrappedComponentSpy.secondCall.args[0], secondProps);
 });
 
-test('connect should unsubscribe stream when unmounted', async (t) => {
+test('connect should unsubscribe stream when unmounted', (t) => {
   const props$ = new BehaviorSubject<Props>(initialProps);
   const HOComponent = connect(WrappedComponent, props$);
 
@@ -85,7 +87,7 @@ test('connect should unsubscribe stream when unmounted', async (t) => {
   t.deepEqual(props$.observers, []);
 });
 
-test('connect should forward props', async (t) => {
+test('connect should forward props', (t) => {
   const { WrappedComponentSpy } = t.context;
   const HOComponent = connect(WrappedComponentSpy, of(initialProps));
 
@@ -118,7 +120,7 @@ test('connect give streamed props precedence over forwarded props', (t) => {
   });
 });
 
-test('connect should propagate changes to forwarded props', async (t) => {
+test('connect should propagate changes to forwarded props', (t) => {
   const { WrappedComponentSpy } = t.context;
   const HOComponent = connect(WrappedComponentSpy, of(initialProps));
 
@@ -137,5 +139,29 @@ test('connect should propagate changes to forwarded props', async (t) => {
   t.deepEqual(WrappedComponentSpy.secondCall?.args[0], {
     ...secondAdditionalProps,
     ...initialProps,
+  });
+});
+
+test('connect should invoke marker hook', (t) => {
+  const HOComponent = connect(WrappedComponent, never());
+
+  hookMarkers((marker) => {
+    t.deepEqual((marker as ViewMarker).name, 'WrappedComponent');
+  });
+
+  act(() => {
+    create(React.createElement(HOComponent));
+  });
+});
+
+test('connect should invoke marker hook without name for anonymous components', (t) => {
+  const HOComponent = connect(() => null, never());
+
+  hookMarkers((marker) => {
+    t.deepEqual((marker as ViewMarker).name, undefined);
+  });
+
+  act(() => {
+    create(React.createElement(HOComponent));
   });
 });
