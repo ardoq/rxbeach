@@ -1,6 +1,29 @@
-import { useStream, NOT_YET_EMITTED } from './useStream';
 import { Observable } from 'rxjs';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useState, useEffect } from 'react';
+
+export const NOT_YET_EMITTED = Symbol('Returned from rxbeach/react:useStream');
+export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
+
+/**
+ * React hook to subscribe to a stream
+ *
+ * Each emit from the stream will make the component re-render with the new
+ * value. Initially, `NOT_YET_EMITTED` is returned, because an `Observable`
+ * has no guarantee for when the first emit will happen.
+ *
+ * @param source$ Stream that provides the needed values
+ */
+export const useStream = <T>(source$: Observable<T>): T | NOT_YET_EMITTED => {
+  const [value, setValue] = useState<T | NOT_YET_EMITTED>(NOT_YET_EMITTED);
+
+  useEffect(() => {
+    const subscription = source$.subscribe(setValue);
+
+    return () => subscription.unsubscribe();
+  }, [source$]);
+
+  return value;
+};
 
 /**
  * Higher order component for connecting a component to a stream
