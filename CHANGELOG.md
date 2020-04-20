@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/ardoq/rxbeach/compare/v0.4.4...v0.5.0) (2020-04-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **react:** Removes useStream hook. Use connect instead.
+
+* **react:** remove useStream hook ([b25407a](https://github.com/ardoq/rxbeach/commit/b25407a5e92df892694d661dbb278dffd82c2166))
+
 ### [0.4.4](https://github.com/ardoq/rxbeach/compare/v0.4.3...v0.4.4) (2020-04-02)
 
 ### [0.4.3](https://github.com/ardoq/rxbeach/compare/v0.4.2...v0.4.3) (2020-04-02)
