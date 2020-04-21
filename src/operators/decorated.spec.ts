@@ -6,7 +6,13 @@ import {
   findMarker,
   markName,
 } from '../internal/markers';
-import { withLatestFrom, merge, combineLatest, startWith } from './decorated';
+import {
+  withLatestFrom,
+  merge,
+  combineLatest,
+  startWith,
+  debounceTime,
+} from './decorated';
 import { marbles } from 'rxjs-marbles/ava';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
@@ -111,3 +117,23 @@ test(
     m.expect(alpha$.pipe(startWith(letters.a))).toBeObservable(startWith$);
   })
 );
+
+test(
+  'debounceTime emits with delay',
+  marbles((m) => {
+    const alpha$ = m.hot('   a-c', letters);
+    const expected$ = m.hot('-a-c', letters);
+
+    m.expect(alpha$.pipe(debounceTime(1))).toBeObservable(expected$);
+  })
+);
+
+test('debounceTime places marker with time', (t) => {
+  const piped$ = source$.pipe(debounceTime(15));
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.DEBOUNCE_TIME,
+    sources: [source],
+    time: 15,
+  });
+});

@@ -8,6 +8,7 @@ export enum MarkerType {
   WITH_LATEST_FROM,
   MERGE,
   ZIP,
+  DEBOUNCE_TIME,
   INVALID, // For test use
 }
 
@@ -84,6 +85,11 @@ export type ZipMarker = MarkerBase<MarkerType.ZIP> & {
   readonly sources: (Marker | null)[];
 };
 
+export type DebounceTimeMarker = MarkerBase<MarkerType.DEBOUNCE_TIME> & {
+  readonly sources: [Marker | null];
+  readonly time: number;
+};
+
 export type Marker =
   | NameMarker
   | ActionMarker
@@ -91,7 +97,8 @@ export type Marker =
   | CombineLatestMarker
   | WithLatestFromMarker
   | MergeMarker
-  | ZipMarker;
+  | ZipMarker
+  | DebounceTimeMarker;
 
 export const actionMarker = (name: string): ActionMarker => ({
   type: MarkerType.ACTION,
@@ -169,6 +176,16 @@ export const markZip = <T>(
   new MarkedObservable(observable$, {
     type: MarkerType.ZIP,
     sources: sources$.map(findMarker),
+  });
+
+export const markDebounceTime = <T>(
+  source$: Observable<unknown>,
+  time: number
+): MonoTypeOperatorFunction<T> => (observable$) =>
+  new MarkedObservable(observable$, {
+    type: MarkerType.DEBOUNCE_TIME,
+    sources: [findMarker(source$)],
+    time,
   });
 
 export const findMarker = (observable$: Observable<unknown>): Marker | null => {

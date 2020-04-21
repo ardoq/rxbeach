@@ -13,6 +13,7 @@ import {
   Marker,
   markMerge,
   markZip,
+  markDebounceTime,
 } from './markers';
 import {
   tap,
@@ -21,11 +22,10 @@ import {
   shareReplay,
   scan,
   filter,
-  debounceTime,
   pluck,
 } from 'rxjs/operators';
 import { derivedStream } from '../derivedStream';
-import { withLatestFrom } from '../operators/decorated';
+import { withLatestFrom, debounceTime } from '../operators/decorated';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
 const dependency$ = source$.pipe(markName('dependency'));
@@ -126,6 +126,16 @@ test('markZip includes sources', (t) => {
   });
 });
 
+test('markDebounceTime includes source', (t) => {
+  const piped$ = source$.pipe(markDebounceTime(source$, 0));
+
+  t.deepEqual(findMarker(piped$), {
+    type: MarkerType.DEBOUNCE_TIME,
+    sources: [source],
+    time: 0,
+  });
+});
+
 const findMarkerOver: Macro<[OperatorFunction<any, any>]> = (t, operator) =>
   t.deepEqual(findMarker(source$.pipe(operator)), TOP_MARKER);
 findMarkerOver.title = (name) =>
@@ -133,7 +143,6 @@ findMarkerOver.title = (name) =>
 
 const coop = () => true;
 const emop = () => empty();
-test('debounceTime', findMarkerOver, debounceTime(0));
 test('filter', findMarkerOver, filter(coop));
 test('scan', findMarkerOver, scan(coop));
 test('shareReplay', findMarkerOver, shareReplay());
@@ -152,6 +161,9 @@ const remote$ = new Observable<unknown>().pipe(markName('remote'));
 const bravo$ = source$.pipe(markName('B'));
 const charlie$ = source$.pipe(markName('C'));
 const delta$ = derivedStream('D', bravo$, charlie$);
+const deltaDebounced$ = derivedStream('D_debounced', bravo$, charlie$).pipe(
+  debounceTime(0)
+);
 const echo$ = bravo$.pipe(withLatestFrom(charlie$), markName('E'));
 const foxtrot$ = derivedStream('F', bravo$, remote$);
 
@@ -200,6 +212,10 @@ test('detectGlitch detects glitches from withLatestFrom', (t) => {
     [echo, echo.sources[0], bravo, source],
     [echo, echo.sources[0], charlie, source],
   ] as [Marker[], Marker[]]);
+});
+
+test('detectGlitches does not detect glitches over debounceTime', (t) => {
+  t.false(detectGlitch(findMarker(deltaDebounced$) as Marker));
 });
 
 test('detectGlitches does not detect false glitches', (t) => {
