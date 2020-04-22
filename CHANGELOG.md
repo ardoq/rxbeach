@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/ardoq/rxbeach/compare/v0.5.0...v0.6.0) (2020-04-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* **markers:** removed detectGlitches
+
+### Features
+
+* **markers:** added marker for debounceTime that includes time ([0ba027d](https://github.com/ardoq/rxbeach/commit/0ba027d951f543073616167decc3a3aa43f9a101))
+
+
+* **markers:** removed detectGlitches ([a071249](https://github.com/ardoq/rxbeach/commit/a0712498f0c3d47cb490db49b89de8d1f35d15bc))
+
 ## [0.5.0](https://github.com/ardoq/rxbeach/compare/v0.4.4...v0.5.0) (2020-04-20)
 
 
