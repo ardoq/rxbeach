@@ -9,8 +9,6 @@ import {
   markCombineLatest,
   markWithLatestFrom,
   NameMarker,
-  detectGlitch,
-  Marker,
   markMerge,
   markZip,
   markDebounceTime,
@@ -24,8 +22,6 @@ import {
   filter,
   pluck,
 } from 'rxjs/operators';
-import { derivedStream } from '../derivedStream';
-import { withLatestFrom, debounceTime } from '../operators/decorated';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));
 const dependency$ = source$.pipe(markName('dependency'));
@@ -131,7 +127,7 @@ test('markDebounceTime includes source', (t) => {
 
   t.deepEqual(findMarker(piped$), {
     type: MarkerType.DEBOUNCE_TIME,
-    sources: [source],
+    sources: [TOP_MARKER],
     time: 0,
   });
 });
@@ -151,86 +147,3 @@ test('tap and map', findMarkerOver, pipe(tap(coop), map(coop)));
 test('tap', findMarkerOver, tap(noop));
 test('map', findMarkerOver, map(coop));
 test('pluck', findMarkerOver, pluck('key'));
-
-// remote  source
-//   |     / \
-//    \   B   C
-//     \ / \ /
-//      F  D|E
-const remote$ = new Observable<unknown>().pipe(markName('remote'));
-const bravo$ = source$.pipe(markName('B'));
-const charlie$ = source$.pipe(markName('C'));
-const delta$ = derivedStream('D', bravo$, charlie$);
-const deltaDebounced$ = derivedStream('D_debounced', bravo$, charlie$).pipe(
-  debounceTime(0)
-);
-const echo$ = bravo$.pipe(withLatestFrom(charlie$), markName('E'));
-const foxtrot$ = derivedStream('F', bravo$, remote$);
-
-const source = TOP_MARKER;
-const bravo = {
-  type: MarkerType.NAME,
-  name: 'B',
-  sources: [source],
-};
-const charlie = {
-  type: MarkerType.NAME,
-  name: 'C',
-  sources: [source],
-};
-const delta = {
-  type: MarkerType.NAME,
-  name: 'D',
-  sources: [
-    {
-      type: MarkerType.COMBINE_LATEST,
-      sources: [bravo, charlie],
-    },
-  ],
-};
-const echo = {
-  type: MarkerType.NAME,
-  name: 'E',
-  sources: [
-    {
-      type: MarkerType.WITH_LATEST_FROM,
-      sources: [bravo],
-      dependencies: [charlie],
-    },
-  ],
-};
-
-test('detectGlitch detects glitches from derivedStream', (t) => {
-  t.deepEqual(detectGlitch(findMarker(delta$) as Marker), [
-    [delta, delta.sources[0], bravo, source],
-    [delta, delta.sources[0], charlie, source],
-  ] as [Marker[], Marker[]]);
-});
-
-test('detectGlitch detects glitches from withLatestFrom', (t) => {
-  t.deepEqual(detectGlitch(findMarker(echo$) as Marker), [
-    [echo, echo.sources[0], bravo, source],
-    [echo, echo.sources[0], charlie, source],
-  ] as [Marker[], Marker[]]);
-});
-
-test('detectGlitches does not detect glitches over debounceTime', (t) => {
-  t.false(detectGlitch(findMarker(deltaDebounced$) as Marker));
-});
-
-test('detectGlitches does not detect false glitches', (t) => {
-  t.false(detectGlitch(findMarker(foxtrot$) as Marker));
-});
-
-test('detectGlitches does not detect anything on marker without parent', (t) => {
-  t.false(detectGlitch(actionMarker('asdf')));
-  // The following test hit's the branch in detectGlitch when sources is
-  // undefined, which is not actually possible in practice, hence the INVALID
-  // marker type
-  t.false(
-    detectGlitch({
-      type: MarkerType.INVALID,
-      dependencies: [],
-    })
-  );
-});
