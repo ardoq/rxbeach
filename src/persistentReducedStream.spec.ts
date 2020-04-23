@@ -7,9 +7,6 @@ import { never, of, Subject } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
 import { map } from 'rxjs/operators';
-import { reducer } from './reducer';
-import { actionCreator } from './actionCreator';
-import { UnknownAction } from './internal';
 
 const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, numbers, errors } = incrementMocks.marbles;
