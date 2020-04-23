@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.1](https://github.com/ardoq/rxbeach/compare/v0.6.0...v0.6.1) (2020-04-23)
+
+
+### Features
+
+* introduce high level state stream tooling ([627349d](https://github.com/ardoq/rxbeach/commit/627349dd3347e934858f9d00df9cee41a97889a7))
+
 ## [0.6.0](https://github.com/ardoq/rxbeach/compare/v0.5.0...v0.6.0) (2020-04-22)
 
 
