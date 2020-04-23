@@ -81,92 +81,10 @@ const ConnectingViews = () => {
 
         render(<ConnectedView />);`}
       />
-      <h3>
-        <code>useStream</code> - Hooks Example
-      </h3>
       <p>
-        With the <code>useStream</code> hook, the view can explicitly handle
-        what happens when the stream hasn't emitted a value yet.
+        TO-DO: pattern/explanation for how one should combine view props with
+        streamed props.
       </p>
-      <p>
-        The <code>useStream</code> hook allows to combine regular view props
-        with streamed data more easily.
-      </p>
-      <h3>Simple useStream example</h3>
-      <CodePreview
-        scope={scope}
-        code={`
-        // These imports are injected
-        // import { interval } from 'rxjs';
-        // import { take } from 'rxjs/operators';
-        // import { useStream, NOT_YET_EMITTED } from 'rxbeach/react';
-
-
-        type ViewModel = {
-          number: number;
-        };
-
-        const number$ = interval(1000);
-        const viewModel$: Observable<ViewProps> = number$.pipe(
-          take(100),
-          map(number => ({
-            number
-          }))
-        );
-
-        const ConnectedView = () => {
-          const viewModel = useStream(viewModel$);
-          if (viewModel === NOT_YET_EMITTED) {
-            return <p>Waiting for first value...</p>;
-          }
-          return <p>Value: {viewModel.number}</p>;
-        };
-        
-        render(<ConnectedView />);`}
-      />
-      <h3>Combining regular view props with streamed data</h3>
-      <CodePreview
-        scope={scope}
-        code={`
-        // These imports are injected
-        // import { interval } from 'rxjs';
-        // import { take } from 'rxjs/operators';
-        // import { useMemo } from 'React';
-        // import { useStream, NOT_YET_EMITTED } from 'rxbeach/react';
-
-        type ViewModel = {
-          number: number;
-        };
-
-        const View = ({ number }: ViewModel) => {
-          return <p>Value: {number}</p>;
-        };
-
-        const number$ = interval(1000);
-        const getViewModel$ = (multiplier: number): Observable<ViewModel> => {
-          return number$.pipe(
-            take(100),
-            map((number => ({
-              number: number * multiplier
-            })))
-          );
-        };
-
-        type ConnectedViewProps = {
-          multiplier: number;
-        };
-
-        const ConnectedView = ({ multiplier }: ConnectedViewProps) => {
-          const viewModel$ = useMemo(() => getViewModel$(multiplier), [multiplier]);
-          const viewModel = useStream(viewModel$);
-          if (viewModel === NOT_YET_EMITTED) {
-            return <p>Waiting for first value...</p>;
-          }
-          return <View number={viewModel.number} />;
-        };
-        
-        render(<ConnectedView multiplier={2} />);`}
-      />
     </div>
   );
 };
