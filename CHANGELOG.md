@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.2](https://github.com/ardoq/rxbeach/compare/v0.6.1...v0.6.2) (2020-04-23)
+
+
+### Bug Fixes
+
+* remove unused dependencies ([65ff0ab](https://github.com/ardoq/rxbeach/commit/65ff0ab2638e345b339bda4fec59f210c4fe1244))
+* **state stream:** ensure state property is always updated ([a7f9a53](https://github.com/ardoq/rxbeach/commit/a7f9a53fa6542acac741ef8a55954791076d07c0))
+
 ### [0.6.1](https://github.com/ardoq/rxbeach/compare/v0.6.0...v0.6.1) (2020-04-23)
 
 
