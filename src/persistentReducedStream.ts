@@ -25,7 +25,15 @@ export class StateStream<State> extends Observable<State>
   constructor(initialState: State, reducedState$: Observable<State>) {
     super();
     this.subject = new BehaviorSubject(initialState);
-    this.subscription = reducedState$.subscribe(this.subject);
+
+    // NOTE: .subscribe(this.subject) does not work
+    // All tests pass with it, but in practice there are cases
+    // where the subject isn't updated as expected
+    this.subscription = reducedState$.subscribe({
+      complete: () => this.subject.complete(),
+      error: (err) => this.subject.error(err),
+      next: (state) => this.subject.next(state),
+    });
   }
 
   get state(): State {
