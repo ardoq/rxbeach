@@ -80,7 +80,7 @@ test(
 
     m.expect(error$).toBeObservable(errorMarbles, errors);
     m.expect(
-      action$.pipe(combineReducers(1, reducerArray, error$))
+      action$.pipe(combineReducers(1, reducerArray, { errorSubject: error$ }))
     ).toBeObservable(expected$);
   })
 );

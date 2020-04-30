@@ -93,7 +93,7 @@ export const persistentReducedStream = <State>(
   errorSubject: Subject<any> = defaultErrorSubject
 ): StateStream<State> => {
   const reducedState$ = action$.pipe(
-    combineReducers(initialState, reducers, errorSubject),
+    combineReducers(initialState, reducers, { errorSubject }),
     markName(name),
     tag(name)
   );
