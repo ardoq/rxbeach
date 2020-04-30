@@ -37,7 +37,10 @@ export const reduceState = <State>(
   errorSubject: Subject<any> = defaultErrorSubject
 ): OperatorFunction<UnknownAction, State> =>
   pipe(
-    combineReducers(defaultState, reducers, errorSubject),
+    combineReducers(defaultState, reducers, {
+      errorSubject,
+      performanceMarker: name,
+    }),
     startWith(defaultState),
     shareReplay({
       refCount: true,

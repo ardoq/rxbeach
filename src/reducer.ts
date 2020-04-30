@@ -1,5 +1,5 @@
 import { OperatorFunction, pipe, Observable, Subject } from 'rxjs';
-import { scan, map, filter } from 'rxjs/operators';
+import { scan, map, filter, tap } from 'rxjs/operators';
 import {
   VoidPayload,
   UnknownAction,
@@ -9,6 +9,10 @@ import {
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { ofType } from './operators/operators';
 import { merge } from './operators/decorated';
+import {
+  startPerformanceMeasurement,
+  endPerformanceMeasurement,
+} from './internal/performance/performanceMeasurements';
 
 const wrapInArray = <T>(val: T | T[]): T[] =>
   Array.isArray(val) ? val : [val];
@@ -178,6 +182,11 @@ export const reducer: ReducerCreator = <State>(
 
 const ACTION_ORIGIN = Symbol('Action origin');
 
+type CombineReducersConfig = {
+  errorSubject?: Subject<any>;
+  performanceMarker?: string;
+};
+
 /**
  * Combine registered reducers into a stream operator
  *
@@ -199,6 +208,8 @@ const ACTION_ORIGIN = Symbol('Action origin');
  * `defaultErrorSubject`, which will rethrow the errors globally, as uncaught
  * exceptions. The stream will not complete or emit any value upon an error.
  *
+ * If a performanceMarker is passed, combineReducers will add performance marks
+ * using the window.performance API
  *
  * @param seed The initial input to the first reducer call
  * @param reducers The reducer entries that should be combined
@@ -207,7 +218,10 @@ const ACTION_ORIGIN = Symbol('Action origin');
 export const combineReducers = <State>(
   seed: State,
   reducers: RegisteredReducer<State, any>[],
-  errorSubject: Subject<any> = defaultErrorSubject
+  {
+    errorSubject = defaultErrorSubject,
+    performanceMarker,
+  }: CombineReducersConfig = {}
 ): OperatorFunction<UnknownAction, State> => {
   const actionReducers = reducers.filter(isActionReducer);
   const streamReducers = reducers.filter(isStreamReducer);
@@ -231,6 +245,9 @@ export const combineReducers = <State>(
     ofType(...actionReducers.flatMap((reducerFn) => reducerFn.trigger.actions)),
     map((action): Packet => ({ origin: ACTION_ORIGIN, value: action })),
     merge(...source$s),
+    tap(() => {
+      if (performanceMarker) startPerformanceMeasurement(performanceMarker);
+    }),
     scan(
       ({ state }, packet) => {
         try {
@@ -257,6 +274,9 @@ export const combineReducers = <State>(
       },
       { state: seed, caughtError: false }
     ),
+    tap(() => {
+      if (performanceMarker) endPerformanceMeasurement(performanceMarker);
+    }),
     filter(({ caughtError }) => caughtError === false),
     map(({ state }) => state)
   );
