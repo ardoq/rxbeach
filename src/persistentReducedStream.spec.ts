@@ -1,9 +1,6 @@
 import test from 'ava';
-import {
-  StateStream,
-  persistentReducedStream,
-} from './persistentReducedStream';
-import { never, of, Subject } from 'rxjs';
+import { persistentReducedStream } from './persistentReducedStream';
+import { of, Subject } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
 import { map } from 'rxjs/operators';
@@ -12,95 +9,17 @@ const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, numbers, errors } = incrementMocks.marbles;
 const reducerArray = Object.values(reducers);
 
-test('StateStream should expose its state immediately', (t) => {
+test('persistentReducedStream should expose its state immediately', (t) => {
   const state = 'hello';
-  const state$ = new StateStream(state, never());
+  const state$ = persistentReducedStream('testStream', state, []);
 
   t.deepEqual(state$.state, state);
 });
 
-test('StateStream should not initially be closed', (t) => {
-  const state$ = new StateStream(null, never());
+test('persistentReducedStream should not initially be closed', (t) => {
+  const state$ = persistentReducedStream('testStream', null, []);
 
   t.false(state$.closed);
-});
-
-test(
-  'StateStream should follow the underlying observable',
-  marbles((m, t) => {
-    const source$ = m.hot('-abc');
-    const expected = '     0abc';
-
-    const state$ = new StateStream('0', source$);
-
-    m.expect(state$).toBeObservable(expected);
-
-    m.flush();
-    t.deepEqual(state$.state, 'c');
-  })
-);
-
-test(
-  'StateStream should error when the underlying observable errors',
-  marbles((m) => {
-    const source$ = m.hot('-a#');
-    const expected = '     0a#';
-
-    const state$ = new StateStream('0', source$);
-
-    m.expect(state$).toBeObservable(expected);
-  })
-);
-
-test(
-  'StateStream should complete when the underlying observable completes',
-  marbles((m) => {
-    const source$ = m.hot('-a|');
-    const expected = '     0a|';
-
-    const state$ = new StateStream('0', source$);
-
-    m.expect(state$).toBeObservable(expected);
-  })
-);
-
-test(
-  'StateStream should support piping',
-  marbles((m) => {
-    const source$ = m.hot('-12');
-    const expected = '     024';
-
-    const state$ = new StateStream(0, source$);
-    const actual$ = state$.pipe(map((a) => `${a * 2}`));
-
-    m.expect(actual$).toBeObservable(expected);
-  })
-);
-
-test(
-  'StateStream should be possible to unsubscribe',
-  marbles((m, t) => {
-    const trigger = m.hot('--|');
-    const source$ = m.hot('-a-c');
-    const expected$ = '    0a--';
-    const subscription = ' ^-!';
-
-    const state$ = new StateStream('0', source$);
-    trigger.subscribe({ complete: () => state$.unsubscribe() });
-
-    m.expect(state$).toBeObservable(expected$);
-    m.expect(source$).toHaveSubscriptions(subscription);
-
-    m.flush();
-    t.true(state$.closed);
-  })
-);
-
-test('persistentReducedStream should expose the state immediately', (t) => {
-  const initialState = 5;
-  const state$ = persistentReducedStream('test', initialState, [], never());
-
-  t.deepEqual(state$.state, initialState);
 });
 
 test(
@@ -113,14 +32,28 @@ test(
     const state$ = persistentReducedStream(
       'testStream',
       initialState,
-      reducerArray,
-      action$
+      reducerArray
     );
+    state$.startReducing(action$);
 
     m.expect(state$).toBeObservable(expected$);
 
     m.flush();
     t.deepEqual(state$.state, numbers[2]);
+  })
+);
+
+test(
+  'persistentReducedStream should support piping',
+  marbles((m) => {
+    const action$ = m.hot('-1-1', actions);
+    const expected = '     02-4';
+
+    const state$ = persistentReducedStream('testStream', 0, reducerArray);
+    state$.startReducing(action$);
+    const actual$ = state$.pipe(map((a) => `${a * 2}`));
+
+    m.expect(actual$).toBeObservable(expected);
   })
 );
 
@@ -131,9 +64,10 @@ test('persistentReducedStream should call reducer once when there are multiple s
   const state$ = persistentReducedStream(
     'testStream',
     initialState,
-    reducerArray,
-    action$
+    reducerArray
   );
+
+  state$.startReducing(action$);
 
   const sub1 = state$.subscribe();
   const sub2 = state$.subscribe();
@@ -143,7 +77,21 @@ test('persistentReducedStream should call reducer once when there are multiple s
 });
 
 test(
-  'persistentReducedStream should never reset state',
+  'persistentReducedStream should ignore actions, but emit initial state before it starts reducing',
+  marbles((m) => {
+    const action$ = m.hot('-1-1', actions);
+    const expected = '     0---';
+
+    const state$ = persistentReducedStream('testStream', 0, reducerArray);
+    const actual$ = state$.pipe(map((a) => `${a * 2}`));
+    action$.subscribe();
+
+    m.expect(actual$).toBeObservable(expected);
+  })
+);
+
+test(
+  'persistentReducedStream keeps reducing even though it has no subscribers',
   marbles((m) => {
     const initialState = 1;
     const action$ = m.hot('      -1-1-1-', actions);
@@ -154,28 +102,87 @@ test(
     const state$ = persistentReducedStream(
       'testStream',
       initialState,
-      reducerArray,
-      action$
+      reducerArray
     );
+
+    state$.startReducing(action$);
 
     m.expect(state$, sub1).toBeObservable(sub1Expected$);
     m.expect(state$, sub2).toBeObservable(sub2Expected$);
   })
 );
 
-test('persistentReducedStream should always reduce', (t) => {
-  const initialState = 1;
-  const action$ = of(actions[1]);
+test(
+  'persistentReducedStream internal subject should close when reducing is stopped',
+  marbles((m, t) => {
+    const trigger = m.hot('  --|');
+    const action$ = m.hot('  -1-1', actions);
+    const expected$ = m.hot('12--', numbers);
+    const subscription = ' ^-!';
 
-  const state$ = persistentReducedStream(
-    'testStream',
-    initialState,
-    reducerArray,
-    action$
-  );
+    const state$ = persistentReducedStream('testStream', 1, reducerArray);
+    state$.startReducing(action$);
+    trigger.subscribe({ complete: () => state$.stopReducing() });
 
-  t.deepEqual(state$.state, 2);
-});
+    m.expect(state$).toBeObservable(expected$);
+    m.expect(action$).toHaveSubscriptions(subscription);
+
+    m.flush();
+    t.true(state$.closed);
+  })
+);
+
+test(
+  'persistentReducedStream should allow to restart reducing after stopping',
+  marbles((m, t) => {
+    const trigger = m.hot('  ---|');
+    const action$ = m.hot('  -1--1--', actions);
+    const subscription = '   ^-!';
+    const expected$ = m.hot('12--', numbers);
+
+    const state$ = persistentReducedStream('testStream', 1, reducerArray);
+    state$.startReducing(action$);
+    trigger.subscribe({
+      complete: () => {
+        const lastState = state$.state;
+        state$.stopReducing();
+        state$.startReducing(action$, lastState);
+      },
+    });
+    m.expect(state$, subscription).toBeObservable(expected$);
+    m.flush();
+    t.false(state$.closed);
+  })
+);
+
+test(
+  'persistentReducedStream should not emit when it starts reducing',
+  marbles((m) => {
+    const trigger = m.hot('  -|--');
+    const action$ = m.hot('  1--1', actions);
+    const expected$ = m.hot('1--2', numbers);
+    const subscription = '   -^---';
+
+    const state$ = persistentReducedStream('testStream', 1, reducerArray);
+    trigger.subscribe({ complete: () => state$.startReducing(action$) });
+
+    m.expect(state$).toBeObservable(expected$);
+    m.expect(action$).toHaveSubscriptions(subscription);
+  })
+);
+
+test(
+  'persistentReducedStream should change state if its started with different state',
+  marbles((m, t) => {
+    const action$ = m.hot('-1-');
+    const state = 'hello';
+    const newState = 'world';
+    const state$ = persistentReducedStream('testStream', state, []);
+    t.deepEqual(state$.state, state);
+    state$.startReducing(action$, newState);
+    t.deepEqual(state$.state, newState);
+  })
+);
 
 test(
   'persistentReducedStream catches errors and emits them to error subject',
@@ -185,9 +192,14 @@ test(
     const errorMarbles = '   -e-';
     const error$ = new Subject<any>();
 
+    const state$ = persistentReducedStream(
+      'testStream',
+      1,
+      reducerArray,
+      error$
+    );
     m.expect(error$).toBeObservable(errorMarbles, errors);
-    m.expect(
-      persistentReducedStream('testStream', 1, reducerArray, action$, error$)
-    ).toBeObservable(expected$);
+    m.expect(state$).toBeObservable(expected$);
+    state$.startReducing(action$);
   })
 );
