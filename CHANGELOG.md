@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/ardoq/rxbeach/compare/v0.6.2...v0.7.0) (2020-05-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **state streams:** persistentReducedStream has a new interface
+* **reducers:** combineReducers now takes a config argument
+
+### Features
+
+* **reducers:** added performance measurements to combineReducers ([883c4e2](https://github.com/ardoq/rxbeach/commit/883c4e21ffa1364ce370339aba238157435c3ea8))
+* **state streams:** updated persistentReducedStream ([de1c495](https://github.com/ardoq/rxbeach/commit/de1c495f86d424ac208a90194790033c7530ab64))
+
 ### [0.6.3](https://github.com/ardoq/rxbeach/compare/v0.6.2...v0.6.3) (2020-04-23)
 
 ### [0.6.2](https://github.com/ardoq/rxbeach/compare/v0.6.1...v0.6.2) (2020-04-23)
