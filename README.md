@@ -23,5 +23,5 @@ respect the setting:
    `yarn lint && yarn build && yarn test`
 2. Bump the version
    `yarn standard-version`
-2. Publish to NPM (DO NOT BUMP THE VERSION HERE!):  
+2. Publish to NPM:  
    `yarn deploy`
