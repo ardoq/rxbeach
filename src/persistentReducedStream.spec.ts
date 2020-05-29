@@ -203,3 +203,10 @@ test(
     state$.startReducing(action$);
   })
 );
+
+test('persistentReducedStream should throw exception when accessing state after stopped reducing', (t) => {
+  const state$ = persistentReducedStream('testStream', 1, reducerArray);
+  state$.stopReducing();
+
+  t.throws(() => state$.state);
+});
