@@ -71,6 +71,9 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
   /**
    * Stop reducing this state stream and unsubscribe from the action$.
    *
+   * Accessing the `.state` property after calling this method will throw an
+   * exception.
+   *
    * Marks the inner subject as closed to prevent new subscriptions
    * (new subscriptions are allowed if the state stream is restarted)
    * https://ncjamieson.com/closed-subjects/
