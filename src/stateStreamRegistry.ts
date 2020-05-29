@@ -1,4 +1,4 @@
-import { PersistentReducedStateStream } from './persistentReducedStream';
+import { PersistentReducedStateStream } from './persistentReducedStateStream';
 import { ActionStream } from './types/helpers';
 
 export class StateStreamRegistry {

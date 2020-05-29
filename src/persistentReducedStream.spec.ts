@@ -1,6 +1,6 @@
-import test from 'ava';
+import test, { Macro } from 'ava';
 import { persistentReducedStream } from './persistentReducedStream';
-import { of, Subject } from 'rxjs';
+import { of, Subject, empty } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
 import { map } from 'rxjs/operators';
@@ -9,15 +9,18 @@ const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, numbers, errors } = incrementMocks.marbles;
 const reducerArray = Object.values(reducers);
 
+let counter = 1;
+const nextStreamName = () => `testStream-${counter++}`;
+
 test('persistentReducedStream should expose its state immediately', (t) => {
   const state = 'hello';
-  const state$ = persistentReducedStream('testStream', state, []);
+  const state$ = persistentReducedStream(nextStreamName(), state, []);
 
   t.deepEqual(state$.state, state);
 });
 
 test('persistentReducedStream should not initially be closed', (t) => {
-  const state$ = persistentReducedStream('testStream', null, []);
+  const state$ = persistentReducedStream(nextStreamName(), null, []);
 
   t.false(state$.closed);
 });
@@ -30,7 +33,7 @@ test(
     const initialState = 1;
 
     const state$ = persistentReducedStream(
-      'testStream',
+      nextStreamName(),
       initialState,
       reducerArray
     );
@@ -49,7 +52,7 @@ test(
     const action$ = m.hot('-1-1', actions);
     const expected = '     02-4';
 
-    const state$ = persistentReducedStream('testStream', 0, reducerArray);
+    const state$ = persistentReducedStream(nextStreamName(), 0, reducerArray);
     state$.startReducing(action$);
     const actual$ = state$.pipe(map((a) => `${a * 2}`));
 
@@ -62,7 +65,7 @@ test('persistentReducedStream should call reducer once when there are multiple s
   handlers.incrementOne.resetHistory();
   const action$ = of(actionCreators.incrementOne());
   const state$ = persistentReducedStream(
-    'testStream',
+    nextStreamName(),
     initialState,
     reducerArray
   );
@@ -82,7 +85,7 @@ test(
     const action$ = m.hot('-1-1', actions);
     const expected = '     0---';
 
-    const state$ = persistentReducedStream('testStream', 0, reducerArray);
+    const state$ = persistentReducedStream(nextStreamName(), 0, reducerArray);
     const actual$ = state$.pipe(map((a) => `${a * 2}`));
     action$.subscribe();
 
@@ -100,7 +103,7 @@ test(
     const sub2 = '               ----^-!';
     const sub2Expected$ = m.hot('----34-', numbers);
     const state$ = persistentReducedStream(
-      'testStream',
+      nextStreamName(),
       initialState,
       reducerArray
     );
@@ -120,7 +123,7 @@ test(
     const expected$ = m.hot('12--', numbers);
     const subscription = ' ^-!';
 
-    const state$ = persistentReducedStream('testStream', 1, reducerArray);
+    const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
     state$.startReducing(action$);
     trigger.subscribe({ complete: () => state$.stopReducing() });
 
@@ -140,7 +143,7 @@ test(
     const subscription = '   ^-!';
     const expected$ = m.hot('12--', numbers);
 
-    const state$ = persistentReducedStream('testStream', 1, reducerArray);
+    const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
     state$.startReducing(action$);
     trigger.subscribe({
       complete: () => {
@@ -155,6 +158,36 @@ test(
   })
 );
 
+const startWithState: Macro<[any]> = (t, state) => {
+  const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
+  state$.startReducing(empty() as any, state);
+
+  t.deepEqual(state$.state, state);
+};
+startWithState.title = (state) =>
+  `persistentReducedStream should allow starting with specified state ${state}`;
+
+test('number', startWithState, 12);
+test('zero', startWithState, 0);
+test('false', startWithState, false);
+test('null', startWithState, null);
+
+const restartWithState: Macro<[any]> = (t, state) => {
+  const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
+  state$.startReducing(empty() as any);
+  state$.stopReducing();
+  state$.startReducing(empty() as any, state);
+
+  t.deepEqual(state$.state, state);
+};
+restartWithState.title = (state) =>
+  `persistentReducedStream should allow restarting with specified state ${state}`;
+
+test('number', restartWithState, 12);
+test('zero', restartWithState, 0);
+test('false', restartWithState, false);
+test('null', restartWithState, null);
+
 test(
   'persistentReducedStream should not emit when it starts reducing',
   marbles((m) => {
@@ -163,7 +196,7 @@ test(
     const expected$ = m.hot('1--2', numbers);
     const subscription = '   -^---';
 
-    const state$ = persistentReducedStream('testStream', 1, reducerArray);
+    const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
     trigger.subscribe({ complete: () => state$.startReducing(action$) });
 
     m.expect(state$).toBeObservable(expected$);
@@ -177,7 +210,7 @@ test(
     const action$ = m.hot('-1-');
     const state = 'hello';
     const newState = 'world';
-    const state$ = persistentReducedStream('testStream', state, []);
+    const state$ = persistentReducedStream(nextStreamName(), state, []);
     t.deepEqual(state$.state, state);
     state$.startReducing(action$, newState);
     t.deepEqual(state$.state, newState);
@@ -193,7 +226,7 @@ test(
     const error$ = new Subject<any>();
 
     const state$ = persistentReducedStream(
-      'testStream',
+      nextStreamName(),
       1,
       reducerArray,
       error$
@@ -205,7 +238,7 @@ test(
 );
 
 test('persistentReducedStream should throw exception when accessing state after stopped reducing', (t) => {
-  const state$ = persistentReducedStream('testStream', 1, reducerArray);
+  const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
   state$.stopReducing();
 
   t.throws(() => state$.state);
