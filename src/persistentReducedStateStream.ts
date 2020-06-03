@@ -25,11 +25,12 @@ import { tag } from 'rxjs-spy/operators';
  * `.state` (as long as the inner subject isn't closed)
  */
 export class PersistentReducedStateStream<State> extends Observable<State> {
+  private errorSubject: Subject<any>;
   private subject: BehaviorSubject<State>;
   private reducerSubscription?: Subscription;
-  public name: string;
   private reducers: RegisteredReducer<State, any>[];
-  private errorSubject: Subject<any>;
+
+  public name: string;
 
   /**
    * Subscribes to the action stream and starts reducing this state stream.
@@ -44,22 +45,27 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
   startReducing = (action$: ActionStream, initialState?: State) => {
     // Reset the subject value if it doesn't match the desired initialState
     // This is normally used for hot-reloading
-    if (this.subject.closed && initialState) {
-      this.subject = new BehaviorSubject(initialState);
-    } else if (initialState && this.subject.value !== initialState) {
-      this.subject.next(initialState);
+    if (initialState !== undefined) {
+      if (this.subject.closed) {
+        this.subject = new BehaviorSubject(initialState);
+      } else if (this.subject.value !== initialState) {
+        this.subject.next(initialState);
+      }
     }
-    // NOTE: .subscribe(this.subject) does not work
-    // All tests pass with it, but in practice there are cases
-    // where the subject isn't updated as expected
+
+    const seed = initialState === undefined ? this.subject.value : initialState;
+
     this.reducerSubscription = action$
       .pipe(
-        combineReducers(initialState || this.subject.value, this.reducers, {
+        combineReducers(seed, this.reducers, {
           errorSubject: this.errorSubject,
         }),
         markName(this.name),
         tag(this.name)
       )
+      // NOTE: .subscribe(this.subject) does not work
+      // All tests pass with it, but in practice there are cases
+      // where the subject isn't updated as expected
       .subscribe({
         complete: () => this.subject.complete(),
         error: (err) => this.subject.error(err),
@@ -67,7 +73,6 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
       });
     return this;
   };
-
   /**
    * Stop reducing this state stream and unsubscribe from the action$.
    *
@@ -84,7 +89,6 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
     }
     this.subject.unsubscribe();
   };
-
   constructor(
     name: string,
     initialState: State,
