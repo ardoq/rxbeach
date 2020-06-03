@@ -35,7 +35,7 @@
     "ava": "3.8.2",
     "conditional-type-checks": "1.0.5",
     "husky": "4.2.5",
-    "nyc": "15.0.1",
+    "nyc": "15.1.0",
     "react": "16.13.1",
     "react-test-renderer": "16.13.1",
     "rimraf": "3.0.2",
