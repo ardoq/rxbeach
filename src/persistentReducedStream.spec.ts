@@ -1,6 +1,6 @@
-import test from 'ava';
+import test, { Macro } from 'ava';
 import { persistentReducedStream } from './persistentReducedStream';
-import { of, Subject } from 'rxjs';
+import { of, Subject, empty } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
 import { map } from 'rxjs/operators';
@@ -157,6 +157,36 @@ test(
     t.false(state$.closed);
   })
 );
+
+const startWithState: Macro<[any]> = (t, state) => {
+  const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
+  state$.startReducing(empty() as any, state);
+
+  t.deepEqual(state$.state, state);
+};
+startWithState.title = (state) =>
+  `persistentReducedStream should allow starting with specified state ${state}`;
+
+test('number', startWithState, 12);
+test('zero', startWithState, 0);
+test('false', startWithState, false);
+test('null', startWithState, null);
+
+const restartWithState: Macro<[any]> = (t, state) => {
+  const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
+  state$.startReducing(empty() as any);
+  state$.stopReducing();
+  state$.startReducing(empty() as any, state);
+
+  t.deepEqual(state$.state, state);
+};
+restartWithState.title = (state) =>
+  `persistentReducedStream should allow restarting with specified state ${state}`;
+
+test('number', restartWithState, 12);
+test('zero', restartWithState, 0);
+test('false', restartWithState, false);
+test('null', restartWithState, null);
 
 test(
   'persistentReducedStream should not emit when it starts reducing',
