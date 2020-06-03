@@ -13,18 +13,25 @@ export class StateStreamRegistry {
   /**
    * Register a stream to this stream registry
    *
-   * If a stream with the same name has already been registered, an error is
-   * thrown.
-   *
-   * If the registry has been started, the registered stream will also be
+   * If the registry has already been started, the registered stream will also be
    * started.
+   *
+   * Before the registry has started, an error will be thrown if the stream name
+   * has already been used. If the environment is not `'production'` (as decided
+   * by `NODE_ENV`), registering a new stream with a name already in use will
+   * replace the old stream, and make the new stream inherit its state.
    *
    * @param stream The stream to register
    */
   register(stream: PersistentReducedStateStream<any>) {
     if (this.streams.has(stream.name)) {
+      if (this.started !== null && process.env.NODE_ENV !== 'production') {
+        this.replace(this.streams.get(stream.name)!, stream);
+        return;
+      }
       throw new Error(`Duplicate stream name: ${stream.name}`);
     }
+
     if (this.started !== null) {
       stream.startReducing(
         this.started.action$,
@@ -32,6 +39,24 @@ export class StateStreamRegistry {
       );
     }
     this.streams.set(stream.name, stream);
+  }
+
+  /**
+   * Replaces a stream with another while running.
+   *
+   * Assumes the registry is started.
+   *
+   * @param old The stream to replace
+   * @param stream The new stream
+   */
+  replace<T>(
+    old: PersistentReducedStateStream<T>,
+    stream: PersistentReducedStateStream<T>
+  ) {
+    console.warn(`RxBeach: Replacing stream ${stream.name}`);
+    stream.startReducing(this.started!.action$, old.state);
+    this.streams.set(stream.name, stream);
+    old.stopReducing();
   }
 
   /**
@@ -77,8 +102,8 @@ export class StateStreamRegistry {
    *
    * If `stopReducing` has been called before this, an exception will be thrown.
    */
-  getStates(): Map<string, any> {
-    return new Map(
+  getStates() {
+    return new Map<string, any>(
       Array.from(this.streams, ([name, stream]) => [name, stream.state])
     );
   }

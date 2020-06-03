@@ -4,6 +4,12 @@ module.exports = {
     'no-restricted-imports': ['error', { patterns: ['rxbeach', 'rxbeach/*'] }],
     'func-style': ['error', 'expression'],
   },
+  globals: {
+    'process': 'readonly'
+  },
+  rules: {
+    'no-console': ['error', { allow: ["warn", "error"]}]
+  },
   overrides: [
     {
       files: ['*.tspec.ts'],
