@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import testUntyped, { TestInterface } from 'ava';
 import { StateStreamRegistry } from './stateStreamRegistry';
-import { PersistentReducedStateStream } from './PersistentReducedStateStream';
+import { PersistentReducedStateStream } from './persistentReducedStateStream';
 import { empty } from 'rxjs';
 import { ActionStream } from './types/helpers';
 

@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { RegisteredReducer } from './reducer';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
-import { PersistentReducedStateStream } from './PersistentReducedStateStream';
+import { PersistentReducedStateStream } from './persistentReducedStateStream';
 import { stateStreamRegistry } from './stateStreamRegistry';
 
 /**
