@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.2](https://github.com/ardoq/rxbeach/compare/v0.7.0...v0.7.2) (2020-06-08)
+
+
+### Features
+
+* add a state stream registry ([e50cba1](https://github.com/ardoq/rxbeach/commit/e50cba138aa9c96b3b56b7bb558c94b09b9dfcfc))
+* make persistentReducedStream register streams ([88cd4de](https://github.com/ardoq/rxbeach/commit/88cd4deb362ff04c1ebfb114de1294a5759a546f))
+
+
+### Bug Fixes
+
+* upgraded vulnerable dependency ([c92cecf](https://github.com/ardoq/rxbeach/commit/c92cecfb61df60c917a329bd58a266e335c9cdd1))
+
 ### [0.7.1](https://github.com/ardoq/rxbeach/compare/v0.7.0...v0.7.1) (2020-06-08)
 
 
