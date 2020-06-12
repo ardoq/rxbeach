@@ -3,7 +3,7 @@ import { MainHeading } from './atoms';
 import CodePreview from './CodePreview';
 import { interval } from 'rxjs';
 import { take, map } from 'rxjs/operators';
-import { useStream, NOT_YET_EMITTED, connect } from 'rxbeach/react';
+import { connect } from 'rxbeach/react';
 
 const Views = () => {
   return (
@@ -20,8 +20,6 @@ const Views = () => {
 };
 
 const scope = {
-  useStream,
-  NOT_YET_EMITTED,
   interval,
   take,
   map,

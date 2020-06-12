@@ -28,7 +28,7 @@ export const OuterLayout = styled(Layout)`
 const getSelectedPage = (pages: Pages, selectedPageId: string | null): Page => {
   return (
     (selectedPageId && findPageById(pages, selectedPageId)) ||
-    (pages.find(p => !isPageGroup(p)) as Page)
+    (pages.find((p) => !isPageGroup(p)) as Page)
   );
 };
 
@@ -44,7 +44,7 @@ const App = ({ selectedPageId }: ViewProps) => {
         <Layout.Sider width={350}>
           <SideMenu
             selectedPage={selectedPage}
-            selectPage={page => selectPage(page.id)}
+            selectPage={(page) => selectPage(page.id)}
             pages={allPages}
           />
         </Layout.Sider>

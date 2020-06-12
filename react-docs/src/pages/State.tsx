@@ -51,8 +51,8 @@ const State = () => {
             direction in an RxBeach application.
           </p>
           <p>
-            Actions --> Base State Streams --> Derived State Streams --> Views
-            --> Actions
+            Actions --&gt; Base State Streams --&gt; Derived State Streams
+            --&gt; Views --&gt; Actions
           </p>
         </li>
       </ol>
