@@ -42,7 +42,7 @@ const CodePreview = ({
         code={stripIndent(code)}
         disabled={disableEditing}
         language="typescript"
-        transformCode={snippet => {
+        transformCode={(snippet) => {
           const transpiled = transpile(snippet, {
             noImplicitUseStrict: true,
             target: ScriptTarget.ES2015,

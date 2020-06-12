@@ -7,7 +7,7 @@ type HistoryShape = {
 };
 const history$ = new Subject<HistoryShape>();
 
-history.listen(location => {
+history.listen((location) => {
   history$.next(location);
 });
 

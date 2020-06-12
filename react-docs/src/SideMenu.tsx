@@ -30,16 +30,16 @@ const SideMenu = ({ selectPage, pages, selectedPage }: ViewProps) => {
         }
       }}
       defaultOpenKeys={pages
-        .filter(page => isPageGroup(page))
-        .map(page => page.id)}
+        .filter((page) => isPageGroup(page))
+        .map((page) => page.id)}
       selectedKeys={[selectedPage.id]}
       mode="inline"
     >
       <h2>🏖️ RxBeach</h2>
-      {pages.map(page =>
+      {pages.map((page) =>
         isPageGroup(page) ? (
           <SubMenu key={page.id} title={page.title}>
-            {page.pages.map(subPage => {
+            {page.pages.map((subPage) => {
               return <Menu.Item key={subPage.id}>{subPage.title}</Menu.Item>;
             })}
           </SubMenu>
