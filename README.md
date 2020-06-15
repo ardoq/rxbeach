@@ -8,6 +8,7 @@ RxBeach is a toolbox for creating applications that uses streams to manage
 state. It is in the **very early stages** of implementation, and the API will
 change continuously.
 
+test
 
 # Contributing
 Code is hosted in the GitHub repo [ardoq/rxbeach](https://github.com/ardoq/rxbeach).
