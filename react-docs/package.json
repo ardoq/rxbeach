@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "antd": "^4.3.4",
-    "history": "^4.10.1",
+    "history": "^5.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-live": "^2.2.2",
