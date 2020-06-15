@@ -8,7 +8,7 @@ type HistoryShape = {
 const history$ = new Subject<HistoryShape>();
 
 history.listen((location) => {
-  history$.next(location);
+  history$.next({ search: location.location.search});
 });
 
 type RouterShape = {
@@ -30,6 +30,6 @@ export const selectPage = (pageId: string) => {
   urlParams.set('p', pageId);
   history.push({
     pathname: history.location.pathname,
-    search: urlParams.toString(),
+    search: '?' + urlParams.toString(),
   });
 };
