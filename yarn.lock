@@ -626,10 +626,10 @@
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.1.tgz#681df970358c82836b42f989188d133e218c458e"
   integrity sha512-yYezQwGWty8ziyYLdZjwxyMb0CZR49h8JALHGrxjQHWlqGgc8kLdHEgWrgL0uZ29DMvEVBDnHU2Wg36zKSIUtA==
 
-"@types/stacktrace-js@^0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/stacktrace-js/-/stacktrace-js-0.0.32.tgz#d23e4a36a5073d39487fbea8234cc6186862d389"
-  integrity sha512-SdxmlrHfO0BxgbBP9HZWMUo2rima8lwMjPiWm6S0dyKkDa5CseamktFhXg8umu3TPVBkSlX6ZoB5uUDJK89yvg==
+"@types/stacktrace-js@^0.0.33":
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/@types/stacktrace-js/-/stacktrace-js-0.0.33.tgz#9b027370ca161b89798f308af77438802546cb39"
+  integrity sha512-aqJ6QM9QThNL4dHBhwl1f9B0oDqiREkYLn9RldghUKsGeFWWGlCsqsRWxbh+hDvvmptMFqc4aIfFIGz9BBu8Qg==
 
 "@types/testing-library__react-hooks@^3.0.0":
   version "3.2.0"
@@ -4224,15 +4224,29 @@ rxjs-report-usage@^1.0.4:
     glob "^7.1.6"
     prompts "^2.3.2"
 
-rxjs-spy@7.5.1:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/rxjs-spy/-/rxjs-spy-7.5.1.tgz#1a9ef50bc8d7dd00d9ecf3c54c00929231eaf319"
-  integrity sha512-dJ9mO4HvW2r16PsU15Qsc0RVkG7pFrfyCNTGx3vrxWje3kIgZ6QjMVnWblQxbniZ32lwLk/2x9+D2O6GhgXV/w==
+rxjs-report-usage@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/rxjs-report-usage/-/rxjs-report-usage-1.0.4.tgz#a43ce8f0e5e47bac0739c482392509542937f929"
+  integrity sha512-UouWJ/difmehbI7Kbd6VNF658Gx802ZauhuRWgqC77DwcG/9pLjr31JrMsI7HCHJSLun7jenf/FBbl1xPrNf8Q==
+  dependencies:
+    "@babel/parser" "^7.10.3"
+    "@babel/traverse" "^7.10.3"
+    "@babel/types" "^7.10.3"
+    bent "^7.3.6"
+    chalk "^4.1.0"
+    glob "^7.1.6"
+    prompts "^2.3.2"
+
+rxjs-spy@7.5.2:
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/rxjs-spy/-/rxjs-spy-7.5.2.tgz#3af03e6cf337e7da91c62c7ef54422266f8a20b7"
+  integrity sha512-jHvLaVwjjlFmQjQPTEX2jhCvI2nH2bOeZC7Ii4l7oHo6m98wRFkffzzzOJou7LH2ochrcW8BL+QgSjRkMajjzw==
   dependencies:
     "@types/circular-json" "^0.4.0"
-    "@types/stacktrace-js" "^0.0.32"
+    "@types/stacktrace-js" "^0.0.33"
     circular-json "^0.5.0"
     error-stack-parser "^2.0.1"
+    rxjs-report-usage "^1.0.4"
     stacktrace-gps "^3.0.2"
 
 rxjs@6.5.5, rxjs@^6.5.3:

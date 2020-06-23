@@ -47,7 +47,7 @@
     "typescript": "3.9.5"
   },
   "dependencies": {
-    "rxjs-spy": "7.5.1"
+    "rxjs-spy": "7.5.2"
   },
   "peerDependencies": {
     "react": "^16.13.0",
