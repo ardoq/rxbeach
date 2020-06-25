@@ -66,12 +66,129 @@ const StateReducers = () => {
       <MainHeading>Reducer State Streams</MainHeading>
       <p>
         A state stream can be defined with a set of reducers that calculate the
-        application state:
+        application state. This is how we make the application react to actions.
+        The action and reducers pattern is a form of functional programming, and
+        ahould make the application state flow quite easy to follow.
+      </p>
+
+      <p>
+        A reducer is a function that receives the current stream state and
+        something to describe how the stream state should change. This something
+        is usually an action, but can also be another stream.
       </p>
 
       <MainHeading>Action reducers</MainHeading>
+      <p>Action reducers receive the stream state and an action payload, and
+        calculates the next application stream. In RxBeach we define the action
+        reducers with the `reducer` function.
+      </p>
+
+      <p>
+        Reducers can handle both actions with and without payloads. Actions
+        without payloads are usually just triggers of some kind. Below is an
+        example of both.
+      </p>
+
+      <CodePreview
+        onlySyntaxHighlighting={true}
+        code={`
+        import { actionCreator, reducer } from 'rxbeach';
+
+        type MyStreamState = { counter: 1 };
+        const increment = actionCreator('increment');
+        const incrementBy = actionCreator<number>('increment by');
+
+        const handleIncrement = reducer(
+          increment,
+          ({ counter }: MyStreamState) => ({ counter: counter + 1 })
+        );
+        const handleIncrementBy = reducer(
+          incrementBy,
+          ({ counter }: MyStreamState, count) => ({ counter: counter + count})
+        )`}
+      />
+
+      <p>
+        Notice the typings here. TypeScript can infer the type of the payload
+        (second argument), but not of the state (first argument), so we have to
+        define it ourselves.
+      </p>
 
       <MainHeading>Stream reducers</MainHeading>
+      <p>
+        Reducers can also react to other streams. This is also done with the
+        `reducer` function. 
+      </p>
+
+      <p>
+        Streams are a bit more tricky to work with than actions, as they are
+        less predictable in how they will emit data. When a reduced state stream
+        with a stream reducer is started, the stream of the stream reducer will
+        be subscribed. The following example illustrates two examples.
+      </p>
+
+      <CodePreview
+        onlySyntaxHighlighting={true}
+        code={`
+        import { of } from 'rxjs';
+
+        type MyStreamState = { counter: number };
+        const increment$ = of([1, 2, 3]);
+        const otherState$ = null as any; // Imported from somewhere
+
+        const handleIncrementOf = reducer(
+          increment$,
+          ({ counter }: MyStreamState, count) => ({ counter: counter + count})
+        );
+
+        const handleIncrementByState = reducer(
+          otherState$,
+          (ourState: MyStreamState, otherState) => { ...ourState, ...otherState };
+        )`}
+      />
+
+      <p>
+        If the first reducer above is used in a stream, that stream will emit
+        three times right as it is starting. This is usually not something we
+        want.
+      </p>
+
+      <MainHeading>Building Reduced State Streams</MainHeading>
+      <p>
+        When you have the needed actions and reducers, you can build a reduced 
+        state stream. This is done with the `persistentReducedStream` function.
+      </p>
+
+      <CodePreview
+        onlySyntaxHighlighting={true}
+        code={`
+        import { persistentReducedStream } from 'rxbeach';
+
+        const reducers = [
+          handleIncrement,
+          handleIncrementBy,
+          handleIncrementOf,
+          handleIncrementByState
+        ];
+        const defaultState: MyStreamState = { counter: 1 };
+
+        const myStream$ = persistentReducedStream('myStream$', defaultState, reducers);`}
+      />
+
+      <p>
+        The stream must also be started. This can be done either with the
+        `.startReducing` method for each stream, or through the stream registry 
+        of RxBeach. 
+      </p>
+
+      <CodePreview
+        onlySyntaxHighlighting={true}
+        code={`
+        import { stateStreamRegistry } from 'rxbeach';
+
+        stateStreamRegistry.startReducing(action$);`}
+      />
+
     </div>
   );
 };
