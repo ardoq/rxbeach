@@ -32,7 +32,7 @@
     "@testing-library/react-hooks": "^3.2.1",
     "@types/react": "16.9.41",
     "@types/sinon": "9.0.4",
-    "ava": "3.9.0",
+    "ava": "3.10.1",
     "conditional-type-checks": "1.0.5",
     "husky": "4.2.5",
     "nyc": "15.1.0",
