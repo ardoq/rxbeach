@@ -1,5 +1,6 @@
  Roadmap
 =========
+> Updated as of 6th of Januar 2020
 
 The purpose of this document is to clearify the goals, direction and upcoming
 tasks of RxBeach to make it simple for other developers to pick up tasks and

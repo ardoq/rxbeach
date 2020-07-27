@@ -5,9 +5,3 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-
-  # React docs
-  - package-ecosystem: "npm"
-    directory: "/react-docs"
-    schedule:
-      interval: "daily"

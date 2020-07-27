@@ -19,13 +19,19 @@ you should have a good understanding of the following:
 
 We recommend these articles to get a refresher on those subjects:
 
-1. TODO
+1. [In-Depth Overview of Flux](https://facebook.github.io/flux/docs/in-depth-overview/)
+2. [Idiomatic Redux](https://blog.isquaredsoftware.com/series/idiomatic-redux/)
+   (article series)
 
 ## Diving in
 
 The side bar contains all the documentation articles. We advice you read through
 all the articles under "Fundamentals" in the order they are listed, and then
 read the articles under "Recipes" and "Techniques" as you need them.
+
+Remember that all the functions from RxBeach are also documented with JSDoc.
+Make sure to read that reference documentation as well. It should be available
+through your IDE.
 
 ## Development
 

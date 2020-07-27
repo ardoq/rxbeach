@@ -4,62 +4,84 @@ Reducers specify how the application’s state changes in response to actions se
 to the store. Remember that actions only describe _what happened_, but don’t
 describe how the application’s state changes.
 
-Reducers generates a state by reducing over the stream of actions.
+Reducers are used to build "reduced state streams", which are streams that use
+reducers to build state. Unlike Redux, RxBeach is built on the idea that there
+might be multiple reduced state streams in an application.
 
 ## Designing the state shape
 
-Reducers are most often used to provide data for a view. The reducer will
-separate the data from the view. The goal is to keep a tidy state that only
-reflects what is needed for the view. A default state is defined and initially
-applied when the reducer is loaded. Nesting of data in the reducer is
-discouraged, this to keep the complexity at a minimum.
+Reducers organize the data in a stream. The stream should have a clear purpose,
+such as providing the necessary data to a view. We should be careful about what
+data is in each stream, and make sure it neither more or less than what we
+actually need. Nesting of data in the reducer is
+discouraged, to keep the complexity at a minimum.
 
-An example of the state from calculated field options:
+To continue the example from the previous section, we can define the state shape,
+and a default state for the module navigation in an app.
 
 ```typescript
-export interface CalculatedFieldOption extends LabeledValue<string> {
-  ids: string[];
+enum Module {
+  DASHBOARD
 }
-export type CalculatedFieldOptionsState = CalculatedFieldOption[];
-export const defaultState: CalculatedFieldOptionsState = [];
+type NavigationState = {
+  selectedModule: Module;
+};
+const defaultNavigationState: NavigationState = {
+  selectedModule: Module.DASHBOARD
+};
 ```
 
-## Handling Actions
+## Reducing over Actions
 
 Reducers are pure functions, where the return value is only determined by its
-input value. It’s very important that the reducer stays pure. Given the same
+input values. It’s very important that the reducer stays pure. Given the same
 arguments, it should calculate the next state and return it. No surprises. No
-side effects. No API calls. No mutations. Just a calculation. An action that is
-connected to the reducer has a one-to-one relation with a reducer, and is only
-associated with a single reducer. To enforce this, a reducer declaration is
-also the action declaration for the action that reducer will react to.
+side effects. No API calls. No mutations. Just a calculation. 
 
-We write types of the reducers state, and define the reducer-action:
+A simple reducer for the `showModule` action, and `NavigationState` could be
 
 ```typescript
-// ./actions
-const setCalculatedFieldOptions = reducer<
-  CalculatedFieldOptionsState,
-  CalculatedFieldOption[]
->(
-  (, options) => options
-);
-
-export const reducers = combineReducers(defaultState, [
-  setCalculatedFieldOptions
-]);
+const handleShowModule = reducer(showModule, (state: NavigationState, payload) => {
+  return {
+    ...state,
+    selectedModule: payload
+  };
+});
 ```
 
-## Reducer \$treams
+Notice where we provide the type for the state, and that the payload type is 
+inferred. In this special case we don't really need the `state` argument, as we
+change its only property, but it's nice to keep it to allow for extending the
+state shape later.
 
-The reducer stream listens to the `action$` stream (possibly a derived action\$)
-and filters through certain actions based on the action types. A match will in
-turn update the reducer, and notify the listeners of the stream of the new state.
+We can make the reducer definition shorter by using some tricks:
 
-- Reducer streams should always be so that:
-  - Subscribers can get the latest value on subscription
-  - A value is only produced once
-  - All subscribers observe the same value
-  - If all subscribers unsubscribe, the stream completes and will
-    “restart” for future subscribers
-- Global reducer streams should be registered and subscribed somewhere central
+```typescript
+const handleShowModule = reducer(showModule, (state: NavigationState, selectedModule) => ({
+  ...state,
+  selectedModule
+}));
+```
+
+## Reducing over other streams
+
+Instead of reacting to actions, reducers can react to other streams.
+*TODO*
+
+## Assembling reducers to streams
+
+As mentioned, reducers are used in reduced state streams. These streams listen
+to the `action$`, and feed the actions to the appropriate reducers, and emit
+their results.
+
+Here follows a simple example based on the code above
+
+```typescript
+const reducers = [handleShowModule];
+
+const navigation$ = persistentReducedStream(
+  'navigation$',
+  defaultNavigationState,
+  reducers
+);
+```

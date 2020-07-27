@@ -1,30 +1,28 @@
 # Actions and the action stream
 
 At the core of our stream architecture sits the actions and the action stream.
-
 All changes to the core data stores, view models and any side effect from the
-application is triggered by actions.
+application is triggered by actions. They are immutable packets of information
+that describe a change or an event.
 
-Actions are simple objects of a specific shape, and the action stream is an RXJs
-[Subject](https://rxjs.dev/guide/subject) where each new action is `next`ed by
-the use of a `dispatchAction` function.
+Technically, actions are simple javascript objects of a specific shape, and the
+action stream is an RXJs [Subject](https://rxjs.dev/guide/subject), where each
+new action is `next`ed by the use of a `dispatchAction` function.
 
 ## Actions
 
-Actions are objects with:
+The action objects have these fields:
 
-- An action type
-- Some meta data
-- An optional payload
+- `type` - An action type
+- `meta` - Some meta data
+- `payload` - An optional payload
 
 They can look something like this:
 
-```javascript
+```typescript
 const action = {
-  type: Symbol("[counter] increment"),
-  payload: {
-    increment: 3
-  },
+  type: Symbol("[navigation] show module"),
+  payload: Module.DASHBOARD,
   meta: {
     dispatchedAt: new Date(),
     dispatchedBy: new Error()
@@ -32,58 +30,96 @@ const action = {
 };
 ```
 
-This example describes an action that will increment a counter by three.
+This example may describe the navigation to a new module in an application.
 
-In actual usage you would never write such an action object yourself; the only
-thing "users" of the architecture provide is the payload, and indirectly, the
-type. The action objects are created by action creator functions, sometimes
-called "action types" or even just "actions". The action types are defined by
-the help of utils.
+## Action creators
 
-> *In the future:*
-> 
-> The action types are defined as part of a reducer, part of a routine or as a
-> legacy action. They are defined one time each, as globals, and are then
-> invoked as functions in order to get an action object. These reducers and
-> routines that also create actions, are sometimes called action-reducers and
-> action-routines.
+In actual usage we would never spell out such an action object ourselves.
+Instead we define action creators, that hold the type and name of the payload.
+Sometimes we refer to these action creators as just "actions".
 
-Action creators are functions that accept the payload as their only argument.
-Given an action creator called `incrementCounter`, creating the action object
-example above, would probably look something like this:
+An action creator for the action above could be created by:
 
-```javascript
-incrementCounter({ increment: 3 });
+```typescript
+enum Module {
+  DASHBOARD
+}
+const showModule = actionCreator<Module>("[navigation] show module");
+```
+
+`showModule` is now an action creator. Specifically it can be called with the
+payload as the only argument, and will return an action object.
+
+```typescript
+showModule(Module.DASHBOARD);
 ```
 
 ## Payloads
 
-Care should be taken when designing the shape of an action payload. There are
-two very important rules regarding payloads:
+Care should be taken when designing the shape of an action payload. In the above
+example the payload is a simple enum, but there will be cases where more 
+complex structures are needed.
 
-- Payloads should contain as little information as possible
-- Payloads should only contain pure data
+### Actions should describe *what* is happening
 
-Passing as little information as possible means for instance that:
+We recommend trying to treat actions more as "describing events that occurred",
+rather than "setters". Treating actions as "events" generally leads to more
+meaningful action names, fewer total actions being dispatched, and a more
+meaningful action log history. Writing "setters" often results in too many
+individual action types, too many dispatches, and an action log that is less
+meaningful.
 
-- You should not pass full models of persisted data, prefer instead their ids
-- Payloads should not contain "static" fields, if you can simplify a payload by
-  splitting it in multiple actions, do that
+Furthermore, "describing events that occurred" can prevent coupling between
+modules. A module should know how to describe an event that happens through an
+action, but it shouldn't care about how that action is executed (i.e. a certain
+order of action setters).
 
-By pure data we mean primitives, and objects and arrays of primitives. This
-means that functions, class instances and views are no-gos.
+#### Batch actions
+
+If you find code that calls the same action multiple times right after each
+other, the payload is badly designed. This is a symptom that the callsite tries
+to use the actions as instructions for how the app should transition its state,
+rather than telling the app what the change is. In these cases, the payload 
+should be designed so it can contain, for example, changes to multiple entities
+at once.
+
+### Payloads should be concise, avoid passing unnecessary information
+
+Actions should describe what's happening by passing as little information as
+possible. This is in order to ensure that handlers of the actions are reading
+data from the correct source of truth.
+
+In practice, this means that you should always to aim pass ids instead of whole
+objects in action payloads. If an action handler needs the whole object, it
+should read that from the single source of truth (i.e. from the application
+state).
+
+### Payloads should be serializable
+
+Payloads should not contain methods, instances of classes or views. You should
+always aim to pass the data that's required to describe the action and nothing
+more.
 
 > **What about callbacks?**
->
-> If you think you need callbacks, you should create some data shape that
-> describes what should happend after the action is dispatched, and add that to
-> the payload
+> If you need to describe what should happen after an
+> action, describe it with data. This ensures less coupling between different
+> modules. The caller only cares about describing what should happen, while the
+> handler of the action will care about how it should happen.
 
 ## The action stream
 
-The action stream, called `action$` in our code, is the backbone of our data
-architecture. It ties everything together by being the single source of truth
-for any changes that happen in the app.
+For actions to actually make something happen, the whole app needs to know about
+them. This is the job of the action stream. Everywhere we need to react to actions
+in the app, we add subscriptions to the action stream. When we have created an
+action, we dispatch it to the action stream so all the subscribers will be 
+notified.
+
+The action stream will usually be named `action$`. New actions will usually be
+dispatched with a function named `dispatchAction`.
+
+> **RxBeach does not have tooling for creating the `action$`**
+> RxBeach does currently not have tooling to create the `action$` stream and the
+> `dispatchAction` function. This will be added eventually
 
 The action stream feeds most other streams in the app by being reduced to
-different kind of state, like a ViewModel or a collection.
+different kind of state, like a ViewModel or a collection. 
