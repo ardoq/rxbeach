@@ -13,6 +13,7 @@ const throwErrorFn = (): number => {
 };
 
 const ERROR = 'error';
+const namespace = 'namespace';
 
 const handleOne = reducer(incrementOne, incrementOneHandler);
 const handleMany = reducer(
@@ -23,6 +24,7 @@ const handleDecrementWithError = reducer(decrement, throwErrorFn);
 
 export const incrementMocks = {
   error: ERROR,
+  namespace,
   actionCreators: {
     incrementOne,
     incrementMany,
@@ -40,7 +42,8 @@ export const incrementMocks = {
       '1': incrementOne(),
       '2': incrementMany(2),
       d: decrement(),
-      n: _namespaceAction('namespace', incrementOne()),
+      n: _namespaceAction(namespace, incrementOne()),
+      m: _namespaceAction('memespace', incrementOne()),
     },
     words: {
       a: '1',
