@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/ardoq/rxbeach/compare/v0.7.3...v0.8.0) (2020-07-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* `persistentReducedStream` has been refactored to accept
+the error subject in an options object instead of a standalone argument.
+
+### Features
+
+* support namespacing persistentReducedStream ([cfb1a95](https://github.com/ardoq/rxbeach/commit/cfb1a957a376d4bf6ca5823a0249a9c9a8c86250))
+
 ### [0.7.3](https://github.com/ardoq/rxbeach/compare/v0.7.1...v0.7.3) (2020-07-30)
 
 
