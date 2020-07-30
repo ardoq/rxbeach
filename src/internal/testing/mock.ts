@@ -1,6 +1,7 @@
 import { actionCreator } from '../../actionCreator';
 import { reducer } from '../../reducer';
 import sinon from 'sinon';
+import { _namespaceAction } from '../../namespace';
 
 const incrementOne = actionCreator('[increment] one');
 const incrementMany = actionCreator<number>('[increment] many');
@@ -39,6 +40,7 @@ export const incrementMocks = {
       '1': incrementOne(),
       '2': incrementMany(2),
       d: decrement(),
+      n: _namespaceAction('namespace', incrementOne()),
     },
     words: {
       a: '1',

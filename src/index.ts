@@ -1,3 +1,5 @@
+export { action$, dispatchAction } from './action$';
+
 export {
   ActionWithoutPayload,
   ActionWithPayload,

@@ -4,7 +4,10 @@ import { UnknownAction } from '../internal/types';
 
 export type ActionStream = Observable<UnknownAction>;
 
-export type ActionDispatcher = (action: UnknownAction) => void;
+export type ActionDispatcher = (
+  action: UnknownAction,
+  namespace?: string
+) => void;
 
 /**
  * Helper type for extracting the payload type from an action creator
