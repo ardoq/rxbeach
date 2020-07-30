@@ -12,6 +12,7 @@ import { RegisteredReducer, combineReducers } from './reducer';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { markName } from './internal/markers';
 import { tag } from 'rxjs-spy/operators';
+import { withNamespace } from './operators';
 
 /**
  * PersistentReducedStateStream is an Observable interface for state streams.
@@ -29,6 +30,7 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
   private subject: BehaviorSubject<State>;
   private reducerSubscription?: Subscription;
   private reducers: RegisteredReducer<State, any>[];
+  private namespace?: string;
 
   public name: string;
 
@@ -55,7 +57,12 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
 
     const seed = initialState === undefined ? this.subject.value : initialState;
 
-    this.reducerSubscription = action$
+    const filteredAction$ =
+      this.namespace === undefined
+        ? action$
+        : action$.pipe(withNamespace(this.namespace));
+
+    this.reducerSubscription = filteredAction$
       .pipe(
         combineReducers(seed, this.reducers, {
           errorSubject: this.errorSubject,
@@ -73,6 +80,7 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
       });
     return this;
   };
+
   /**
    * Stop reducing this state stream and unsubscribe from the action$.
    *
@@ -89,17 +97,20 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
     }
     this.subject.unsubscribe();
   };
+
   constructor(
     name: string,
     initialState: State,
     reducers: RegisteredReducer<State, any>[],
-    errorSubject: Subject<any> = defaultErrorSubject
+    errorSubject: Subject<any> = defaultErrorSubject,
+    namespace?: string
   ) {
     super();
     this.name = name;
     this.subject = new BehaviorSubject(initialState);
     this.reducers = reducers;
     this.errorSubject = errorSubject;
+    this.namespace = namespace;
   }
 
   get state(): State {

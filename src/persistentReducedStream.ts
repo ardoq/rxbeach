@@ -1,8 +1,12 @@
 import { Subject } from 'rxjs';
 import { RegisteredReducer } from './reducer';
-import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { PersistentReducedStateStream } from './persistentReducedStateStream';
 import { stateStreamRegistry } from './stateStreamRegistry';
+
+type PersistentReducedStreamOptions = {
+  errorSubject?: Subject<any>;
+  namespace?: string;
+};
 
 /**
  * Creates and registers a persistent reduced state stream
@@ -39,13 +43,14 @@ export const persistentReducedStream = <State>(
   name: string,
   initialState: State,
   reducers: RegisteredReducer<State, any>[],
-  errorSubject: Subject<any> = defaultErrorSubject
+  { errorSubject, namespace }: PersistentReducedStreamOptions = {}
 ): PersistentReducedStateStream<State> => {
   const stream = new PersistentReducedStateStream(
     name,
     initialState,
     reducers,
-    errorSubject
+    errorSubject,
+    namespace
   );
 
   stateStreamRegistry.register(stream);

@@ -225,12 +225,9 @@ test(
     const errorMarbles = '   -e-';
     const error$ = new Subject<any>();
 
-    const state$ = persistentReducedStream(
-      nextStreamName(),
-      1,
-      reducerArray,
-      error$
-    );
+    const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray, {
+      errorSubject: error$,
+    });
     m.expect(error$).toBeObservable(errorMarbles, errors);
     m.expect(state$).toBeObservable(expected$);
     state$.startReducing(action$);
@@ -243,3 +240,40 @@ test('persistentReducedStream should throw exception when accessing state after 
 
   t.throws(() => state$.state);
 });
+
+test(
+  'persistentReducedStream only reduces action with correct namespace',
+  marbles((m) => {
+    const action$ = m.hot('  --mn-', actions);
+    const expected$ = m.hot('1--2-', numbers);
+    const initialState = 1;
+
+    const state$ = persistentReducedStream(
+      nextStreamName(),
+      initialState,
+      reducerArray,
+      { namespace: incrementMocks.namespace }
+    );
+    state$.startReducing(action$);
+
+    m.expect(state$).toBeObservable(expected$);
+  })
+);
+
+test(
+  'persistentReducedStream reduces namespaced actions when no namespace is set',
+  marbles((m) => {
+    const action$ = m.hot('  --1mn-', actions);
+    const expected$ = m.hot('1-234-', numbers);
+    const initialState = 1;
+
+    const state$ = persistentReducedStream(
+      nextStreamName(),
+      initialState,
+      reducerArray
+    );
+    state$.startReducing(action$);
+
+    m.expect(state$).toBeObservable(expected$);
+  })
+);
