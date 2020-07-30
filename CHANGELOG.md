@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.3](https://github.com/ardoq/rxbeach/compare/v0.7.1...v0.7.3) (2020-07-30)
+
+
+### Features
+
+* introduce the action$ in RxBeach ([7f3e539](https://github.com/ardoq/rxbeach/commit/7f3e5392e404f8b7aacc57a1fe368b0ff46c0386))
+
+
+### Bug Fixes
+
+* **react-docs:** fix router after update of history ([e09281b](https://github.com/ardoq/rxbeach/commit/e09281bf5edf920e100836ffc1ae92540f76f55c))
+* upgraded vulnerable dependency ([c92cecf](https://github.com/ardoq/rxbeach/commit/c92cecfb61df60c917a329bd58a266e335c9cdd1))
+
 ### [0.7.2](https://github.com/ardoq/rxbeach/compare/v0.7.0...v0.7.2) (2020-06-08)
 
 
