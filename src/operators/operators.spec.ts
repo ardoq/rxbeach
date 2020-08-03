@@ -9,12 +9,19 @@ import {
   ofType,
   carry,
   apply,
+  withoutNamespace,
 } from './operators';
 import { mockAction } from '../internal/testing/utils';
 import { map } from 'rxjs/operators';
 import { Observable, pipe } from 'rxjs';
 import { UnknownAction } from '../internal/types';
 import { findMarker, MarkerType, OfTypeMarker } from '../internal/markers';
+import { incrementMocks } from '../internal/testing/mock';
+
+const {
+  namespace,
+  marbles: { actions },
+} = incrementMocks;
 
 const extractsPayload: Macro<[any]> = (t, payload) =>
   marbles((m) => {
@@ -147,17 +154,8 @@ test(
 test(
   'withNamespace should exclude actions with the wrong namespace',
   marbles((m) => {
-    const actionType = 'actionType';
-    const namespace = 'namespace';
-
-    const inputsOutputs = {
-      a: mockAction(actionType, 'wrong namespace'),
-      b: mockAction(actionType, namespace),
-      c: mockAction(actionType),
-    };
-
-    const source = m.hot('  abc', inputsOutputs);
-    const expected = m.hot('-bc', inputsOutputs);
+    const source = m.hot('  m1n', actions);
+    const expected = m.hot('-1n', actions);
 
     m.expect(source.pipe(withNamespace(namespace))).toBeObservable(expected);
   })
@@ -176,19 +174,39 @@ test(
       p: 2,
       q: 3,
     };
-    const actions = {
+    const namespaceActions = {
       v: voidActionWS(),
       w: voidActionNS(),
       p: payloadActionWS(payloads.p),
       q: payloadActionNS(payloads.q),
     };
 
-    const source = m.hot('  pvwqwvp', actions);
+    const source = m.hot('  pvwqwvp', namespaceActions);
     const expected = m.hot('---q---', payloads);
 
     m.expect(
       source.pipe(withNamespace('NS'), ofType(payloadAction), extractPayload())
     ).toBeObservable(expected);
+  })
+);
+
+test(
+  'withoutNamespace should exclude actions with any namespace',
+  marbles((m) => {
+    const source = m.hot('  n1m', actions);
+    const expected = m.hot('-1-', actions);
+
+    m.expect(source.pipe(withoutNamespace())).toBeObservable(expected);
+  })
+);
+
+test(
+  'withoutNamespace should exclude actions with specific namespace',
+  marbles((m) => {
+    const source = m.hot('  n1m', actions);
+    const expected = m.hot('-1m', actions);
+
+    m.expect(source.pipe(withoutNamespace(namespace))).toBeObservable(expected);
   })
 );
 
