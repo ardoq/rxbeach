@@ -107,6 +107,23 @@ export const withNamespace = (
   );
 
 /**
+ * Stream operator that excludes actions with the given namespace
+ *
+ * If no namespace is provided, it will exclude all actions that has any
+ * namespace
+ *
+ * @param excludedNamespace Optionally a specific namespace to exclude
+ */
+export const withoutNamespace = (
+  excludedNamespace?: string
+): MonoTypeOperatorFunction<UnknownAction> =>
+  filter(({ meta: { namespace } }) =>
+    excludedNamespace === undefined
+      ? namespace === undefined
+      : namespace !== excludedNamespace
+  );
+
+/**
  * Stream operator that carries the initial payload alongside the results
  * from the operator parameter
  *

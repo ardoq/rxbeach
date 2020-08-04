@@ -2,6 +2,7 @@ export {
   ofType,
   extractPayload,
   withNamespace,
+  withoutNamespace,
   carry,
   apply,
 } from './operators';
