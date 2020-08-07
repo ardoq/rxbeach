@@ -95,3 +95,16 @@ test(
     m.expect(combineLatest(alpha$, bravo$)).toBeObservable(combined$);
   })
 );
+
+test(
+  'combineLatest supports a projection function',
+  marbles((m) => {
+    const alpha$ = m.hot('a-c', letters);
+    const bravo$ = m.hot('-b-', letters);
+    const combined$ = m.hot('-bb', letters);
+
+    m.expect(combineLatest(alpha$, bravo$, (a, b) => b)).toBeObservable(
+      combined$
+    );
+  })
+);
