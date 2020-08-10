@@ -121,3 +121,29 @@ test(
     ).toBeObservable(expected$);
   })
 );
+
+test(
+  'combineReducers should forward namespace',
+  marbles((m) => {
+    const action$ = m.hot('  1', actions);
+    const expected$ = m.hot('2', numbers);
+
+    const verifyNamespaceReducer = reducer(
+      actionCreators.incrementOne,
+      (_, __, namespace) => {
+        if (namespace === incrementMocks.namespace) {
+          return 2;
+        }
+        return 1;
+      }
+    );
+
+    m.expect(
+      action$.pipe(
+        combineReducers(1, [verifyNamespaceReducer], {
+          namespace: incrementMocks.namespace,
+        })
+      )
+    ).toBeObservable(expected$);
+  })
+);
