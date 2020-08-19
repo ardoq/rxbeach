@@ -19,7 +19,8 @@ const wrapInArray = <T>(val: T | T[]): T[] =>
 
 export type Reducer<State, Payload = VoidPayload> = (
   previousState: State,
-  payload: Payload
+  payload: Payload,
+  namespace?: string
 ) => State;
 
 type RegisteredActionReducer<State, Payload = any> = Reducer<State, Payload> & {
@@ -167,7 +168,8 @@ export const reducer: ReducerCreator = <State>(
     | Observable<any>,
   reducerFn: Reducer<State, any>
 ) => {
-  const wrapper = (state: State, payload: any) => reducerFn(state, payload);
+  const wrapper = (state: State, payload: any, namespace?: string) =>
+    reducerFn(state, payload, namespace);
   if (actionCreator instanceof Observable) {
     wrapper.trigger = {
       source$: actionCreator,
@@ -185,6 +187,7 @@ const ACTION_ORIGIN = Symbol('Action origin');
 type CombineReducersConfig = {
   errorSubject?: Subject<any>;
   performanceMarker?: string;
+  namespace?: string;
 };
 
 /**
@@ -213,6 +216,8 @@ type CombineReducersConfig = {
  *
  * @param seed The initial input to the first reducer call
  * @param reducers The reducer entries that should be combined
+ * @param namespace Namespace to pass on to the reducers. Note that this will
+ *                  always be passed, regardless of namespaces of the actions.
  * @see rxjs.merge
  */
 export const combineReducers = <State>(
@@ -221,6 +226,7 @@ export const combineReducers = <State>(
   {
     errorSubject = defaultErrorSubject,
     performanceMarker,
+    namespace,
   }: CombineReducersConfig = {}
 ): OperatorFunction<UnknownAction, State> => {
   const actionReducers = reducers.filter(isActionReducer);
@@ -255,14 +261,14 @@ export const combineReducers = <State>(
             const reducerFn = reducersByActionType.get(packet.value.type)!;
             return {
               caughtError: false,
-              state: reducerFn(state, packet.value.payload),
+              state: reducerFn(state, packet.value.payload, namespace),
             };
           }
 
           const reducerFn = streamReducers[packet.origin];
           return {
             caughtError: false,
-            state: reducerFn(state, packet.value),
+            state: reducerFn(state, packet.value, namespace),
           };
         } catch (e) {
           errorSubject.next(e);

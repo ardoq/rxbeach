@@ -4,6 +4,7 @@ import { of, Subject, empty } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
 import { map } from 'rxjs/operators';
+import { reducer } from './reducer';
 
 const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, numbers, errors } = incrementMocks.marbles;
@@ -271,6 +272,35 @@ test(
       nextStreamName(),
       initialState,
       reducerArray
+    );
+    state$.startReducing(action$);
+
+    m.expect(state$).toBeObservable(expected$);
+  })
+);
+
+test(
+  'persistentReducedStream forwards namespace to reducers',
+  marbles((m) => {
+    const action$ = m.hot('  --n-', actions);
+    const expected$ = m.hot('1-2-', numbers);
+    const initialState = 1;
+
+    const verifyNamespaceReducer = reducer(
+      actionCreators.incrementOne,
+      (state, _, namespace) => {
+        if (namespace === incrementMocks.namespace) {
+          return 2;
+        }
+        return state;
+      }
+    );
+
+    const state$ = persistentReducedStream(
+      nextStreamName(),
+      initialState,
+      [verifyNamespaceReducer],
+      { namespace: incrementMocks.namespace }
     );
     state$.startReducing(action$);
 

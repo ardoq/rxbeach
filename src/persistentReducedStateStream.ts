@@ -66,6 +66,7 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
       .pipe(
         combineReducers(seed, this.reducers, {
           errorSubject: this.errorSubject,
+          namespace: this.namespace,
         }),
         markName(this.name),
         tag(this.name)
