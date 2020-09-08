@@ -34,7 +34,7 @@
     "@types/sinon": "9.0.5",
     "ava": "3.12.1",
     "conditional-type-checks": "1.0.5",
-    "husky": "4.2.5",
+    "husky": "4.3.0",
     "nyc": "15.1.0",
     "react": "16.13.1",
     "react-test-renderer": "16.13.1",
