@@ -39,7 +39,7 @@
     "react": "16.13.1",
     "react-test-renderer": "16.13.1",
     "rimraf": "3.0.2",
-    "rxjs": "6.6.2",
+    "rxjs": "6.6.3",
     "rxjs-marbles": "6.0.1",
     "sinon": "9.0.3",
     "standard-version": "9.0.0",
