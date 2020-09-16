@@ -26,7 +26,7 @@ const notInferredOverlapRoutine = routine(
   extractPayload()
 );
 type NotInferredOverlapRoutine = AssertTrue<
-  Has<typeof notInferredOverlapRoutine, Routine<{}>>
+  Has<typeof notInferredOverlapRoutine, Routine<any>>
 >;
 
 const hintedInferredOverlapRoutine = routine(

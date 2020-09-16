@@ -15,7 +15,9 @@ enumAction(Enum.B);
 const e: Enum = Enum.C;
 enumAction(e);
 
-const unionAction = actionCreator<{} | number>('empty or number');
+const unionAction = actionCreator<Record<string, unknown> | number>(
+  'empty or number'
+);
 unionAction({});
 unionAction(1);
 unionAction(2);

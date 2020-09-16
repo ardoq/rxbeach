@@ -46,10 +46,9 @@ interface OfType {
    *
    * @param targetTypes The types to filter for
    */
-  (...targetTypes: UnknownActionCreatorWithPayload<{}>[]): OperatorFunction<
-    UnknownAction,
-    ActionWithPayload<{}>
-  >;
+  (
+    ...targetTypes: UnknownActionCreatorWithPayload<unknown>[]
+  ): OperatorFunction<UnknownAction, ActionWithPayload<unknown>>;
 
   /**
    * Stream operator to filter specific actions that does not have payloads

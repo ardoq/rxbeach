@@ -8,7 +8,9 @@ module.exports = {
     'process': 'readonly'
   },
   rules: {
-    'no-console': ['error', { allow: ["warn", "error"]}]
+    'no-console': ['error', { allow: ["warn", "error"]}],
+    'no-shadow': ['off'],
+    '@typescript-eslint/no-shadow': ['error']
   },
   overrides: [
     {
@@ -17,7 +19,6 @@ module.exports = {
         mocha: true,
       },
       rules: {
-        '@typescript-eslint/camelcase': ['off'],
         '@typescript-eslint/no-unused-vars': ['off'],
         camelcase: ['off'],
         'prefer-const': ['off'],

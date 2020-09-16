@@ -103,7 +103,7 @@ test(
     const bravo$ = m.hot('-b-', letters);
     const combined$ = m.hot('-bb', letters);
 
-    m.expect(combineLatest(alpha$, bravo$, (a, b) => b)).toBeObservable(
+    m.expect(combineLatest(alpha$, bravo$, (_, b) => b)).toBeObservable(
       combined$
     );
   })
