@@ -119,5 +119,5 @@ export interface RoutineFunc {
     fn9: OperatorFunction<H, I>,
     fn10: OperatorFunction<I, J>,
     ...fns: OperatorFunction<any, any>[]
-  ): Routine<{}>;
+  ): Routine<unknown>;
 }

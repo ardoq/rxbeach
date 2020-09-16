@@ -124,9 +124,9 @@ type ReducerCreator = {
    *          called directly as if it was the `reducer` parameter itself.
    */
   <State>(
-    actionCreator: UnknownActionCreatorWithPayload<{}>[],
-    reducer: Reducer<State, {}>
-  ): RegisteredReducer<State, {}>;
+    actionCreator: UnknownActionCreatorWithPayload<unknown>[],
+    reducer: Reducer<State, unknown>
+  ): RegisteredReducer<State, unknown>;
 
   /**
    * Define a reducer for multiple actions without payloads
