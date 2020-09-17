@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.3](https://github.com/ardoq/rxbeach/compare/v0.8.2...v0.8.3) (2020-09-17)
+
+
+### Features
+
+* forward namespaces to reducers ([74b5219](https://github.com/ardoq/rxbeach/commit/74b521904141ac689b724f0b2c4be04aed8dea8f))
+
+
+### Bug Fixes
+
+* order reducer overload from most to least complex ([b6832d7](https://github.com/ardoq/rxbeach/commit/b6832d75189f5763354aec5be2dcbe431f303e0d))
+
 ### [0.8.2](https://github.com/ardoq/rxbeach/compare/v0.8.1...v0.8.2) (2020-08-10)
 
 
