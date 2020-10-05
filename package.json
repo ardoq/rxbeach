@@ -31,7 +31,7 @@
     "@commitlint/config-conventional": "11.0.0",
     "@testing-library/react-hooks": "^3.2.1",
     "@types/react": "16.9.49",
-    "@types/sinon": "9.0.6",
+    "@types/sinon": "9.0.8",
     "ava": "3.13.0",
     "conditional-type-checks": "1.0.5",
     "husky": "4.3.0",
