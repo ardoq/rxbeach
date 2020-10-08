@@ -33,19 +33,6 @@ const handleIncrementBy = reducer(
   incrementBy,
   ({ counter }: MyStreamState, count) => ({ counter: counter + count})
 )
-
-import { actionCreator, reducer } from 'rxbeach';
-type MyStreamState = { counter: 1 };
-const increment = actionCreator('increment');
-const incrementBy = actionCreator<number>('increment by');
-const handleIncrement = reducer(
-  increment,
-  ({ counter }: MyStreamState) => ({ counter: counter + 1 })
-);
-const handleIncrementBy = reducer(
-  incrementBy,
-  ({ counter }: MyStreamState, count) => ({ counter: counter + count})
-)
 ```
 
 Notice the typings here. TypeScript can infer the type of the payload (second
@@ -76,20 +63,7 @@ const handleIncrementOf = reducer(
 
 const handleIncrementByState = reducer(
   otherState$,
-  (ourState: MyStreamState, otherState) => { ...ourState, ...otherState };
-)
-
-import { of } from 'rxjs';
-type MyStreamState = { counter: number };
-const increment$ = of([1, 2, 3]);
-const otherState$ = null as any; // Imported from somewhere
-const handleIncrementOf = reducer(
-  increment$,
-  ({ counter }: MyStreamState, count) => ({ counter: counter + count})
-);
-const handleIncrementByState = reducer(
-  otherState$,
-  (ourState: MyStreamState, otherState) => { ...ourState, ...otherState };
+  (ourState: MyStreamState, otherState) => ({ ...ourState, ...otherState });
 )
 ```
 
@@ -113,16 +87,6 @@ const reducers = [
 const defaultState: MyStreamState = { counter: 1 };
 
 const myStream$ = persistentReducedStream('myStream$', defaultState, reducers);
-
-import { persistentReducedStream } from 'rxbeach';
-const reducers = [
-  handleIncrement,
-  handleIncrementBy,
-  handleIncrementOf,
-  handleIncrementByState
-];
-const defaultState: MyStreamState = { counter: 1 };
-const myStream$ = persistentReducedStream('myStream$', defaultState, reducers);
 ```
 
 The stream must also be started. This can be done either with the
@@ -132,8 +96,5 @@ RxBeach.
 ```typescript
 import { stateStreamRegistry } from 'rxbeach';
 
-stateStreamRegistry.startReducing(action$);
-
-import { stateStreamRegistry } from 'rxbeach';
 stateStreamRegistry.startReducing(action$);
 ```
