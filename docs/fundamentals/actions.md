@@ -66,7 +66,7 @@ Furthermore, "describing events that occurred" can prevent coupling between modu
 
 #### Batch actions
 
-If you find a piece code that calls the same action multiple times right after each other, the payload is badly designed. This is a symptom that the call site tries to use the actions as instructions for how the app should transition its state, rather than telling the app what the change is. In these cases, the payload should be designed so it can contain, for example, changes to multiple entities at once.
+If you find code that calls the same action multiple times right after each other, the payload is badly designed. This is a symptom that the call site tries to use the actions as instructions for how the app should transition its state, rather than telling the app what the change is. In these cases, the payload should be designed so it can contain, for example, changes to multiple entities at once.
 
 ### Payloads should be concise, avoid passing unnecessary information
 
