@@ -2,7 +2,7 @@
 
 A state stream can be defined with a set of reducers that calculate the
 application state. This is how we make the application react to actions. The
-action and reducers pattern is a form of functional programming, and ahould make
+action and reducers pattern is a form of functional programming and should make
 the application state flow quite easy to follow.
 
 A reducer is a function that receives the current stream state and something to
@@ -11,12 +11,12 @@ action, but can also be another stream.
 
 ## Action reducers
 
-Action reducers receive the stream state and an action payload, and calculates
+Action reducers receive the stream state and an action payload and calculates
 the next application stream. In RxBeach we define the action reducers with the
 `reducer` function.
 
-Reducers can handle both actions with and without payloads. Actions without
-payloads are usually just triggers of some kind. Below is an example of both.
+Reducers can handle both actions with and without payloads. Actions without payloads are usually just triggers of some kind.
+Below is an example of both.
 
 ```typescript
 import { actionCreator, reducer } from 'rxbeach';

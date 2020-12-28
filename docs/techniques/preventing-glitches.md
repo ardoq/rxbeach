@@ -16,7 +16,7 @@ As Andre Staltz outlines in [his article on
 glitches](https://staltz.com/rx-glitches-arent-actually-a-problem.html), we
 cannot prevent glitches in the above scenario with RxJs, since it would require
 a transaction manager under the hood. Nevertheless, he goes on to conclude that
-glitches aren't really problem, since they can be avoided by combining your
+glitches aren't really a problem, since they can be avoided by combining your
 streams differently (i.e. by proper software design).
 
 ## Avoiding glitches in RxBeach
@@ -43,16 +43,13 @@ glitches by software design".
 In an RxBeach application, you should follow these design principles to avoid
 introducing glitches:
 
-1. Keep your reactive state graph flat. Avoid creating unnecessary layers of
-   derived state streams.
-1. If you need to create a derived state stream, aim to augment the data, so
-   that subscribers of the derived state stream don't need to subscribe to the
-   root stream.
+1. Keep your reactive state graph flat. Avoid creating unnecessary layers of derived state streams.
+1. If you need to create a derived state stream, aim to augment the data so that subscribers of the derived state stream don't need to subscribe to the root stream.
 3. Automatically visualize and detect glitches within your state streams so that
    you can handle them when they are introduced
 
 Although the above principles will help you avoid some glitches, it doesn't
-completely solve the problem. The viewModel$ pattern suggests that we should
+completely solve the problem. The `viewModel$` pattern suggests that we should
 combine various state streams to prepare suitable props for a view. When
 combining these streams, we have no information about whether the streams depend
 on the same source, and since the requirements of a view change rapidly it is
@@ -62,11 +59,11 @@ all glitches by software design.
 ### Avoid glitches by debouncing combined stream emissions
 
 As long as the combined streams emit their values synchronously, introducing the
-debounceTime operator will ensure that the stream only emits the "latest" value
+`debounceTime` operator will ensure that the stream only emits the "latest" value
 in the current frame to its subscribers.
 
-Adding debounceTIme ensures that the subscriber will only be called once when
+Adding `debounceTime` ensures that the subscriber will only be called once when
 two or more combined streams emit simultaneously, but it will make the
 subscription handler async.
 
-One should be careful when introducing debounceTime in derived state streams that are combined multiple times further down the graph
+One should be careful when introducing `debounceTime` in derived state streams that are combined multiple times further down the graph.
