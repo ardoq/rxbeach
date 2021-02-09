@@ -22,7 +22,10 @@
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
     "deploy:prep": "yarn build -p tsconfig-publish.json && node prep-package.js",
-    "deploy": "yarn deploy:prep && yarn publish dist --non-interactive"
+    "deploy": "yarn deploy:prep && yarn publish dist --non-interactive",
+    "postinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "devDependencies": {
     "@ardoq/shared-configs": "0.1.6",
@@ -36,6 +39,7 @@
     "conditional-type-checks": "1.0.5",
     "husky": "5.0.9",
     "nyc": "15.1.0",
+    "pinst": "2.1.4",
     "react": "16.14.0",
     "react-test-renderer": "16.13.1",
     "rimraf": "3.0.2",
@@ -84,10 +88,5 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   }
 }
