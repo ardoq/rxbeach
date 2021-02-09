@@ -32,7 +32,7 @@
     "@ava/typescript": "1.1.1",
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
-    "@testing-library/react-hooks": "^3.2.1",
+    "@testing-library/react-hooks": "^5.0.3",
     "@types/react": "17.0.1",
     "@types/sinon": "9.0.10",
     "ava": "3.15.0",
