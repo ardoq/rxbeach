@@ -1,10 +1,10 @@
-import { OperatorFunction, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
-import { map, filter, withLatestFrom, flatMap } from 'rxjs/operators';
+import { MonoTypeOperatorFunction, OperatorFunction, of, pipe } from 'rxjs';
+import { filter, flatMap, map, withLatestFrom } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
 import {
-  UnknownActionCreatorWithPayload,
-  UnknownActionCreator,
   UnknownAction,
+  UnknownActionCreator,
+  UnknownActionCreatorWithPayload,
 } from '../internal/types';
 import { markOfType } from '../internal/markers';
 

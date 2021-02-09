@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { UnknownAction, markName } from './internal';
-import { ActionStream, ActionDispatcher } from './types/helpers';
+import { ActionDispatcher, ActionStream } from './types/helpers';
 import { tag } from 'rxjs-spy/operators';
 import { share } from 'rxjs/operators';
 import { _namespaceAction } from './namespace';

@@ -1,9 +1,9 @@
 import test from 'ava';
 import {
-  markName,
-  findMarker,
   MarkerType,
   NameMarker,
+  findMarker,
+  markName,
 } from './internal/markers';
 import { Observable } from 'rxjs';
 import { derivedStream } from './derivedStream';

@@ -1,5 +1,5 @@
-import { IsExact, AssertTrue, Has, AssertFalse } from 'conditional-type-checks';
-import { ActionWithPayload, ActionWithoutPayload, Action } from './Action';
+import { AssertFalse, AssertTrue, Has, IsExact } from 'conditional-type-checks';
+import { Action, ActionWithPayload, ActionWithoutPayload } from './Action';
 
 type ActionWithPayload_extends_ActionWithoutPayload = AssertTrue<
   Has<ActionWithPayload<unknown>, ActionWithoutPayload>

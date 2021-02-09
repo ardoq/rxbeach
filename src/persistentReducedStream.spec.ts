@@ -1,6 +1,6 @@
 import test, { Macro } from 'ava';
 import { persistentReducedStream } from './persistentReducedStream';
-import { of, Subject, empty } from 'rxjs';
+import { Subject, empty, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
 import { map } from 'rxjs/operators';

@@ -1,4 +1,4 @@
-import { ActionWithoutPayload, ActionWithPayload } from './Action';
+import { ActionWithPayload, ActionWithoutPayload } from './Action';
 import { ActionCreatorCommon, VoidPayload } from '../internal/types';
 
 export interface ActionCreatorWithoutPayload extends ActionCreatorCommon {

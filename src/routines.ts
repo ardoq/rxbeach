@@ -1,4 +1,4 @@
-import { OperatorFunction, pipe, Subject } from 'rxjs';
+import { OperatorFunction, Subject, pipe } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ActionStream } from './types/helpers';
 import { Routine, RoutineFunc } from './internal/routineFunc';

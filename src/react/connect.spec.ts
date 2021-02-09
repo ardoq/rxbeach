@@ -1,9 +1,9 @@
 import testUntyped from 'ava';
-import { act, create, ReactTestRenderer } from 'react-test-renderer';
+import { ReactTestRenderer, act, create } from 'react-test-renderer';
 import React from 'react';
-import { empty, of, BehaviorSubject, Subject } from 'rxjs';
-import { connect, useStream, NOT_YET_EMITTED } from './connect';
-import { spy, SinonSpy } from 'sinon';
+import { BehaviorSubject, Subject, empty, of } from 'rxjs';
+import { NOT_YET_EMITTED, connect, useStream } from './connect';
+import { SinonSpy, spy } from 'sinon';
 import { TestInterface } from 'ava';
 import { renderHook } from '@testing-library/react-hooks';
 

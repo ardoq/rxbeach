@@ -1,4 +1,4 @@
-import { routine, Routine } from '../routines';
+import { Routine, routine } from '../routines';
 import { actionCreator } from '../actionCreator';
 import { extractPayload, ofType } from './operators';
 import { AssertTrue, Has } from 'conditional-type-checks';

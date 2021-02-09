@@ -1,13 +1,13 @@
 import untypedTest from 'ava';
 import { Subject } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
 import { ActionWithPayload } from './types/Action';
 import {
   Routine,
-  subscribeRoutine,
-  routine,
   collectRoutines,
+  routine,
+  subscribeRoutine,
 } from './routines';
 import { mockAction, stubRethrowErrorGlobally } from './internal/testing/utils';
 import { extractPayload } from './operators/operators';

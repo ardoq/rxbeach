@@ -1,17 +1,17 @@
-import { OperatorFunction, pipe, Observable, Subject } from 'rxjs';
-import { scan, map, filter, tap } from 'rxjs/operators';
+import { Observable, OperatorFunction, Subject, pipe } from 'rxjs';
+import { filter, map, scan, tap } from 'rxjs/operators';
 import {
-  VoidPayload,
   UnknownAction,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
+  VoidPayload,
 } from './internal/types';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { ofType } from './operators/operators';
 import { merge } from './operators/decorated';
 import {
-  startPerformanceMeasurement,
   endPerformanceMeasurement,
+  startPerformanceMeasurement,
 } from './internal/performance/performanceMeasurements';
 
 const wrapInArray = <T>(val: T | T[]): T[] =>

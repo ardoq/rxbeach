@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import React, { ComponentType, useState, useEffect } from 'react';
+import React, { ComponentType, useEffect, useState } from 'react';
 
 export const NOT_YET_EMITTED = Symbol('Returned from rxbeach/react:useStream');
 // eslint-disable-next-line no-redeclare

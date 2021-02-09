@@ -1,17 +1,17 @@
 import test from 'ava';
 import { Observable } from 'rxjs';
 import {
-  NameMarker,
   MarkerType,
+  NameMarker,
   findMarker,
   markName,
 } from '../internal/markers';
 import {
-  withLatestFrom,
-  merge,
   combineLatest,
-  startWith,
   debounceTime,
+  merge,
+  startWith,
+  withLatestFrom,
 } from './decorated';
 import { marbles } from 'rxjs-marbles/ava';
 

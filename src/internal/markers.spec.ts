@@ -1,26 +1,26 @@
 import test, { Macro } from 'ava';
-import { Observable, OperatorFunction, pipe, noop, empty } from 'rxjs';
+import { Observable, OperatorFunction, empty, noop, pipe } from 'rxjs';
 import {
-  findMarker,
   MarkerType,
-  markOfType,
-  actionMarker,
-  markName,
-  markCombineLatest,
-  markWithLatestFrom,
   NameMarker,
-  markMerge,
-  markZip,
+  actionMarker,
+  findMarker,
+  markCombineLatest,
   markDebounceTime,
+  markMerge,
+  markName,
+  markOfType,
+  markWithLatestFrom,
+  markZip,
 } from './markers';
 import {
-  tap,
-  map,
   catchError,
-  shareReplay,
-  scan,
   filter,
+  map,
   pluck,
+  scan,
+  shareReplay,
+  tap,
 } from 'rxjs/operators';
 
 const source$ = new Observable<unknown>().pipe(markName('source'));

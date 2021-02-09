@@ -1,12 +1,12 @@
 import { Observable, SchedulerLike } from 'rxjs';
 import * as operators from 'rxjs/operators';
 import {
-  markMerge,
-  markCombineLatest,
-  markWithLatestFrom,
-  findMarker,
   MarkedObservable,
+  findMarker,
+  markCombineLatest,
   markDebounceTime,
+  markMerge,
+  markWithLatestFrom,
 } from '../internal/markers';
 
 export const merge = ((...sources: Observable<unknown>[]) => (

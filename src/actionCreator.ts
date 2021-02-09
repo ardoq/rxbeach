@@ -1,6 +1,6 @@
 import {
-  ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
+  ActionCreatorWithoutPayload,
 } from './types/ActionCreator';
 import { actionMarker } from './internal/markers';
 

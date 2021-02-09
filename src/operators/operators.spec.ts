@@ -4,18 +4,18 @@ import { ActionWithPayload } from '../types/Action';
 import { actionCreator } from '../actionCreator';
 import { namespaceActionCreator } from '../namespace';
 import {
-  extractPayload,
-  withNamespace,
-  ofType,
-  carry,
   apply,
+  carry,
+  extractPayload,
+  ofType,
+  withNamespace,
   withoutNamespace,
 } from './operators';
 import { mockAction } from '../internal/testing/utils';
 import { map } from 'rxjs/operators';
 import { Observable, pipe } from 'rxjs';
 import { UnknownAction } from '../internal/types';
-import { findMarker, MarkerType, OfTypeMarker } from '../internal/markers';
+import { MarkerType, OfTypeMarker, findMarker } from '../internal/markers';
 import { incrementMocks } from '../internal/testing/mock';
 
 const {

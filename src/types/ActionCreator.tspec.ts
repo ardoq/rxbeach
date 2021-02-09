@@ -1,8 +1,8 @@
-import { IsExact, AssertTrue, Has, AssertFalse } from 'conditional-type-checks';
+import { AssertFalse, AssertTrue, Has, IsExact } from 'conditional-type-checks';
 import {
+  ActionCreator,
   ActionCreatorWithPayload,
   ActionCreatorWithoutPayload,
-  ActionCreator,
 } from './ActionCreator';
 import { ActionCreatorCommon } from '../internal/types';
 

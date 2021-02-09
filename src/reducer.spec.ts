@@ -1,4 +1,4 @@
-import { reducer, combineReducers } from './reducer';
+import { combineReducers, reducer } from './reducer';
 import test from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import { Subject } from 'rxjs';

@@ -3,8 +3,8 @@ import { UnknownAction } from '../internal/types';
 import { defaultErrorSubject } from '../internal/defaultErrorSubject';
 import { tag } from 'rxjs-spy/operators';
 import { shareReplay, startWith } from 'rxjs/operators';
-import { combineReducers, RegisteredReducer } from '../reducer';
-import { OperatorFunction, pipe, Subject } from 'rxjs';
+import { RegisteredReducer, combineReducers } from '../reducer';
+import { OperatorFunction, Subject, pipe } from 'rxjs';
 
 /**
  * Create a state stream for a set of reducers.

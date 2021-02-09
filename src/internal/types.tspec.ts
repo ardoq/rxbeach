@@ -1,5 +1,5 @@
-import { Has, AssertFalse } from 'conditional-type-checks';
-import { ActionWithoutPayload, ActionWithPayload } from '../types/Action';
+import { AssertFalse, Has } from 'conditional-type-checks';
+import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
 import {
   ActionCreatorWithPayload,
   ActionCreatorWithoutPayload,

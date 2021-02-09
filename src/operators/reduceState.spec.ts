@@ -2,10 +2,10 @@ import { reducer } from '../reducer';
 import untypedTest from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import { reduceState } from '../operators/reduceState';
-import { of, Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { stubRethrowErrorGlobally } from '../internal/testing/utils';
 import { incrementMocks } from '../internal/testing/mock';
-import { withLatestFrom, map } from 'rxjs/operators';
+import { map, withLatestFrom } from 'rxjs/operators';
 import { ofType } from './operators';
 
 const { reducers, actionCreators, handlers } = incrementMocks;

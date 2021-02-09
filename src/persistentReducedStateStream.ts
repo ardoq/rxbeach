@@ -1,10 +1,10 @@
 import {
   BehaviorSubject,
   Observable,
-  Subscription,
-  Subject,
   Operator,
+  Subject,
   Subscriber,
+  Subscription,
   TeardownLogic,
 } from 'rxjs';
 import { ActionStream } from './types/helpers';
