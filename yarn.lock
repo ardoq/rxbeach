@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ardoq/shared-configs@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@ardoq/shared-configs/-/shared-configs-0.1.6.tgz#c9040e1508d020d862a0c8ac3e04bf9d2baa918a"
-  integrity sha512-neOqP7/2Emd/S1PCesZcH4mOTkdMPpr9DFbYJ7yGnzSb3c7oTzuA1CQZI7joUs/Jt6Gvady0n2G170RiwZIPkw==
+"@ardoq/shared-configs@0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@ardoq/shared-configs/-/shared-configs-0.1.11.tgz#929b0ec0e79e4ed12a16f185b74984e110f9b648"
+  integrity sha512-nP+P1l2aYbIqzvb7+LxwbjLJl4RNyyYrsIA3D6P0Ricwmvap44+hi6VDVAZOLnkqkTwVcJt1MEZKy8LPy7/8vA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.14.2"
     "@typescript-eslint/parser" "^4.14.2"
