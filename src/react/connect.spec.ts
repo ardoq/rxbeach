@@ -34,6 +34,12 @@ test('useStream return initial value right away', (t) => {
   t.deepEqual(result.current, NOT_YET_EMITTED);
 });
 
+test('useStream return default value (if defined) right away', (t) => {
+  const { result } = renderHook(() => useStream(empty(), 'default value'));
+
+  t.deepEqual(result.current, 'default value');
+});
+
 test('useStream return value from stream', (t) => {
   const source$ = new Subject<Props>();
   const { result } = renderHook(() => useStream(source$));
