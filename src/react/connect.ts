@@ -13,9 +13,15 @@ export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
  * has no guarantee for when the first emit will happen.
  *
  * @param source$ Stream that provides the needed values
+ * @param defaultValue Default value returned on init until stream emits new value
  */
-export const useStream = <T>(source$: Observable<T>): T | NOT_YET_EMITTED => {
-  const [value, setValue] = useState<T | NOT_YET_EMITTED>(NOT_YET_EMITTED);
+export const useStream = <T>(
+  source$: Observable<T>,
+  defaultState?: T
+): T | NOT_YET_EMITTED => {
+  const [value, setValue] = useState<T | NOT_YET_EMITTED>(
+    defaultState ?? NOT_YET_EMITTED
+  );
 
   useEffect(() => {
     const subscription = source$.subscribe(setValue);
