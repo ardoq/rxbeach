@@ -17,7 +17,7 @@ export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
  */
 export const useStream = <T>(
   source$: Observable<T>,
-  defaultState?: T
+  defaultValue?: T
 ): T | NOT_YET_EMITTED => {
   const [value, setValue] = useState<T | NOT_YET_EMITTED>(
     defaultState ?? NOT_YET_EMITTED
