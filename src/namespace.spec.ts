@@ -72,7 +72,6 @@ test('namespaceActionDispatcher should invoke the parent dispatcher with namespa
   childDispatcher(actionObject);
 
   t.deepEqual(dispatchedAction, {
-    payload: undefined,
     ...mockAction(actionObject.type, namespace),
   });
 });
