@@ -17,7 +17,7 @@ const {
   repository,
   author,
   license,
-  depedencies,
+  dependencies,
 } = JSON.parse(fs.readFileSync('./package.json'));
 fs.writeFileSync(
   path.join(TARGET, 'package.json'),
@@ -35,7 +35,7 @@ fs.writeFileSync(
       repository,
       author,
       license,
-      depedencies,
+      dependencies,
     },
     null,
     2
