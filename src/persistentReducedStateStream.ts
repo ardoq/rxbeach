@@ -1,11 +1,10 @@
 import {
   BehaviorSubject,
   Observable,
+  Observer,
   Operator,
   Subject,
-  Subscriber,
   Subscription,
-  TeardownLogic,
 } from 'rxjs';
 import { ActionStream } from './types/helpers';
 import { RegisteredReducer, combineReducers } from './reducer';
@@ -126,11 +125,11 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
     return this.subject.lift(operator);
   }
 
-  _trySubscribe(subscriber: Subscriber<State>): TeardownLogic {
-    return this.subject._trySubscribe(subscriber);
-  }
-
-  _subscribe(subscriber: Subscriber<State>): Subscription {
-    return this.subject._subscribe(subscriber);
+  subscribe(
+    observerOrNext?: Partial<Observer<State>> | ((value: State) => void) | null,
+    error?: ((error: any) => void) | null,
+    complete?: (() => void) | null
+  ): Subscription {
+    return this.subject.subscribe(observerOrNext as any, error, complete);
   }
 }
