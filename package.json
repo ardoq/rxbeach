@@ -39,7 +39,7 @@
     "conditional-type-checks": "1.0.5",
     "husky": "5.0.9",
     "nyc": "15.1.0",
-    "pinst": "2.1.4",
+    "pinst": "2.1.6",
     "react": "17.0.2",
     "react-test-renderer": "17.0.2",
     "rimraf": "3.0.2",
