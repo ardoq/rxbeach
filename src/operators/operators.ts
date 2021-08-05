@@ -138,13 +138,15 @@ export const withoutNamespace = (
  *
  * @param operator The operator to execute
  */
-export const carry = <Carried, Emitted>(
-  operator: OperatorFunction<Carried, Emitted>
-): OperatorFunction<Carried, [Carried, Emitted]> => (observable) =>
-  observable.pipe(
-    operator,
-    withLatestFrom(observable, (emitted, carried) => [carried, emitted])
-  );
+export const carry =
+  <Carried, Emitted>(
+    operator: OperatorFunction<Carried, Emitted>
+  ): OperatorFunction<Carried, [Carried, Emitted]> =>
+  (observable) =>
+    observable.pipe(
+      operator,
+      withLatestFrom(observable, (emitted, carried) => [carried, emitted])
+    );
 
 /**
  * A utility operator for using pipes which need a value to be present

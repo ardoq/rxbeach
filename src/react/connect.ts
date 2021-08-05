@@ -42,17 +42,19 @@ export const useStream = <T>(source$: Observable<T>): T | NOT_YET_EMITTED => {
  * @param stream$ Stream that will provide props to the component
  * @see useStream
  */
-export const connect = <Props, Observed extends Partial<Props>>(
-  Component: ComponentType<Props>,
-  stream$: Observable<Observed>
-) => (props: Omit<Props, keyof Observed>) => {
-  const value = useStream(stream$);
+export const connect =
+  <Props, Observed extends Partial<Props>>(
+    Component: ComponentType<Props>,
+    stream$: Observable<Observed>
+  ) =>
+  (props: Omit<Props, keyof Observed>) => {
+    const value = useStream(stream$);
 
-  if (value === NOT_YET_EMITTED) return null;
+    if (value === NOT_YET_EMITTED) return null;
 
-  // Typescript doesn't recognize this as Observed & Props for some reason
-  // Question on StackOverflow: https://stackoverflow.com/q/60758084/1104307
-  const newProps = { ...props, ...value } as Props & Observed;
+    // Typescript doesn't recognize this as Observed & Props for some reason
+    // Question on StackOverflow: https://stackoverflow.com/q/60758084/1104307
+    const newProps = { ...props, ...value } as Props & Observed;
 
-  return React.createElement(Component, newProps);
-};
+    return React.createElement(Component, newProps);
+  };

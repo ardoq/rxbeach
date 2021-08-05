@@ -16,6 +16,5 @@ export type ActionDispatcher = (
  * type Payload = ExtractPayload<typeof myAction>;
  * ```
  */
-export type ExtractPayload<
-  ActionType extends ActionCreatorWithPayload<any>
-> = ReturnType<ActionType>['payload'];
+export type ExtractPayload<ActionType extends ActionCreatorWithPayload<any>> =
+  ReturnType<ActionType>['payload'];

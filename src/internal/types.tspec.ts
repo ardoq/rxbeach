@@ -24,9 +24,10 @@ let unknownActionCreator: UnknownActionCreator;
 unknownAction = actionWithoutPayload;
 unknownAction = actionWithPayload;
 
-type ActionCreatorWithoutPayload_is_not_assibleable_to_UnknownActionCreatorWithPayload = AssertFalse<
-  Has<ActionCreatorWithoutPayload, UnknownActionCreatorWithPayload<unknown>>
->;
+type ActionCreatorWithoutPayload_is_not_assibleable_to_UnknownActionCreatorWithPayload =
+  AssertFalse<
+    Has<ActionCreatorWithoutPayload, UnknownActionCreatorWithPayload<unknown>>
+  >;
 
 // ActionCreatorWithPayload and UnkownActionCreatorWithPayload is assignable to each other
 unknownActionCreatorWithPayload = actionCreatorWithPayload;

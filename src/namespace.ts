@@ -55,8 +55,7 @@ export const namespaceActionCreator = <Payload = VoidPayload>(
  * @returns An action dispatcher that sets the namespace before passing the
  *          actions to the parent dispatcher
  */
-export const namespaceActionDispatcher = (
-  namespace: string,
-  parentDispatcher: ActionDispatcher
-): ActionDispatcher => (action) =>
-  parentDispatcher(_namespaceAction(namespace, action));
+export const namespaceActionDispatcher =
+  (namespace: string, parentDispatcher: ActionDispatcher): ActionDispatcher =>
+  (action) =>
+    parentDispatcher(_namespaceAction(namespace, action));
