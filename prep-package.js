@@ -18,6 +18,7 @@ const {
   author,
   license,
   dependencies,
+  peerDependencies,
 } = JSON.parse(fs.readFileSync('./package.json'));
 fs.writeFileSync(
   path.join(TARGET, 'package.json'),
@@ -36,6 +37,7 @@ fs.writeFileSync(
       author,
       license,
       dependencies,
+      peerDependencies,
     },
     null,
     2
