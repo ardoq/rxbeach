@@ -18,6 +18,10 @@ jobs:
             - v2-dependencies-{{ checksum "yarn.lock" }}
             - v2-dependencies-
 
+      - run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > ~/.npmrc
+      - run: echo "@ardoq:registry=https://npm.pkg.github.com" >> ~/.npmrc
+      - run: echo "always-auth=true" >> ~/.npmrc
+
       - run: yarn install --frozen-lockfile
 
       - save_cache:
