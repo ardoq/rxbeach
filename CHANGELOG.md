@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/ardoq/rxbeach/compare/v0.8.6...v0.9.0) (2021-09-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* The previous version was a breaking change, because the
+exports where made strict.
+
+* fix deployment instructions ([6399503](https://github.com/ardoq/rxbeach/commit/6399503d1b8dcbed627b77149d5767b5c9fb916c))
+
 ### [0.8.6](https://github.com/ardoq/rxbeach/compare/v0.8.5...v0.8.6) (2021-09-02)
 
 ### [0.8.5](https://github.com/ardoq/rxbeach/compare/v0.8.4...v0.8.5) (2021-08-05)
