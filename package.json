@@ -1,6 +1,6 @@
 {
   "name": "rxbeach",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "Chill with streams at the RxBeach",
   "keywords": [
     "rxjs",
@@ -23,13 +23,23 @@
   },
   "typesVersions": {
     "*": {
-      "index": [ "dist/index.d.ts" ],
-      "operators": [ "dist/operators/index.d.ts" ],
-      "react": [ "dist/react/index.d.ts" ],
-      "internal": [ "dist/internal/index.d.ts" ]
+      "index": [
+        "dist/index.d.ts"
+      ],
+      "operators": [
+        "dist/operators/index.d.ts"
+      ],
+      "react": [
+        "dist/react/index.d.ts"
+      ],
+      "internal": [
+        "dist/internal/index.d.ts"
+      ]
     }
   },
-  "files": [ "./dist" ],
+  "files": [
+    "./dist"
+  ],
   "scripts": {
     "test": "yarn nyc ava",
     "test:watch": "yarn ava --watch",
