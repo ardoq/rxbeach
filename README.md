@@ -23,5 +23,7 @@ respect the setting:
    `yarn lint && yarn build && yarn test`
 2. Bump the version
    `yarn standard-version`
-2. Publish to NPM:  
-   `yarn deploy`
+3. Publish to NPM (remember to **not** bump the version here):  
+   `yarn publish`
+4. Push your changes:
+   `git push --follow-tags`

@@ -39,5 +39,6 @@ export { derivedStream } from './derivedStream';
 export { combineLatest, merge, zip } from './decoratedObservableCombiners';
 
 export { persistentReducedStream } from './persistentReducedStream';
+export { PersistentReducedStateStream } from './persistentReducedStateStream';
 
 export { stateStreamRegistry } from './stateStreamRegistry';

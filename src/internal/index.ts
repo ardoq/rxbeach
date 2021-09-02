@@ -19,4 +19,7 @@ export {
   markZip,
   MarkedObservable,
   findMarker,
+  Marker,
+  MarkerInterface,
+  MarkerType,
 } from './markers';
