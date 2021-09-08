@@ -223,7 +223,19 @@ test(
     ).toBeObservable(expected);
   })
 );
-
+test(
+  'carry only subscribes to the original observable once',
+  marbles((m) => {
+    const source$ = m.cold(' f', { f });
+    const expected = m.hot('1', {
+      '1': [f.payload, f.payload.foo] as [FooPayload, number],
+    });
+    m.expect(
+      source$.pipe(extractPayload(), carry(map((e) => e.foo)))
+    ).toBeObservable(expected);
+    m.expect(source$).toHaveSubscriptions(['  ^']);
+  })
+);
 test(
   'apply should provide context to operators',
   marbles((m) => {

@@ -1,5 +1,5 @@
 import { MonoTypeOperatorFunction, OperatorFunction, of, pipe } from 'rxjs';
-import { filter, flatMap, map, withLatestFrom } from 'rxjs/operators';
+import { filter, flatMap, map, share, withLatestFrom } from 'rxjs/operators';
 import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
 import {
   UnknownAction,
@@ -124,7 +124,7 @@ export const withoutNamespace = (
 
 /**
  * Stream operator that carries the initial payload alongside the results
- * from the operator parameter
+ * from the operator parameter. Using this makes the observable/stream hot.
  *
  * ```
  * routine(
@@ -142,11 +142,13 @@ export const carry =
   <Carried, Emitted>(
     operator: OperatorFunction<Carried, Emitted>
   ): OperatorFunction<Carried, [Carried, Emitted]> =>
-  (observable) =>
-    observable.pipe(
+  (observable) => {
+    const hot = observable.pipe(share());
+    return hot.pipe(
       operator,
-      withLatestFrom(observable, (emitted, carried) => [carried, emitted])
+      withLatestFrom(hot, (emitted, carried) => [carried, emitted])
     );
+  };
 
 /**
  * A utility operator for using pipes which need a value to be present
