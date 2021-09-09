@@ -2,14 +2,14 @@ import test from 'ava';
 import { actionCreator } from './actionCreator';
 
 type Payload = { num: number };
-const myAction = actionCreator<Payload>('three');
+const myAction = actionCreator<Payload>('[test] three');
 const action = myAction({ num: 3 }) as {
   type: string;
   payload: Payload;
   meta: { namespace?: string };
 };
 type AlternativePayload = { text: string };
-const unionAction = actionCreator<Payload | AlternativePayload>('union');
+const unionAction = actionCreator<Payload | AlternativePayload>('[test] union');
 const union1 = unionAction({ num: 4 });
 const union2 = unionAction({ text: 'hi' });
 

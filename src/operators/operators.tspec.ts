@@ -4,7 +4,7 @@ import { extractPayload, ofType } from './operators';
 import { AssertTrue, Has } from 'conditional-type-checks';
 
 const stringRoutine = routine(
-  ofType(actionCreator<string>('simple string')),
+  ofType(actionCreator<string>('[test] simple string')),
   extractPayload()
 );
 type StringRoutine = AssertTrue<Has<typeof stringRoutine, Routine<string>>>;
@@ -14,7 +14,10 @@ type Left = { a: number } & Overlap;
 type Right = Overlap & { c: symbol };
 
 const inferredOverlapRoutine = routine(
-  ofType(actionCreator<Overlap>('overlap'), actionCreator<Right>('right')),
+  ofType(
+    actionCreator<Overlap>('[test] overlap'),
+    actionCreator<Right>('[test] right')
+  ),
   extractPayload()
 );
 type InferredOverlapRoutine = AssertTrue<
@@ -22,7 +25,10 @@ type InferredOverlapRoutine = AssertTrue<
 >;
 
 const notInferredOverlapRoutine = routine(
-  ofType(actionCreator<Left>('left'), actionCreator<Right>('right')),
+  ofType(
+    actionCreator<Left>('[test] left'),
+    actionCreator<Right>('[test] right')
+  ),
   extractPayload()
 );
 type NotInferredOverlapRoutine = AssertTrue<
@@ -30,7 +36,10 @@ type NotInferredOverlapRoutine = AssertTrue<
 >;
 
 const hintedInferredOverlapRoutine = routine(
-  ofType<Overlap>(actionCreator<Left>('left'), actionCreator<Right>('right')),
+  ofType<Overlap>(
+    actionCreator<Left>('[test] left'),
+    actionCreator<Right>('[test] right')
+  ),
   extractPayload()
 );
 type HintedInferredOverlapRoutine = AssertTrue<
@@ -38,7 +47,7 @@ type HintedInferredOverlapRoutine = AssertTrue<
 >;
 
 const unionRoutine = routine(
-  ofType(actionCreator<string | number>('string or number')),
+  ofType(actionCreator<string | number>('[test] string or number')),
   extractPayload()
 );
 type UnionRoutine = AssertTrue<
@@ -46,7 +55,7 @@ type UnionRoutine = AssertTrue<
 >;
 
 const optionalPayloadRoutine = routine(
-  ofType(actionCreator<string | void>('optional string')),
+  ofType(actionCreator<string | void>('[test] optional string')),
   extractPayload()
 );
 type OptionalPayloadRoutine = AssertTrue<
