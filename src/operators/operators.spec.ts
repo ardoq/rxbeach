@@ -45,10 +45,11 @@ type FooPayload = {
   foo: number;
 };
 
-const voidAction = actionCreator('void');
-const fooAction = actionCreator<FooPayload>('foo');
-const barAction = actionCreator<{ bar: number }>('bar');
-const combinedAction = actionCreator<{ foo: number; bar: number }>('extended');
+const voidAction = actionCreator('[test] void');
+const fooAction = actionCreator<FooPayload>('[test] foo');
+const barAction = actionCreator<{ bar: number }>('[test] bar');
+const combinedAction =
+  actionCreator<{ foo: number; bar: number }>('[test] extended');
 
 const v = voidAction();
 const f = fooAction({ foo: 1 });
@@ -164,7 +165,7 @@ test(
 test(
   'it should be possible to chain withNamespace, ofType and extractPayload',
   marbles((m) => {
-    const payloadAction = actionCreator<number>('payload action');
+    const payloadAction = actionCreator<number>('[test] payload action');
     const payloadActionWS = namespaceActionCreator('WS', payloadAction);
     const payloadActionNS = namespaceActionCreator('NS', payloadAction);
     const voidActionWS = namespaceActionCreator('WS', voidAction);

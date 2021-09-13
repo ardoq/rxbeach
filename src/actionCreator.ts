@@ -4,6 +4,8 @@ import {
 } from './types/ActionCreator';
 import { actionMarker } from './internal/markers';
 
+type ActionName = `[${string}] ${string}`;
+
 interface ActionCreatorFunc {
   /**
    * Create an action creator without a payload
@@ -12,7 +14,7 @@ interface ActionCreatorFunc {
    * @returns An action creator function that creates complete action objects with
    *          a type unique to this action creator
    */
-  (type: string): ActionCreatorWithoutPayload;
+  (type: ActionName): ActionCreatorWithoutPayload;
   /**
    * Create an action creator with a given payload type
    *
@@ -22,7 +24,7 @@ interface ActionCreatorFunc {
    *          returns a complete action object with that payload and a type unique
    *          to this action creator
    */
-  <Payload>(type: string): ActionCreatorWithPayload<Payload>;
+  <Payload>(type: ActionName): ActionCreatorWithPayload<Payload>;
 }
 
 /**
