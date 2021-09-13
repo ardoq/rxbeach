@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/ardoq/rxbeach/compare/v0.9.0...v0.10.0) (2021-09-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* This ensures every action has name of the form
+`[qualifier] action name`. See the
+[new doc](https://github.com/ardoq/rxbeach/blob/master/docs/qualified-action-names.md)
+for how to automate this process.
+
+### Features
+
+* enforce qualifier in action names ([9a8aae9](https://github.com/ardoq/rxbeach/commit/9a8aae9119a815f4129781b63720cb75ac75867a))
+
+
+### Bug Fixes
+
+* ard-9960 fixed carry bug ([2f3073e](https://github.com/ardoq/rxbeach/commit/2f3073e6c0c2b456cb8133112aa52dfcc476d485))
+
 ## [0.9.0](https://github.com/ardoq/rxbeach/compare/v0.8.6...v0.9.0) (2021-09-02)
 
 
