@@ -23,6 +23,68 @@ We recommend these articles to get a refresher on those subjects:
 2. [Idiomatic Redux](https://blog.isquaredsoftware.com/series/idiomatic-redux/)
    (article series)
 
+## Brief overview
+
+This diagram shows how Actions flow through (RxJs) Streams to produce State and side-effects and how 
+Views are subscribed to streams:
+
+![Data flow in RxBeach](rxbeach-data-flow.png)
+
+Notice that despite the singular, there will be many (possibly parallel streams), routines etc.
+The application state is spread across multiple state streams. Combined, all of the base streams represent the current application state .
+
+### A complete example
+
+```js
+enum Module { DASHBOARD, … }
+// action creator
+const showModule = actionCreator<Module>("[navigation] show module");
+/* When invoked , will produce st. like:
+const action = {
+  type: Symbol("[navigation] show module"),
+  payload: Module.DASHBOARD,
+  meta: {
+    dispatchedAt: new Date(),
+    dispatchedBy: new Error()
+  }
+};
+*/
+
+// state
+type NavigationState = { selectedModule: Module; };
+const defaultNavigationState: NavigationState = {  selectedModule: Module.DASHBOARD };
+
+// reducer
+const handleShowModule = reducer(
+  showModule,  // could also be another stream
+  (state: NavigationState, selectedModule) => ({
+    ...state,
+    selectedModule // could also do some calculations / transformations on it
+}));
+
+// reduced state stream
+const reducers = [handleShowModule];
+const navigation$ = persistentReducedStream(
+  'navigation$',
+  defaultNavigationState,
+  reducers
+);
+// the stream also must be started, e.g. via:
+stateStreamRegistry.startReducing(navigation$);
+// (Side-)effects via routines:
+const logModuleChange = routine(
+  ofType(showModule), // filter
+  extractPayload(),
+  tap(module => console.log(`Showing module ${module}`))
+);
+subscribeRoutine(navigation$, logModuleChange)
+
+// UI
+type ViewModel = NavigationState;
+const View = ({ selectedModule }: ViewModel) => { return <p>Navigating to: {selectedModule}</p>; };
+const ConnectedView = connect(View, navigation$);
+```
+
 ## Diving in
 
 The sidebar contains all the documentation articles. We advise you read through

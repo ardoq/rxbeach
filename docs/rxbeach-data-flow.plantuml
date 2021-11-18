@@ -1,0 +1,26 @@
+@startuml
+digraph rxbeach {
+label="Data flow in RxBeach"
+  {
+     Action [label="Action\n{type, payload?, meta?}"]
+     act_str [label="Action Stream"]
+     red_str [label="Reduced State Stream\nvia persistentReducedStream"]
+     derived [label="Derived Stream"]
+     Reducer [label="Reducer\nfn(state, action) -> state", shape=box]
+     State [shape=cylinder]
+     eff [label="Side-Effect", shape=none]
+     View1 [label="View 1"]
+     View2 [label="View 2"]
+  }
+  Action -> act_str [label=dispatchAction, weight=100]
+  Reducer -> red_str [style=dotted]
+  State -> red_str [style=dotted,dir=both]
+  act_str -> red_str
+  act_str -> Routine [label="subscribe"]
+  Routine -> eff [style=dotted]
+  red_str -> View1
+  View1 -> Action [label="an Action Creator"]
+  red_str -> derived
+  derived -> View2
+}
+@enduml
