@@ -4,10 +4,14 @@
 [![Coverage Status](https://coveralls.io/repos/github/ardoq/rxbeach/badge.svg?branch=master)](https://coveralls.io/github/ardoq/rxbeach?branch=master)
 > Chill with streams at the RxBeach
 
-RxBeach is a toolbox for creating applications that uses streams to manage
+RxBeach is a toolbox for creating applications that use streams to manage
 state. It is in the **very early stages** of implementation, and the API will
 change continuously.
 
+# Documentation
+
+The documentation is published at https://ardoq.github.io/rxbeach/ and there is also 
+a good deal of JSDoc comments in the code.
 
 # Contributing
 Code is hosted in the GitHub repo [ardoq/rxbeach](https://github.com/ardoq/rxbeach).
