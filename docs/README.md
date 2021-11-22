@@ -81,7 +81,10 @@ subscribeRoutine(navigation$, logModuleChange)
 
 // UI
 type ViewModel = NavigationState;
-const View = ({ selectedModule }: ViewModel) => { return <p>Navigating to: {selectedModule}</p>; };
+const View = ({ selectedModule }: ViewModel) => 
+  <p>Navigating to: {selectedModule} 
+     <button onClick={dispatchAction(showModule(DASHBOARD))} />
+  </p>;
 const ConnectedView = connect(View, navigation$);
 ```
 
