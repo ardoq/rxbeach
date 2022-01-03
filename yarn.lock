@@ -4060,10 +4060,10 @@ rxjs-report-usage@^1.0.4:
     glob "~7.1.6"
     prompts "~2.3.2"
 
-rxjs-spy@7.5.3:
-  version "7.5.3"
-  resolved "https://registry.yarnpkg.com/rxjs-spy/-/rxjs-spy-7.5.3.tgz#0194bc23ed0c30fb6a61f8bccbc8090e545b91b9"
-  integrity sha512-8QsSL6Ma51dTeaJ5Q9zWqhqnCSEkDf56Evs1gUsI9N22oB7bYrPMMx4UnoifNGc+Pko2sGX/xydzinLwGO+2pw==
+rxjs-spy@8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/rxjs-spy/-/rxjs-spy-8.0.2.tgz#dd510bdb58d798e0bc23121ab67714dd6fd95f88"
+  integrity sha512-w2yc+EiwYA8J97hxqMD+pxGZkNbRCQwxR660r4nw4Soa8kCvatsdSRc0THndYk9uk6SvZy2RNyiVcxfX39pWpw==
   dependencies:
     "@types/circular-json" "^0.4.0"
     "@types/stacktrace-js" "^0.0.33"
