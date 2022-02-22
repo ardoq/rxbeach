@@ -10,12 +10,19 @@ export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
  *
  * Each emit from the stream will make the component re-render with the new
  * value. Initially, `NOT_YET_EMITTED` is returned, because an `Observable`
- * has no guarantee for when the first emit will happen.
+ * has no guarantee for when the first emit will happen. This initial
+ * value may be overridden with the `defaultValue` argument.
  *
  * @param source$ Stream that provides the needed values
+ * @param defaultValue Default value returned on init until stream emits new value
  */
-export const useStream = <T>(source$: Observable<T>): T | NOT_YET_EMITTED => {
-  const [value, setValue] = useState<T | NOT_YET_EMITTED>(NOT_YET_EMITTED);
+export const useStream = <T>(
+  source$: Observable<T>,
+  defaultValue?: T
+): T | NOT_YET_EMITTED => {
+  const [value, setValue] = useState<T | NOT_YET_EMITTED>(
+    defaultValue ?? NOT_YET_EMITTED
+  );
 
   useEffect(() => {
     const subscription = source$.subscribe(setValue);
