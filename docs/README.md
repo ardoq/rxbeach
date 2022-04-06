@@ -6,7 +6,7 @@
 Welcome to the documentation of RxBeach!
 
 RxBeach is a toolbox for creating applications that use streams to manage
-state. This documentation is a work in progress.
+the state. This documentation is a work in progress.
 
 ## Prerequisite knowledge
 
@@ -30,8 +30,8 @@ Views are subscribed to streams:
 
 ![Data flow in RxBeach](rxbeach-data-flow.png)
 
-Notice that despite the singular, there will be many (possibly parallel streams), routines etc.
-The application state is spread across multiple state streams. Combined, all of the base streams represent the current application state .
+Notice that despite the singular, there will be many (possibly parallel streams), routines, etc.
+The application state is spread across multiple state streams. Combined, all of the base streams represent the current application state.
 
 ### A complete example
 

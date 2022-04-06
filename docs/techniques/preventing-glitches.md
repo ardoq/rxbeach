@@ -29,7 +29,7 @@ There are two main strategies for avoiding glitches in an RxBeach state
 graph. As a guideline, you should aim to solve all glitches within your
 state graph by applying the software design principles below, but when
 encountering a glitch at the end of a reactive state graph you can use
-debounceTime (i.e. in a viewModel$ that is passed to a view).
+`debounceTime` (i.e. in a `viewModel$` that is passed to a view).
 
 ### Avoid glitches by "software design"
 

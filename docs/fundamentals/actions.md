@@ -1,8 +1,8 @@
 # Actions and the action stream
 
 At the core of our stream architecture sits the actions and the action stream.
-All changes to the core data stores, view models, and any side effect from the
-application is triggered by actions. They are immutable packets of information
+All changes to the core data stores, view models, and any side effects from the
+application are triggered by actions. They are immutable packets of information
 that describe a change or an event.
 
 Technically, actions are simple javascript objects of a specific shape and the
@@ -70,7 +70,7 @@ If you find code that calls the same action multiple times right after each othe
 
 ### Payloads should be concise, avoid passing unnecessary information
 
-Actions should describe what's happening, by passing as little information as possible. This is in order to ensure that handlers of the actions are reading data from the correct source of truth.
+Actions should describe what's happening by passing as little information as possible. This is in order to ensure that handlers of the actions are reading data from the correct source of truth.
 
 In practice, this means that you should always aim to pass ids instead of whole objects in action payloads. If an action handler needs the whole object, it should read that from the single source of truth (i.e. from the application state).
 
@@ -91,7 +91,7 @@ For actions to actually make something happen, the whole app needs to know about
 The action stream will usually be named `action$`. New actions will usually be dispatched with a function named `dispatchAction`.
 
 > **RxBeach does not have tooling for creating the `action$`**
-> RxBeach does currently not have tooling to create the `action$` stream and the
+> RxBeach does currently not have the tooling to create the `action$` stream and the
 > `dispatchAction` function. This will be added eventually
 
-The action stream feeds most other streams in the app by being reduced to different kind of state, like a ViewModel or a collection.
+The action stream feeds most other streams in the app by being reduced to a different kind of state, like a ViewModel or a collection.

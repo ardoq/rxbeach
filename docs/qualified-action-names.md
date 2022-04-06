@@ -1,7 +1,7 @@
  Converting to qualified action names
 ========================
 
-With the introduced requirment that action names have to be of the form
+With the introduced requirement that action names have to be of the form
 `[qualifier] action name`, it might be useful to automate this change.
 
 In Ardoq we used this codemod to convert 600 actions. It picks the name of the

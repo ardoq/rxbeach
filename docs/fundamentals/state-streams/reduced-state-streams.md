@@ -11,7 +11,7 @@ action, but can also be another stream.
 
 ## Action reducers
 
-Action reducers receive the stream state and an action payload and calculates
+Action reducers receive the stream state and an action payload and calculate
 the next application stream. In RxBeach we define the action reducers with the
 `reducer` function.
 
@@ -45,9 +45,9 @@ Reducers can also react to other streams. This is also done with the `reducer`
 function.
 
 Streams are a bit more tricky to work with than actions, as they are less
-predictable in how they will emit data. When a reduced state stream with a
+predictable in how they emit data. When a reduced state stream with a
 stream reducer is started, the stream of the stream reducer will be subscribed.
-The following example illustrates two examples.
+The following examples illustrate the two cases.
 
 ```typescript
 import { of } from 'rxjs';
