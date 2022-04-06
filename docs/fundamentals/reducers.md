@@ -1,14 +1,14 @@
 # Reducers
 
-Reducers specify how the application’s state changes in response to actions sent to the store. Remember that actions only describe _what happened_, but don’t describe how the application’s state changes.
+Reducers specify how the application state changes in response to actions sent to the store. Remember that actions only describe _what happened_, but don’t describe how the application’s state changes.
 
 Reducers are used to build "reduced state streams", which are streams that use reducers to build state. Unlike Redux, RxBeach is built on the idea that there might be multiple reduced state streams in an application.
 
 ## Designing the state shape
 
-Reducers organize the data in a stream. The stream should have a clear purpose, such as providing the necessary data to a view. We should be careful about what data is in each stream, and make sure it neither more nor less than what we actually need. Nesting of data in the reducer is discouraged, to keep the complexity at a minimum.
+Reducers organize the data in a stream. The stream should have a clear purpose, such as providing the necessary data to a view. We should be careful about what data is in each stream, and make sure it is neither more nor less than what we actually need. Nesting of data in the reducer is discouraged, to keep the complexity at a minimum.
 
-To continue the example from the previous section, we can define the state shape, and a default state for the module navigation in an app.
+To continue the example from the previous section, we can define the state shape and a default state for the module navigation in an app.
 
 ```typescript
 enum Module {

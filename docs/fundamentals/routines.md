@@ -22,7 +22,7 @@ const logModuleChange = routine(
 );
 ```
 
-To understand how this works, you can imagine the `routine` function call being replaced by `action$.pipe`. At the top, actions that are dispatched to the action stream will flow in, then `ofType` will filter for only actions of the `showModule` type. `ofType` also provides type hints for typescript.
+To understand how this works, you can imagine the `routine` function call being replaced by `action$.pipe`. At the top, actions that are dispatched to the action stream will flow in, then `ofType` will filter for actions of the `showModule` type. `ofType` also provides type hints for TypeScript.
 `extractPayload` is a small helper that plucks the payload from the full action object. Most routines will include `extractPayload`, as we are usually not interested in other parts of the action object.
 
 ## Subscribing routines
