@@ -162,21 +162,18 @@ type ReducerCreator = {
 };
 
 export const reducer: ReducerCreator = <State>(
-  actionCreator:
-    | UnknownActionCreator
-    | UnknownActionCreator[]
-    | Observable<any>,
+  trigger: UnknownActionCreator | UnknownActionCreator[] | Observable<any>,
   reducerFn: Reducer<State, any>
 ) => {
   const wrapper = (state: State, payload: any, namespace?: string) =>
     reducerFn(state, payload, namespace);
-  if (actionCreator instanceof Observable) {
+  if (trigger instanceof Observable) {
     wrapper.trigger = {
-      source$: actionCreator,
+      source$: trigger,
     };
   } else {
     wrapper.trigger = {
-      actions: wrapInArray(actionCreator),
+      actions: wrapInArray(trigger),
     };
   }
   return wrapper;
@@ -233,7 +230,10 @@ export const combineReducers = <State>(
   const streamReducers = reducers.filter(isStreamReducer);
   const reducersByActionType = new Map(
     actionReducers.flatMap((reducerFn) =>
-      reducerFn.trigger.actions.map((action) => [action.type, reducerFn])
+      reducerFn.trigger.actions.map((actionCreator) => [
+        actionCreator.type,
+        reducerFn,
+      ])
     )
   );
 

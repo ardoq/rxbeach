@@ -35,14 +35,14 @@ interface ActionCreatorFunc {
  * recognize the generic, typed overload of this function.
  */
 export const actionCreator: ActionCreatorFunc = (type: string) => {
-  const action = (payload?: any) =>
+  const actionCreatorFn = (payload?: any) =>
     Object.freeze({
       type,
       payload,
       meta: Object.freeze({}),
     });
-  action.type = type;
-  action._marker = actionMarker(type);
+  actionCreatorFn.type = type;
+  actionCreatorFn._marker = actionMarker(type);
 
-  return Object.freeze(action);
+  return Object.freeze(actionCreatorFn);
 };

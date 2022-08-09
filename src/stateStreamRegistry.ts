@@ -26,6 +26,7 @@ export class StateStreamRegistry {
   register(stream: PersistentReducedStateStream<any>) {
     if (this.streams.has(stream.name)) {
       if (this.started !== null && process.env.NODE_ENV !== 'production') {
+        // This happens when a persitentReducedStream is hot reloaded
         this.replace(this.streams.get(stream.name)!, stream);
         return;
       }
