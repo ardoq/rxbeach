@@ -2,7 +2,7 @@ import { Action } from '../../types/Action';
 import { VoidPayload } from '../types';
 import * as rethrowErrorGloballyModule from '../rethrowErrorGlobally';
 import sinon, { SinonStub } from 'sinon';
-import { TestInterface } from 'ava';
+import { TestFn } from 'ava';
 
 export const mockAction = <P = VoidPayload>(
   type: string,
@@ -16,11 +16,11 @@ export const mockAction = <P = VoidPayload>(
   } as Action<P>);
 
 export type TestContextRethrowErrorGlobally = {
-  rethrowErrorGlobally: SinonStub<[any], number>;
+  rethrowErrorGlobally: SinonStub<[any], NodeJS.Timeout>;
 };
 
-export const stubRethrowErrorGlobally = (untypedTest: TestInterface) => {
-  const test = untypedTest as TestInterface<TestContextRethrowErrorGlobally>;
+export const stubRethrowErrorGlobally = (untypedTest: TestFn) => {
+  const test = untypedTest as TestFn<TestContextRethrowErrorGlobally>;
   test.before((t) => {
     t.context.rethrowErrorGlobally = sinon.stub(
       rethrowErrorGloballyModule,

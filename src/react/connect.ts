@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { ObservableInput, from } from 'rxjs';
 import React, { ComponentType, useEffect, useState } from 'react';
 
 export const NOT_YET_EMITTED = Symbol('Returned from rxbeach/react:useStream');
@@ -17,7 +17,7 @@ export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
  * @param defaultValue Default value returned on init until stream emits new value
  */
 export const useStream = <T>(
-  source$: Observable<T>,
+  source$: ObservableInput<T>,
   defaultValue?: T
 ): T | NOT_YET_EMITTED => {
   const [value, setValue] = useState<T | NOT_YET_EMITTED>(
@@ -25,7 +25,7 @@ export const useStream = <T>(
   );
 
   useEffect(() => {
-    const subscription = source$.subscribe(setValue);
+    const subscription = from(source$).subscribe(setValue);
 
     return () => subscription.unsubscribe();
   }, [source$]);
@@ -52,7 +52,7 @@ export const useStream = <T>(
 export const connect =
   <Props, Observed extends Partial<Props>>(
     Component: ComponentType<Props>,
-    stream$: Observable<Observed>
+    stream$: ObservableInput<Observed>
   ) =>
   (props: Omit<Props, keyof Observed>) => {
     const value = useStream(stream$);

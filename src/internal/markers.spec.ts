@@ -132,11 +132,11 @@ test('markDebounceTime includes source', (t) => {
   });
 });
 
-const findMarkerOver: Macro<[OperatorFunction<any, any>]> = (t, operator) =>
-  t.deepEqual(findMarker(source$.pipe(operator)), TOP_MARKER);
-findMarkerOver.title = (name) =>
-  `findMarker finds marker over ${name} operator`;
-
+const findMarkerOver: Macro<[OperatorFunction<any, any>]> = {
+  exec: (t, operator) =>
+    t.deepEqual(findMarker(source$.pipe(operator)), TOP_MARKER),
+  title: (name) => `findMarker finds marker over ${name} operator`,
+};
 const coop = () => true;
 const emop = () => empty();
 test('filter', findMarkerOver, filter(coop));

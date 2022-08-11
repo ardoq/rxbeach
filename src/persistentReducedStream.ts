@@ -1,11 +1,17 @@
 import { Subject } from 'rxjs';
-import { RegisteredReducer } from './reducer';
-import { PersistentReducedStateStream } from './persistentReducedStateStream';
+import { RegisteredReducer, combineReducers } from './reducer';
+import { ObservableState } from './observableState';
 import { stateStreamRegistry } from './stateStreamRegistry';
+import { action$ as defaultAction$ } from './action$';
+import { ActionStream } from './types/helpers';
+import { withNamespace } from './operators';
+import { markName } from './internal';
+import { tag } from 'rxjs-spy/operators';
 
 type PersistentReducedStreamOptions = {
   errorSubject?: Subject<any>;
   namespace?: string;
+  action$?: ActionStream;
 };
 
 /**
@@ -43,15 +49,22 @@ export const persistentReducedStream = <State>(
   name: string,
   initialState: State,
   reducers: RegisteredReducer<State, any>[],
-  { errorSubject, namespace }: PersistentReducedStreamOptions = {}
-): PersistentReducedStateStream<State> => {
-  const stream = new PersistentReducedStateStream(
-    name,
-    initialState,
-    reducers,
-    errorSubject,
-    namespace
+  { errorSubject, namespace, action$: a$ }: PersistentReducedStreamOptions = {}
+): ObservableState<State> => {
+  const action$ = a$ ?? defaultAction$;
+  const filteredAction$ =
+    namespace === undefined ? action$ : action$.pipe(withNamespace(namespace));
+
+  const source$ = filteredAction$.pipe(
+    combineReducers(initialState, reducers, {
+      errorSubject: errorSubject,
+      namespace: namespace,
+    }),
+    markName(name),
+    tag(name)
   );
+
+  const stream = new ObservableState(name, source$, initialState);
 
   stateStreamRegistry.register(stream);
 

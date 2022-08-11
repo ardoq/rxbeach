@@ -1,5 +1,13 @@
-import { Observable, OperatorFunction, Subject, pipe } from 'rxjs';
-import { filter, map, scan, tap } from 'rxjs/operators';
+import {
+  InteropObservable,
+  Observable,
+  ObservableInput,
+  OperatorFunction,
+  Subject,
+  from,
+  pipe,
+} from 'rxjs';
+import { filter, map, mergeWith, scan, tap } from 'rxjs/operators';
 import {
   UnknownAction,
   UnknownActionCreator,
@@ -8,11 +16,11 @@ import {
 } from './internal/types';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { ofType } from './operators/operators';
-import { merge } from './operators/decorated';
 import {
   endPerformanceMeasurement,
   startPerformanceMeasurement,
 } from './internal/performance/performanceMeasurements';
+import { isObservableInput } from './isObservableInput';
 
 const wrapInArray = <T>(val: T | T[]): T[] =>
   Array.isArray(val) ? val : [val];
@@ -57,6 +65,8 @@ const isStreamReducer = <State, Payload>(
 ): reducerFn is RegisteredStreamReducer<State, Payload> =>
   'source$' in reducerFn.trigger;
 
+type ObservableLike<T> = Observable<T> | InteropObservable<T>;
+
 type ReducerCreator = {
   /**
    * Define a reducer for a stream
@@ -70,7 +80,7 @@ type ReducerCreator = {
    *          called directly as if it was the `reducer` parameter itself.
    */
   <State, Payload>(
-    source$: Observable<Payload>,
+    source$: ObservableLike<Payload>,
     reducer: Reducer<State, Payload>
   ): RegisteredReducer<State, Payload>;
 
@@ -162,14 +172,14 @@ type ReducerCreator = {
 };
 
 export const reducer: ReducerCreator = <State>(
-  trigger: UnknownActionCreator | UnknownActionCreator[] | Observable<any>,
+  trigger: UnknownActionCreator | UnknownActionCreator[] | ObservableInput<any>,
   reducerFn: Reducer<State, any>
 ) => {
   const wrapper = (state: State, payload: any, namespace?: string) =>
     reducerFn(state, payload, namespace);
-  if (trigger instanceof Observable) {
+  if (!Array.isArray(trigger) && isObservableInput(trigger)) {
     wrapper.trigger = {
-      source$: trigger,
+      source$: from(trigger),
     };
   } else {
     wrapper.trigger = {
@@ -250,7 +260,7 @@ export const combineReducers = <State>(
   return pipe(
     ofType(...actionReducers.flatMap((reducerFn) => reducerFn.trigger.actions)),
     map((action): Packet => ({ origin: ACTION_ORIGIN, value: action })),
-    merge(...source$s),
+    mergeWith(...source$s),
     tap(() => {
       if (performanceMarker) startPerformanceMeasurement(performanceMarker);
     }),

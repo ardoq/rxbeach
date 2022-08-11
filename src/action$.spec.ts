@@ -3,11 +3,12 @@ import { incrementMocks } from './internal/testing/mock';
 import { action$, dispatchAction } from './action$';
 import { take } from 'rxjs/operators';
 import { _namespaceAction } from './namespace';
+import { ActionWithoutPayload } from './types/Action';
 
 const actions = incrementMocks.marbles.actions;
 
 test('dispatchAction makes action$ emit', (t) => {
-  let lastAction;
+  let lastAction: ActionWithoutPayload | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   t.teardown(() => sub.unsubscribe());
 
@@ -16,7 +17,7 @@ test('dispatchAction makes action$ emit', (t) => {
 });
 
 test('dispatchAction does not remove existing namespace', (t) => {
-  let lastAction;
+  let lastAction: ActionWithoutPayload | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   t.teardown(() => sub.unsubscribe());
 

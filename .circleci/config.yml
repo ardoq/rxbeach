@@ -45,7 +45,7 @@ jobs:
 
       - run:
           name: Line coverage
-          command: ./node_modules/.bin/nyc report --reporter=text-lcov | npx coveralls
+          command: yarn c8 report --reporter=text-lcov | npx coveralls
 
       - store_test_results:
           path: ~/reports

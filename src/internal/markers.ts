@@ -1,4 +1,4 @@
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import { MonoTypeOperatorFunction, Observable, ObservableInput } from 'rxjs';
 
 export enum MarkerType {
   NAME,
@@ -192,11 +192,15 @@ export const markDebounceTime =
       time,
     });
 
-export const findMarker = (observable$: Observable<unknown>): Marker | null => {
+export const findMarker = (
+  observable$: ObservableInput<unknown>
+): Marker | null => {
   if (observable$ instanceof MarkedObservable) {
     return observable$.marker;
-  } else if (observable$.source instanceof Observable) {
-    return findMarker(observable$.source);
+  } else if (
+    (observable$ as Observable<unknown>).source instanceof Observable
+  ) {
+    return findMarker((observable$ as any).source);
   }
   return null;
 };
