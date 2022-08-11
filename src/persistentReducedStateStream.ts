@@ -34,6 +34,21 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
 
   public name: string;
 
+  constructor(
+    name: string,
+    initialState: State,
+    reducers: RegisteredReducer<State, any>[],
+    errorSubject: Subject<any> = defaultErrorSubject,
+    namespace?: string
+  ) {
+    super();
+    this.name = name;
+    this.subject = new BehaviorSubject(initialState);
+    this.reducers = reducers;
+    this.errorSubject = errorSubject;
+    this.namespace = namespace;
+  }
+
   /**
    * Subscribes to the action stream and starts reducing this state stream.
    * startReducing does not always immediately emit a value since the value
@@ -98,21 +113,6 @@ export class PersistentReducedStateStream<State> extends Observable<State> {
     }
     this.subject.unsubscribe();
   };
-
-  constructor(
-    name: string,
-    initialState: State,
-    reducers: RegisteredReducer<State, any>[],
-    errorSubject: Subject<any> = defaultErrorSubject,
-    namespace?: string
-  ) {
-    super();
-    this.name = name;
-    this.subject = new BehaviorSubject(initialState);
-    this.reducers = reducers;
-    this.errorSubject = errorSubject;
-    this.namespace = namespace;
-  }
 
   get state(): State {
     return this.subject.getValue();
