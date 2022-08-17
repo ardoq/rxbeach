@@ -38,7 +38,6 @@ export const reduceState = <State>(
   pipe(
     combineReducers(defaultState, reducers, {
       errorSubject,
-      performanceMarker: name,
     }),
     startWith(defaultState),
     shareReplay({
