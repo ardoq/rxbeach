@@ -13,9 +13,7 @@ import {
 } from './operators';
 import { mockAction } from '../internal/testing/utils';
 import { map } from 'rxjs/operators';
-import { Observable, pipe } from 'rxjs';
-import { UnknownAction } from '../internal/types';
-import { MarkerType, OfTypeMarker, findMarker } from '../internal/markers';
+import { pipe } from 'rxjs';
 import { incrementMocks } from '../internal/testing/mock';
 
 const {
@@ -81,29 +79,6 @@ test(
     m.expect(source.pipe(ofType(voidAction))).toBeObservable(expected);
   })
 );
-
-test('ofType should add a stream marker', (t) => {
-  const piped$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
-
-  t.deepEqual(findMarker(piped$), {
-    type: MarkerType.OF_TYPE,
-    sources: [
-      {
-        type: MarkerType.ACTION,
-        name: voidAction.type,
-      },
-    ],
-  });
-});
-
-test('ofType markers should have reference equality of action marker', (t) => {
-  const one$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
-  const two$ = new Observable<UnknownAction>().pipe(ofType(voidAction));
-  const one = findMarker(one$) as OfTypeMarker;
-  const two = findMarker(two$) as OfTypeMarker;
-
-  t.assert(one.sources[0] === two.sources[0]);
-});
 
 test(
   'ofType should filter multiple actions that are mix of void and not void',

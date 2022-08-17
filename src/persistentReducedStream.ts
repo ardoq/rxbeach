@@ -5,7 +5,6 @@ import { stateStreamRegistry } from './stateStreamRegistry';
 import { action$ as defaultAction$ } from './action$';
 import { ActionStream } from './types/helpers';
 import { withNamespace } from './operators';
-import { markName } from './internal';
 import { tag } from 'rxjs-spy/operators';
 
 type PersistentReducedStreamOptions = {
@@ -41,7 +40,7 @@ type PersistentReducedStreamOptions = {
  * myState$.startReducing(action$) // To start reducing
  * ```
  *
- * @param name The name of the stream, used for placing a marker and spy tag
+ * @param name The name of the stream, used for placing a spy tag
  * @param initialState The initial state of the stream
  * @param reducers The reducers that build up the stream state
  */
@@ -60,7 +59,6 @@ export const persistentReducedStream = <State>(
       errorSubject: errorSubject,
       namespace: namespace,
     }),
-    markName(name),
     tag(name)
   );
 

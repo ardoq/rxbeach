@@ -6,7 +6,6 @@ import {
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
 } from '../internal/types';
-import { markOfType } from '../internal/markers';
 
 interface OfType {
   /**
@@ -74,10 +73,7 @@ export const ofType: OfType = ((
 ): OperatorFunction<UnknownAction, UnknownAction> => {
   const types = new Set(targetTypes.map(({ type }) => type));
 
-  return pipe(
-    filter((action: UnknownAction) => types.has(action.type)),
-    markOfType(targetTypes.map(({ _marker }) => _marker))
-  );
+  return pipe(filter((action: UnknownAction) => types.has(action.type)));
 }) as any; // Implementation is untyped
 
 /**

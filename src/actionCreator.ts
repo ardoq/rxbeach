@@ -2,7 +2,6 @@ import {
   ActionCreatorWithPayload,
   ActionCreatorWithoutPayload,
 } from './types/ActionCreator';
-import { actionMarker } from './internal/markers';
 
 type ActionName = `[${string}] ${string}`;
 
@@ -42,7 +41,6 @@ export const actionCreator: ActionCreatorFunc = (type: string) => {
       meta: Object.freeze({}),
     });
   actionCreatorFn.type = type;
-  actionCreatorFn._marker = actionMarker(type);
 
   return Object.freeze(actionCreatorFn);
 };

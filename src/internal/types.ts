@@ -1,5 +1,4 @@
 import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
-import { ActionMarker } from './markers';
 
 export { VoidPayload } from '../types/Action';
 
@@ -14,7 +13,6 @@ export type UnknownAction = ActionWithoutPayload & { payload?: unknown };
 
 export interface ActionCreatorCommon {
   readonly type: string;
-  readonly _marker: ActionMarker;
 }
 
 /**

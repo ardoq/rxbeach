@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { UnknownAction, markName } from './internal';
+import { UnknownAction } from './internal';
 import { ActionDispatcher, ActionStream } from './types/helpers';
 import { tag } from 'rxjs-spy/operators';
 import { share } from 'rxjs/operators';
@@ -12,7 +12,6 @@ const actionSubject$ = new Subject<UnknownAction>();
  */
 export const action$: ActionStream = actionSubject$.pipe(
   tag('action$'),
-  markName('action$'),
   share()
 );
 
