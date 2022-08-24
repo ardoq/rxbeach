@@ -3,14 +3,10 @@ import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
 import { ActionWithPayload } from './types/Action';
-import {
-  Routine,
-  collectRoutines,
-  routine,
-  subscribeRoutine,
-} from './routines';
+import { Routine, routine } from './routines';
 import { mockAction, stubRethrowErrorGlobally } from './internal/testing/utils';
 import { extractPayload } from './operators/operators';
+import { routinesRegistry } from './routinesRegistry';
 
 const test = stubRethrowErrorGlobally(untypedTest);
 
@@ -60,6 +56,7 @@ test(
   marbles((m) => {
     const action$ = m.hot(actionMarbles1, actions);
     const expected$ = m.hot(letterMarbles, letters);
+    routinesRegistry.startRoutines(action$);
 
     const actual$ = action$.pipe(lettersRoutine);
 
@@ -67,49 +64,35 @@ test(
   })
 );
 
-test(
-  'collectRoutines runs all routines',
-  marbles((m) => {
-    const action$ = m.hot(actionMarbles1, actions);
-    const expected$ = m.hot(combinedMarbles, lengths);
+// test(
+//   'subscribeRoutine subscribes action$',
+//   marbles((m) => {
+//     const action$ = m.hot(actionMarbles1, actions);
+//     routinesRegistry.startRoutines(action$);
 
-    const actual$ = action$.pipe(
-      collectRoutines(lettersRoutine, lengthRoutine)
-    );
+//     m.expect(action$).toHaveSubscriptions(['^']);
+//   })
+// );
 
-    m.expect(actual$).toBeObservable(expected$);
-  })
-);
+// test(
+//   'subscribeRoutine resubscribes on errors',
+//   marbles((m) => {
+//     const action$ = m.hot(actionMarbles2, actions);
 
-test(
-  'subscribeRoutine subscribes action$',
-  marbles((m) => {
-    const action$ = m.hot(actionMarbles1, actions);
-    subscribeRoutine(action$, lettersRoutine);
+//     subscribeRoutine(errorRoutine, { action$ });
 
-    m.expect(action$).toHaveSubscriptions(['^']);
-  })
-);
+//     m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
+//   })
+// );
 
-test(
-  'subscribeRoutine resubscribes on errors',
-  marbles((m) => {
-    const action$ = m.hot(actionMarbles2, actions);
+// test(
+//   'subscribeRoutine emits errors to error subject',
+//   marbles((m) => {
+//     const action$ = m.hot(actionMarbles2, actions);
+//     const error$ = new Subject<any>();
 
-    subscribeRoutine(action$, errorRoutine);
+//     subscribeRoutine(errorRoutine, { errorSubject: error$, action$ });
 
-    m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
-  })
-);
-
-test(
-  'subscribeRoutine emits errors to error subject',
-  marbles((m) => {
-    const action$ = m.hot(actionMarbles2, actions);
-    const error$ = new Subject<any>();
-
-    subscribeRoutine(action$, errorRoutine, error$);
-
-    m.expect(error$).toBeObservable(errorMarbles, errors);
-  })
-);
+//     m.expect(error$).toBeObservable(errorMarbles, errors);
+//   })
+// );

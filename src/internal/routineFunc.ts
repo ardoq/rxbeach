@@ -1,4 +1,5 @@
-import { OperatorFunction } from 'rxjs';
+import { OperatorFunction, Subject, Subscription } from 'rxjs';
+import { ActionStream } from '../types/helpers';
 import { UnknownAction } from './types';
 
 export type Routine<T> = OperatorFunction<UnknownAction, T>;
@@ -121,3 +122,8 @@ export interface RoutineFunc {
     ...fns: OperatorFunction<any, any>[]
   ): Routine<unknown>;
 }
+
+export type SubscribeRoutineFunc = (
+  routineToSubscribe: Routine<unknown>,
+  config?: { errorSubject?: Subject<any>; action$?: ActionStream }
+) => Subscription;

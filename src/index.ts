@@ -27,12 +27,7 @@ export {
 
 export { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
 
-export {
-  Routine,
-  subscribeRoutine,
-  routine,
-  collectRoutines,
-} from './routines';
+export { Routine, routine } from './routines';
 
 export { derivedStream } from './derivedStream';
 
@@ -42,3 +37,4 @@ export { persistentReducedStream } from './persistentReducedStream';
 export { ObservableState } from './observableState';
 
 export { stateStreamRegistry } from './stateStreamRegistry';
+export { routinesRegistry } from './routinesRegistry';
