@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ardoq/rxbeach/compare/v1.0.0...v2.0.0) (2022-08-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* RxBeach no longer re-exports operators from RxJS.
+These operators must now be imported directly from RxJS.
+
+### Features
+
+* remove all marker functionality ([0028d59](https://github.com/ardoq/rxbeach/commit/0028d591fa001d0fcb42316f334149ae79dde237))
+* remove performance measurement ([49b3840](https://github.com/ardoq/rxbeach/commit/49b3840e5fc4efe35aa9001e761c65baf8266470))
+
 ## [1.0.0](https://github.com/ardoq/rxbeach/compare/v0.10.3...v1.0.0) (2022-08-26)
 
 
