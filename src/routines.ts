@@ -11,7 +11,7 @@ export { Routine } from './internal/routineFunc';
  * Routines are added to registery when they are created and subscribed by calling startRoutines when.
  */
 export const routine: RoutineFunc = (...args: OperatorFunction<any, any>[]) => {
-  const routine = pipe(...(args as [OperatorFunction<any, any>]));
-  routinesRegistry.register(routine);
-  return routine;
+  const routinePipe = pipe(...(args as [OperatorFunction<any, any>]));
+  routinesRegistry.register(routinePipe);
+  return routinePipe;
 };

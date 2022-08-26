@@ -1,7 +1,6 @@
-import { catchError, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, catchError } from 'rxjs';
 import { action$ as defaultAction$ } from './action$';
-import { SubscribeRoutineFunc } from './internal/routineFunc';
-import { Routine } from './routines';
+import { Routine, SubscribeRoutineFunc } from './internal/routineFunc';
 import { ActionStream } from './types/helpers';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 
@@ -40,8 +39,6 @@ export class RoutinesRegistry {
    * @param action$ The action stream the streams should reduce over
    */
   startRoutines(action$?: ActionStream) {
-    console.log('started', this.started);
-
     if (this.started) {
       throw new Error('Registry has already been started!');
     }

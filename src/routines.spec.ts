@@ -21,17 +21,11 @@ const letters = {
   B: 'B',
   C: 'C',
 };
-const lengths = {
-  ...letters,
-  '5': 5,
-  '7': 7,
-};
 const errors = {
   e: 'error',
 };
 const actionMarbles1 = ' -a----b----c---';
 const letterMarbles = '  -A----B----C---';
-const combinedMarbles = '-(A5)-(B5)-(C7)';
 const actionMarbles2 = ' -a----e----a---';
 const errorMarbles = '   ------e';
 const errorSub1 = '      ^-----!';
@@ -49,7 +43,6 @@ const lettersRoutine = routine(
   extractPayload(),
   map(({ letter }) => letter)
 );
-const lengthRoutine = routine(map(({ type }) => type.length));
 
 test(
   'routine pipes multiple operator functions',
