@@ -2,7 +2,6 @@ import test from 'ava';
 import { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
 import { ActionDispatcher } from './types/helpers';
 import { UnknownAction } from './internal/types';
-import { actionMarker } from './internal/markers';
 import { _namespaceAction } from './namespace';
 import { mockAction } from './internal/testing/utils';
 
@@ -45,7 +44,6 @@ test('namespaceActionCreator should create actions with namespace', (t) => {
   const actionCreator = (payload: number) =>
     mockAction(type, 'old namespace', payload);
   actionCreator.type = type;
-  actionCreator._marker = actionMarker(type);
 
   const namespacedActionCreator = namespaceActionCreator(
     namespace,

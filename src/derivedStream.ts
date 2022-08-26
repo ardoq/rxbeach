@@ -1,6 +1,5 @@
-import { Observable, ObservableInput } from 'rxjs';
-import { combineLatest } from './decoratedObservableCombiners';
-import { markName } from './internal/markers';
+import { Observable, ObservableInput, combineLatest } from 'rxjs';
+import { tag } from 'rxjs-spy/operators';
 
 export type DerivedStream = {
   <A>(name: string, a: ObservableInput<A>): Observable<[A]>;
@@ -95,7 +94,7 @@ export type DerivedStream = {
  * Make this stream a derived stream of its source and dependencies
  *
  * This is basically an annotated version of the `combineLatest` operator that
- * adds markers so the stream can be analyzed.
+ * adds tags so the stream can be analyzed.
  *
  * @param name The unique name of this stream
  * @param dependencies The dependencies of this stream
@@ -104,4 +103,4 @@ export type DerivedStream = {
 export const derivedStream: DerivedStream = (
   name: string,
   ...dependencies: ObservableInput<unknown>[]
-): Observable<any> => combineLatest(...dependencies).pipe(markName(name));
+): Observable<any> => combineLatest(dependencies).pipe(tag(name));

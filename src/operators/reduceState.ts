@@ -1,4 +1,3 @@
-import { markName } from '../internal/markers';
 import { UnknownAction } from '../internal/types';
 import { defaultErrorSubject } from '../internal/defaultErrorSubject';
 import { tag } from 'rxjs-spy/operators';
@@ -39,13 +38,11 @@ export const reduceState = <State>(
   pipe(
     combineReducers(defaultState, reducers, {
       errorSubject,
-      performanceMarker: name,
     }),
     startWith(defaultState),
     shareReplay({
       refCount: true,
       bufferSize: 1,
     }),
-    markName(name),
     tag(name)
   );
