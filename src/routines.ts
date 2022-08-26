@@ -15,4 +15,3 @@ export const routine: RoutineFunc = (...args: OperatorFunction<any, any>[]) => {
   routinesRegistry.register(routine);
   return routine;
 };
-// TODO: Delete mergeOperators

@@ -13,5 +13,4 @@ export {
   startWith,
   debounceTime,
 } from './decorated';
-export { mergeOperators } from './mergeOperators';
 export { reduceState } from './reduceState';
