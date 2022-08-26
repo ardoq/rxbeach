@@ -8,8 +8,8 @@ import { defaultErrorSubject } from './internal/defaultErrorSubject';
 export class RoutinesRegistry {
   routines: Map<Routine<any>, Subscription | null> = new Map();
 
-  started = false;
-  action$ = defaultAction$;
+  private started = false;
+  private action$ = defaultAction$;
 
   /**
    * Register a routine

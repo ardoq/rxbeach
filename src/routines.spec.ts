@@ -64,35 +64,38 @@ test(
   })
 );
 
-// test(
-//   'subscribeRoutine subscribes action$',
-//   marbles((m) => {
-//     const action$ = m.hot(actionMarbles1, actions);
-//     routinesRegistry.startRoutines(action$);
+test(
+  'subscribeRoutine subscribes action$',
+  marbles((m) => {
+    const action$ = m.hot(actionMarbles1, actions);
+    routinesRegistry.subscribeRoutine(lettersRoutine, { action$ });
 
-//     m.expect(action$).toHaveSubscriptions(['^']);
-//   })
-// );
+    m.expect(action$).toHaveSubscriptions(['^']);
+  })
+);
 
-// test(
-//   'subscribeRoutine resubscribes on errors',
-//   marbles((m) => {
-//     const action$ = m.hot(actionMarbles2, actions);
+test(
+  'subscribeRoutine resubscribes on errors',
+  marbles((m) => {
+    const action$ = m.hot(actionMarbles2, actions);
 
-//     subscribeRoutine(errorRoutine, { action$ });
+    routinesRegistry.subscribeRoutine(errorRoutine, { action$ });
 
-//     m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
-//   })
-// );
+    m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
+  })
+);
 
-// test(
-//   'subscribeRoutine emits errors to error subject',
-//   marbles((m) => {
-//     const action$ = m.hot(actionMarbles2, actions);
-//     const error$ = new Subject<any>();
+test(
+  'subscribeRoutine emits errors to error subject',
+  marbles((m) => {
+    const action$ = m.hot(actionMarbles2, actions);
+    const error$ = new Subject<any>();
 
-//     subscribeRoutine(errorRoutine, { errorSubject: error$, action$ });
+    routinesRegistry.subscribeRoutine(errorRoutine, {
+      errorSubject: error$,
+      action$,
+    });
 
-//     m.expect(error$).toBeObservable(errorMarbles, errors);
-//   })
-// );
+    m.expect(error$).toBeObservable(errorMarbles, errors);
+  })
+);
