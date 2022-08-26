@@ -179,7 +179,7 @@ export const reducer: ReducerCreator = <State>(
     reducerFn(state, payload, namespace);
   if (!Array.isArray(trigger) && isObservableInput(trigger)) {
     wrapper.trigger = {
-      source$: from(trigger),
+      source$: from<ObservableInput<any>>(trigger),
     };
   } else {
     wrapper.trigger = {
