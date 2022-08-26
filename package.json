@@ -1,6 +1,6 @@
 {
   "name": "rxbeach",
-  "version": "1.0.0-beta-1",
+  "version": "1.0.0",
   "description": "Chill with streams at the RxBeach",
   "keywords": [
     "rxjs",

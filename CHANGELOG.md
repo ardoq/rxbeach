@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/ardoq/rxbeach/compare/v0.10.3...v1.0.0) (2022-08-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* See breaking changes from RxJS 7.
+* `persistentStateStream` no longer returns an instance
+of a subclass of `Observable`, but rather the new class
+`ObservableState`.
+
+### Features
+
+* upgrade RxJS, introduce ObservableState ([#478](https://github.com/ardoq/rxbeach/issues/478)) ([545cbf0](https://github.com/ardoq/rxbeach/commit/545cbf09c7baa546b2be3b4842576bd18fef3872))
+
 ### [0.10.3](https://github.com/ardoq/rxbeach/compare/v0.10.2...v0.10.3) (2022-04-06)
 
 ### [0.10.2](https://github.com/ardoq/rxbeach/compare/v0.10.1...v0.10.2) (2022-02-23)
