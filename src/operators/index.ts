@@ -8,8 +8,8 @@ export {
 } from './operators';
 export {
   withLatestFrom,
-  combineLatest,
-  merge,
+  combineLatestWith,
+  mergeWith,
   startWith,
   debounceTime,
 } from './decorated';

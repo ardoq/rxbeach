@@ -7,9 +7,9 @@ import {
   markName,
 } from '../internal/markers';
 import {
-  combineLatest,
+  combineLatestWith,
   debounceTime,
-  merge,
+  mergeWith,
   startWith,
   withLatestFrom,
 } from './decorated';
@@ -41,8 +41,8 @@ const combined = {
   C: ['C', 'B'] as [string, string],
 };
 
-test('merge adds name and merge marker', (t) => {
-  const merged$ = source$.pipe(merge(dependency1$, dependency2$));
+test('mergeWith adds name and mergeWith marker', (t) => {
+  const merged$ = source$.pipe(mergeWith(dependency1$, dependency2$));
 
   t.deepEqual(findMarker(merged$), {
     type: MarkerType.MERGE,
@@ -51,13 +51,13 @@ test('merge adds name and merge marker', (t) => {
 });
 
 test(
-  'merge emits for each emit from source',
+  'mergeWith emits for each emit from source',
   marbles((m) => {
     const alpha$ = m.hot(' a-c', letters);
     const bravo$ = m.hot(' -b-', letters);
     const merged$ = m.hot('abc', letters);
 
-    m.expect(alpha$.pipe(merge(bravo$))).toBeObservable(merged$);
+    m.expect(alpha$.pipe(mergeWith(bravo$))).toBeObservable(merged$);
   })
 );
 
@@ -82,8 +82,8 @@ test(
   })
 );
 
-test('combineLatest adds name and merge marker', (t) => {
-  const combined$ = source$.pipe(combineLatest(dependency1$, dependency2$));
+test('combineLatestWith adds name and mergeWith marker', (t) => {
+  const combined$ = source$.pipe(combineLatestWith(dependency1$, dependency2$));
 
   t.deepEqual(findMarker(combined$), {
     type: MarkerType.COMBINE_LATEST,
@@ -92,13 +92,13 @@ test('combineLatest adds name and merge marker', (t) => {
 });
 
 test(
-  'combineLatest emits for each emit from source',
+  'combineLatestWith emits for each emit from source',
   marbles((m) => {
     const alpha$ = m.hot('   a-c', letters);
     const bravo$ = m.hot('   -b-', letters);
     const combined$ = m.hot('-BC', combined);
 
-    m.expect(alpha$.pipe(combineLatest(bravo$))).toBeObservable(combined$);
+    m.expect(alpha$.pipe(combineLatestWith(bravo$))).toBeObservable(combined$);
   })
 );
 

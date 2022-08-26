@@ -1,11 +1,10 @@
-import testUntyped from 'ava';
+import testUntyped, { TestFn } from 'ava';
 import { ReactTestRenderer, act, create } from 'react-test-renderer';
 import React from 'react';
-import { BehaviorSubject, Subject, empty, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, Subject, of } from 'rxjs';
 import { NOT_YET_EMITTED, connect, useStream } from './connect';
 import { SinonSpy, spy } from 'sinon';
-import { TestInterface } from 'ava';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '../internal/testing/renderHook';
 
 type Props = { msg: string; num?: number };
 const initialProps = { msg: 'hello' };
@@ -18,7 +17,7 @@ type Context = {
   WrappedComponentSpy: SinonSpy<[Props], ReturnType<typeof WrappedComponent>>;
 };
 
-const test = testUntyped as TestInterface<Context>;
+const test = testUntyped as TestFn<Context>;
 
 test.beforeEach((t) => {
   t.context.WrappedComponentSpy = spy(({ msg }: Props) =>
@@ -29,13 +28,13 @@ test.beforeEach((t) => {
 test.afterEach((t) => t.context.WrappedComponentSpy.resetHistory());
 
 test('useStream return initial value right away', (t) => {
-  const { result } = renderHook(() => useStream(empty()));
+  const { result } = renderHook(() => useStream(EMPTY));
 
   t.deepEqual(result.current, NOT_YET_EMITTED);
 });
 
 test('useStream return default value (if defined) right away', (t) => {
-  const { result } = renderHook(() => useStream(empty(), 'default value'));
+  const { result } = renderHook(() => useStream(EMPTY, 'default value'));
 
   t.deepEqual(result.current, 'default value');
 });
@@ -55,7 +54,7 @@ test('useStream unsubscribes on unmount', (t) => {
 
   unmount();
 
-  t.deepEqual(source$.observers, []);
+  t.false(source$.observed);
 });
 
 test('useStream does not resubscribe on rerender', (t) => {
@@ -80,13 +79,13 @@ test('useStream unsubscribes, keeps latest value and subscribes new stream', (t)
   rerender({ source$: bravo });
 
   t.deepEqual(result.current, initialProps);
-  t.deepEqual(alpha.observers, []);
-  t.deepEqual(bravo.observers.length, 1);
+  t.false(alpha.observed);
+  t.assert(bravo.observed);
 });
 
 test('connect should render null on first render', (t) => {
   const { WrappedComponentSpy } = t.context;
-  const HOComponent = connect(WrappedComponentSpy, empty());
+  const HOComponent = connect(WrappedComponentSpy, EMPTY);
 
   let component: ReactTestRenderer;
   act(() => {
@@ -133,13 +132,13 @@ test('connect should unsubscribe stream when unmounted', async (t) => {
     component = create(React.createElement(HOComponent));
   });
 
-  t.notDeepEqual(props$.observers, []);
+  t.assert(props$.observed);
 
   act(() => {
     component.unmount();
   });
 
-  t.deepEqual(props$.observers, []);
+  t.false(props$.observed);
 });
 
 test('connect should forward props', async (t) => {
@@ -165,7 +164,7 @@ test('connect give streamed props precedence over forwarded props', (t) => {
       React.createElement(HOComponent, {
         ...additionalProps,
         msg: 'overriding should not work',
-      })
+      } as any)
     );
   });
 

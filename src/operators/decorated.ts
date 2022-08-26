@@ -9,12 +9,12 @@ import {
   markWithLatestFrom,
 } from '../internal/markers';
 
-export const merge = ((...sources: Observable<unknown>[]) =>
+export const mergeWith = ((...sources: Observable<unknown>[]) =>
   (observable$: Observable<unknown>) =>
     observable$.pipe(
-      operators.merge(...sources),
+      operators.mergeWith(...sources),
       markMerge([observable$, ...sources])
-    )) as typeof operators.merge;
+    )) as typeof operators.mergeWith;
 
 export const withLatestFrom = ((...dependencies: Observable<unknown>[]) =>
   (observable$: Observable<unknown>) =>
@@ -23,12 +23,15 @@ export const withLatestFrom = ((...dependencies: Observable<unknown>[]) =>
       markWithLatestFrom(observable$, dependencies)
     )) as typeof operators.withLatestFrom;
 
-export const combineLatest = ((...sources: Observable<unknown>[]) =>
+export const combineLatestWith = ((
+    source: Observable<unknown>,
+    ...sources: Observable<unknown>[]
+  ) =>
   (observable$: Observable<unknown>) =>
     observable$.pipe(
-      operators.combineLatest(...sources),
-      markCombineLatest([observable$, ...sources])
-    )) as typeof operators.combineLatest;
+      operators.combineLatestWith(source, ...sources),
+      markCombineLatest([observable$, source, ...sources])
+    )) as typeof operators.combineLatestWith;
 
 export const startWith = ((...args: any) =>
   (observable$: Observable<unknown>) => {
@@ -36,6 +39,8 @@ export const startWith = ((...args: any) =>
     const marker = findMarker(observable$);
     if (marker === null) return startWith$;
     return new MarkedObservable(startWith$, marker);
+    // only one of the overloads is deprecated
+    // tslint:disable-next-line deprecation
   }) as typeof operators.startWith;
 
 export const debounceTime: typeof operators.debounceTime =

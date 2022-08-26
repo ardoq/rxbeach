@@ -23,20 +23,20 @@ const {
   marbles: { actions },
 } = incrementMocks;
 
-const extractsPayload: Macro<[any]> = (t, payload) =>
-  marbles((m) => {
-    const source = m.hot<ActionWithPayload<any>>('aa', {
-      a: mockAction('', '', payload) as ActionWithPayload<any>,
-    });
-    const expected = m.hot('pp', {
-      p: payload,
-    });
+const extractsPayload: Macro<[any]> = {
+  exec: (t, payload) =>
+    marbles((m) => {
+      const source = m.hot<ActionWithPayload<any>>('aa', {
+        a: mockAction('', '', payload) as ActionWithPayload<any>,
+      });
+      const expected = m.hot('pp', {
+        p: payload,
+      });
 
-    m.expect(source.pipe(extractPayload())).toBeObservable(expected);
-  })(t);
-extractsPayload.title = (name) =>
-  `extractPayload should extract ${name} payload`;
-
+      m.expect(source.pipe(extractPayload())).toBeObservable(expected);
+    })(t),
+  title: (name) => `extractPayload should extract ${name} payload`,
+};
 test('primitive', extractsPayload, 'Hello World');
 test('array', extractsPayload, ['Hello', { what: 'World' }]);
 test('object', extractsPayload, { foo: true });
@@ -48,8 +48,9 @@ type FooPayload = {
 const voidAction = actionCreator('[test] void');
 const fooAction = actionCreator<FooPayload>('[test] foo');
 const barAction = actionCreator<{ bar: number }>('[test] bar');
-const combinedAction =
-  actionCreator<{ foo: number; bar: number }>('[test] extended');
+const combinedAction = actionCreator<{ foo: number; bar: number }>(
+  '[test] extended'
+);
 
 const v = voidAction();
 const f = fooAction({ foo: 1 });

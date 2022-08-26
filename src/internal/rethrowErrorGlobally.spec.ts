@@ -1,8 +1,8 @@
-import untypedTest, { TestInterface } from 'ava';
+import untypedTest, { TestFn } from 'ava';
 import sinon from 'sinon';
 import { rethrowErrorGlobally } from '../internal/rethrowErrorGlobally';
 
-const test = untypedTest as TestInterface<{ clock: sinon.SinonFakeTimers }>;
+const test = untypedTest as TestFn<{ clock: sinon.SinonFakeTimers }>;
 
 test.before((t) => {
   t.context.clock = sinon.useFakeTimers();

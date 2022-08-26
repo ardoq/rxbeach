@@ -1,87 +1,94 @@
-import { Observable } from 'rxjs';
+import { Observable, ObservableInput } from 'rxjs';
 import { combineLatest } from './decoratedObservableCombiners';
 import { markName } from './internal/markers';
 
 export type DerivedStream = {
-  <A>(name: string, a: Observable<A>): Observable<[A]>;
-  <A, B>(name: string, a: Observable<A>, b: Observable<B>): Observable<[A, B]>;
+  <A>(name: string, a: ObservableInput<A>): Observable<[A]>;
+  <A, B>(
+    name: string,
+    a: ObservableInput<A>,
+    b: ObservableInput<B>
+  ): Observable<[A, B]>;
   <A, B, C>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>
   ): Observable<[A, B, C]>;
   <A, B, C, D>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>
   ): Observable<[A, B, C, D]>;
   <A, B, C, D, E>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>,
-    e: Observable<E>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>,
+    e: ObservableInput<E>
   ): Observable<[A, B, C, D, E]>;
   <A, B, C, D, E, F>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>,
-    e: Observable<E>,
-    f: Observable<F>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>,
+    e: ObservableInput<E>,
+    f: ObservableInput<F>
   ): Observable<[A, B, C, D, E, F]>;
   <A, B, C, D, E, F, G>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>,
-    e: Observable<E>,
-    f: Observable<F>,
-    g: Observable<G>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>,
+    e: ObservableInput<E>,
+    f: ObservableInput<F>,
+    g: ObservableInput<G>
   ): Observable<[A, B, C, D, E, F, G]>;
   <A, B, C, D, E, F, G, H>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>,
-    e: Observable<E>,
-    f: Observable<F>,
-    g: Observable<G>,
-    h: Observable<H>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>,
+    e: ObservableInput<E>,
+    f: ObservableInput<F>,
+    g: ObservableInput<G>,
+    h: ObservableInput<H>
   ): Observable<[A, B, C, D, E, F, G, H]>;
   <A, B, C, D, E, F, G, H, I>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>,
-    e: Observable<E>,
-    f: Observable<F>,
-    g: Observable<G>,
-    h: Observable<H>,
-    i: Observable<I>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>,
+    e: ObservableInput<E>,
+    f: ObservableInput<F>,
+    g: ObservableInput<G>,
+    h: ObservableInput<H>,
+    i: ObservableInput<I>
   ): Observable<[A, B, C, D, E, F, G, H, I]>;
   <A, B, C, D, E, F, G, H, I, J>(
     name: string,
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-    d: Observable<D>,
-    e: Observable<E>,
-    f: Observable<F>,
-    g: Observable<G>,
-    h: Observable<H>,
-    i: Observable<I>,
-    j: Observable<J>
+    a: ObservableInput<A>,
+    b: ObservableInput<B>,
+    c: ObservableInput<C>,
+    d: ObservableInput<D>,
+    e: ObservableInput<E>,
+    f: ObservableInput<F>,
+    g: ObservableInput<G>,
+    h: ObservableInput<H>,
+    i: ObservableInput<I>,
+    j: ObservableInput<J>
   ): Observable<[A, B, C, D, E, F, G, H, I, J]>;
-  (name: string, ...dependencies: Observable<unknown>[]): Observable<unknown>;
+  (
+    name: string,
+    ...dependencies: ObservableInput<unknown>[]
+  ): Observable<unknown>;
 };
 
 /**
@@ -96,5 +103,5 @@ export type DerivedStream = {
  */
 export const derivedStream: DerivedStream = (
   name: string,
-  ...dependencies: Observable<unknown>[]
+  ...dependencies: ObservableInput<unknown>[]
 ): Observable<any> => combineLatest(...dependencies).pipe(markName(name));
