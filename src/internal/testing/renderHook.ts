@@ -9,7 +9,9 @@ type RenderedHook<HookResult, TProps> = {
     current: HookResult | undefined;
   };
   unmount: () => void;
-  rerender: (props: TProps) => void;
+  rerender: (
+    props: TProps extends Record<string, never> ? void : TProps
+  ) => void;
 };
 
 /**
@@ -34,7 +36,10 @@ type RenderedHook<HookResult, TProps> = {
  * @returns An object with the result/output of the hook, as well as methods to
  * unmount and rerender the hook (really the component holding the hook)
  */
-export const renderHook = <HookResult, TProps = void>(
+export const renderHook = <
+  HookResult,
+  TProps extends Record<string, unknown> = Record<string, never>
+>(
   hookInit: (props: TProps) => HookResult,
   { initialProps }: RenderHookOptions<TProps> = {}
 ): RenderedHook<HookResult, TProps> => {
@@ -55,7 +60,9 @@ export const renderHook = <HookResult, TProps = void>(
     unmount: () => act(() => container?.unmount()),
     rerender: (props) =>
       act(() =>
-        container?.update(React.createElement(ComponentWithTheHook, props))
+        container?.update(
+          React.createElement(ComponentWithTheHook, props as TProps)
+        )
       ),
   };
 };

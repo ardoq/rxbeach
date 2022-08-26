@@ -50,7 +50,7 @@ export const useStream = <T>(
  * @see useStream
  */
 export const connect =
-  <Props, Observed extends Partial<Props>>(
+  <Props extends {}, Observed extends Partial<Props>>( // eslint-disable-line @typescript-eslint/ban-types
     Component: ComponentType<Props>,
     stream$: ObservableInput<Observed>
   ) =>
