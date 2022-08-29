@@ -1,11 +1,11 @@
 import { Subject, Subscription, catchError } from 'rxjs';
 import { action$ as defaultAction$ } from './action$';
-import { Routine, SubscribeRoutineFunc } from './internal/routineFunc';
+import { Routine } from './internal/routineFunc';
 import { ActionStream } from './types/helpers';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 
 export class RoutinesRegistry {
-  routines: Map<Routine<any>, Subscription | null> = new Map();
+  private routines: Map<Routine<any>, Subscription | null> = new Map();
 
   private started = false;
   private action$ = defaultAction$;
@@ -22,7 +22,7 @@ export class RoutinesRegistry {
   register(routine: Routine<any>) {
     let subscription: Subscription | null = null;
     if (this.started) {
-      subscription = this.subscribeRoutine(routine);
+      subscription = subscribeRoutine(routine, this.action$);
     }
     this.routines.set(routine, subscription);
   }
@@ -38,13 +38,16 @@ export class RoutinesRegistry {
    *
    * @param action$ The action stream the streams should reduce over
    */
-  startRoutines(action$?: ActionStream) {
+  startRoutines(action$?: ActionStream, errorSubject?: Subject<any>) {
     if (this.started) {
       throw new Error('Registry has already been started!');
     }
     this.action$ = action$ ?? this.action$;
     for (const [routine] of this.routines) {
-      this.routines.set(routine, this.subscribeRoutine(routine, { action$ }));
+      this.routines.set(
+        routine,
+        subscribeRoutine(routine, this.action$, errorSubject)
+      );
     }
     this.started = true;
   }
@@ -62,46 +65,56 @@ export class RoutinesRegistry {
   }
 
   /**
-   * Subscribe a routine to an action stream
-   *
-   * Errors will not cause the routine to be unsubscribed from the action stream.
-   * We assume all errors stem from faulty action objects, so we allow ourselves
-   * to continue the routine on errors. It is therefore important that the action
-   * stream is "hot", so the same action object is not re-emitted right away to
-   * the routine.
-   *
-   * If a routine throws an error, it will be nexted on the error subject. If the
-   * error subject is not explicitly set, it will default to
-   * `defaultErrorSubject`, which will rethrow the errors globally, as uncaught
-   * exceptions.
-   *
-   * **NB**: Routines should not accidentally dispatch actions to the action$
-   * when they are subscribed. If a routine dispatches an action when it is
-   * subscribed, only some of the routines will receive the action.
-   *
-   * @param routineToSubscribe The routine to subscribe
-   * @param config Containes the errorSubject and action stream.
-   *  both errorSubject and action$ have a default value.
-   * @returns A Subscription object
-   * @see defaultErrorSubject
+   * Delete all the registered routines.
+   * This will call `stopRoutines` method.
    */
-  subscribeRoutine: SubscribeRoutineFunc = (
-    routineToSubscribe: Routine<unknown>,
-    { errorSubject: e, action$: a$ } = {}
-  ) => {
-    const errorSubject: Subject<any> = e ?? defaultErrorSubject;
-    const action$: ActionStream = a$ ?? this.action$;
-
-    return action$
-      .pipe(
-        routineToSubscribe,
-        catchError((err, stream) => {
-          errorSubject.next(err);
-          return stream;
-        })
-      )
-      .subscribe();
-  };
+  clearRegistery() {
+    this.stopRoutines();
+    this.routines.clear();
+  }
 }
+
+/**
+ * Subscribe a routine to an action stream
+ *
+ * Errors will not cause the routine to be unsubscribed from the action stream.
+ * We assume all errors stem from faulty action objects, so we allow ourselves
+ * to continue the routine on errors. It is therefore important that the action
+ * stream is "hot", so the same action object is not re-emitted right away to
+ * the routine.
+ *
+ * If a routine throws an error, it will be nexted on the error subject. If the
+ * error subject is not explicitly set, it will default to
+ * `defaultErrorSubject`, which will rethrow the errors globally, as uncaught
+ * exceptions.
+ *
+ * **NB**: Routines should not accidentally dispatch actions to the action$
+ * when they are subscribed. If a routine dispatches an action when it is
+ * subscribed, only some of the routines will receive the action.
+ *
+ * @param routineToSubscribe The routine to subscribe
+ * @param config Containes the errorSubject and action stream.
+ *  both errorSubject and action$ have a default value.
+ * @returns A Subscription object
+ * @see defaultErrorSubject
+ */
+const subscribeRoutine = (
+  routineToSubscribe: Routine<unknown>,
+  action$: ActionStream,
+  errorSubject?: Subject<any>
+) => {
+  const actualErrorSubject: Subject<any> = errorSubject ?? defaultErrorSubject;
+  const actualAction$: ActionStream = action$ ?? defaultAction$;
+
+  return actualAction$
+    .pipe(
+      routineToSubscribe,
+      catchError((err, stream) => {
+        actualErrorSubject.next(err);
+        return stream;
+      })
+    )
+    .subscribe();
+};
 
 export const routinesRegistry = new RoutinesRegistry();
