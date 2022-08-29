@@ -35,59 +35,74 @@ const errorRoutine: Routine<string> = map((a) => {
   if (a.type === 'error') throw 'error';
   return 'passed';
 });
-const lettersRoutine = routine(
-  filter(
-    (action: any): action is ActionWithPayload<{ letter: string }> =>
-      action.payload !== undefined
-  ),
-  extractPayload(),
-  map(({ letter }) => letter)
-);
 
-test(
+test.serial.afterEach(() => {
+  routinesRegistry.clearRegistery();
+});
+
+const createRoutine = () =>
+  routine(
+    filter(
+      (action: any): action is ActionWithPayload<{ letter: string }> =>
+        action.payload !== undefined
+    ),
+    extractPayload(),
+    map(({ letter }) => letter)
+  );
+
+test.serial(
   'routine pipes multiple operator functions',
   marbles((m) => {
+    const lettersRoutine = createRoutine();
     const action$ = m.hot(actionMarbles1, actions);
     const expected$ = m.hot(letterMarbles, letters);
     routinesRegistry.startRoutines(action$);
 
     const actual$ = action$.pipe(lettersRoutine);
-
     m.expect(actual$).toBeObservable(expected$);
   })
 );
 
-test(
+test.serial(
   'subscribeRoutine subscribes action$',
   marbles((m) => {
+    createRoutine();
     const action$ = m.hot(actionMarbles1, actions);
-    routinesRegistry.subscribeRoutine(lettersRoutine, { action$ });
+    routinesRegistry.startRoutines(action$);
 
     m.expect(action$).toHaveSubscriptions(['^']);
   })
 );
 
-test(
+test.serial(
+  'routine should be subscribed when it registered after the routines has started',
+  marbles((m) => {
+    const action$ = m.hot(actionMarbles1, actions);
+    routinesRegistry.startRoutines(action$);
+    createRoutine();
+
+    m.expect(action$).toHaveSubscriptions(['^']);
+  })
+);
+
+test.serial(
   'subscribeRoutine resubscribes on errors',
   marbles((m) => {
     const action$ = m.hot(actionMarbles2, actions);
 
-    routinesRegistry.subscribeRoutine(errorRoutine, { action$ });
-
+    routine(errorRoutine);
+    routinesRegistry.startRoutines(action$);
     m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
   })
 );
 
-test(
+test.serial(
   'subscribeRoutine emits errors to error subject',
   marbles((m) => {
     const action$ = m.hot(actionMarbles2, actions);
     const error$ = new Subject<any>();
-
-    routinesRegistry.subscribeRoutine(errorRoutine, {
-      errorSubject: error$,
-      action$,
-    });
+    routine(errorRoutine);
+    routinesRegistry.startRoutines(action$, error$);
 
     m.expect(error$).toBeObservable(errorMarbles, errors);
   })
