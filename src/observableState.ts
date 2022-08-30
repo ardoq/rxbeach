@@ -51,6 +51,9 @@ export class ObservableState<State>
     this.subscribe = this.subject.subscribe.bind(this.subject);
     this.pipe = this.subject.pipe.bind(this.subject);
 
+    // rxjs-interop/patch handles fallback from Symbol.observable to
+    // "@@observable" for the cases when the user of rxbeach hasn't polyfilled
+    // Symbol.observable
     patch(this);
   }
 
