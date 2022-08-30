@@ -32,6 +32,7 @@ export {
   subscribeRoutine,
   routine,
   collectRoutines,
+  tapRoutine,
 } from './routines';
 
 export { derivedStream } from './derivedStream';

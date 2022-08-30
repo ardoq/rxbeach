@@ -21,6 +21,6 @@ export type ActionWithPayload<Payload> = ActionWithoutPayload & {
  *
  * @template `Payload` - The payload type to dispatch on
  */
-export type Action<Payload = VoidPayload> = Payload extends VoidPayload
+export type Action<Payload = VoidPayload> = [Payload] extends [VoidPayload]
   ? ActionWithoutPayload
   : ActionWithPayload<Payload>;

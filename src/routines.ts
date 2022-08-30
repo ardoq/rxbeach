@@ -1,9 +1,14 @@
 import { OperatorFunction, Subject, pipe } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { ActionStream } from './types/helpers';
 import { Routine, RoutineFunc } from './internal/routineFunc';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { mergeOperators } from './operators/mergeOperators';
+import {
+  UnknownActionCreator,
+  UnknownActionCreatorWithPayload,
+} from './internal';
+import { extractPayload, ofType } from './operators';
 
 export { Routine } from './internal/routineFunc';
 
@@ -70,3 +75,31 @@ export const subscribeRoutine = (
       })
     )
     .subscribe();
+
+type PlainOrArray<T> = T | T[];
+export const ensureArray = <T>(a: PlainOrArray<T>): T[] =>
+  Array.isArray(a) ? a : [a];
+
+type TapRoutine = {
+  <Payload>(
+    actionCreator: PlainOrArray<UnknownActionCreatorWithPayload<Payload>>,
+    body: (payload: Payload) => void
+  ): Routine<void>;
+
+  (
+    actionCreator: PlainOrArray<UnknownActionCreator>,
+    body: () => void
+  ): Routine<void>;
+};
+
+export const tapRoutine: TapRoutine = <Payload>(
+  actionCreator: PlainOrArray<
+    UnknownActionCreatorWithPayload<Payload> | UnknownActionCreator
+  >,
+  body: (payload?: Payload) => void
+) =>
+  routine(
+    ofType(...(ensureArray(actionCreator) as any)),
+    extractPayload<Payload>(),
+    tap(body)
+  );

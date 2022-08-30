@@ -6,11 +6,14 @@ import { ActionWithPayload } from './types/Action';
 import {
   Routine,
   collectRoutines,
+  ensureArray,
   routine,
   subscribeRoutine,
+  tapRoutine,
 } from './routines';
 import { mockAction, stubRethrowErrorGlobally } from './internal/testing/utils';
 import { extractPayload } from './operators/operators';
+import { actionCreator } from './actionCreator';
 
 const test = stubRethrowErrorGlobally(untypedTest);
 
@@ -19,11 +22,13 @@ const actions = {
   b: mockAction('bravo', undefined, { letter: 'B' }),
   c: mockAction('charlie', undefined, { letter: 'C' }),
   e: mockAction('error'),
+  f: mockAction('[Mock] action', undefined, { letter: 'F' }),
 };
 const letters = {
   A: 'A',
   B: 'B',
   C: 'C',
+  F: 'F',
 };
 const lengths = {
   ...letters,
@@ -40,6 +45,7 @@ const actionMarbles2 = ' -a----e----a---';
 const errorMarbles = '   ------e';
 const errorSub1 = '      ^-----!';
 const errorSub2 = '      ------^--------';
+const singleActionMarble = '  -f---f';
 
 const errorRoutine: Routine<string> = map((a) => {
   if (a.type === 'error') throw 'error';
@@ -72,11 +78,9 @@ test(
   marbles((m) => {
     const action$ = m.hot(actionMarbles1, actions);
     const expected$ = m.hot(combinedMarbles, lengths);
-
     const actual$ = action$.pipe(
       collectRoutines(lettersRoutine, lengthRoutine)
     );
-
     m.expect(actual$).toBeObservable(expected$);
   })
 );
@@ -113,3 +117,21 @@ test(
     m.expect(error$).toBeObservable(errorMarbles, errors);
   })
 );
+
+test(
+  'tapRoutine register a routine',
+  marbles((m, t) => {
+    const action$ = m.hot(singleActionMarble, actions);
+    const action = actionCreator<{ letter: string }>('[Mock] action');
+    t.plan(2);
+    const routineToSubscribe = tapRoutine(action, (payload) =>
+      t.is(payload.letter, 'F')
+    );
+    subscribeRoutine(action$, routineToSubscribe);
+  })
+);
+
+test('ensureArray return an Array', (t) => {
+  t.assert(Array.isArray(ensureArray('a')));
+  t.assert(Array.isArray(ensureArray(['a'])));
+});

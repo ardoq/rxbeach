@@ -33,11 +33,10 @@ type Action_expands_union_types2b = AssertTrue<
   IsExact<Action<Enum>, ActionWithPayload<Enum>>
 >;
 
-type Action_Expands_union_types3a = AssertTrue<
+type Action_Expands_union_types3a = AssertFalse<
   IsExact<Action<Foo | Bar>, ActionWithPayload<Foo> | ActionWithPayload<Bar>>
 >;
-type Action_Expands_union_types3b = AssertFalse<
-  // This is how we would like it to work
+type Action_Expands_union_types3b = AssertTrue<
   IsExact<Action<Foo | Bar>, ActionWithPayload<Foo | Bar>>
 >;
 
