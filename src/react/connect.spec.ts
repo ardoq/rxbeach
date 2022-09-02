@@ -1,8 +1,13 @@
 import testUntyped, { TestFn } from 'ava';
 import { ReactTestRenderer, act, create } from 'react-test-renderer';
 import React from 'react';
-import { BehaviorSubject, EMPTY, Subject, of } from 'rxjs';
-import { NOT_YET_EMITTED, connect, useStream } from './connect';
+import { BehaviorSubject, EMPTY, Observable, Subject, of } from 'rxjs';
+import {
+  NOT_YET_EMITTED,
+  connect,
+  connectInstance,
+  useStream,
+} from './connect';
 import { SinonSpy, spy } from 'sinon';
 import { renderHook } from '../internal/testing/renderHook';
 
@@ -58,13 +63,16 @@ test('useStream unsubscribes on unmount', (t) => {
 });
 
 test('useStream does not resubscribe on rerender', (t) => {
-  const source$ = new Subject<string>();
-  const { rerender } = renderHook(() => useStream(source$));
+  let subscriptions = 0;
+  const source$ = new Observable<string>((obs) => {
+    subscriptions++;
+    obs.next('hello');
+  });
 
-  const subscription = source$.observers[0];
+  const { rerender } = renderHook(() => useStream(source$));
   rerender();
 
-  t.assert(source$.observers[0] === subscription);
+  t.deepEqual(subscriptions, 1);
 });
 
 test('useStream unsubscribes, keeps latest value and subscribes new stream', (t) => {
@@ -194,4 +202,29 @@ test('connect should propagate changes to forwarded props', async (t) => {
     ...secondAdditionalProps,
     ...initialProps,
   });
+});
+
+test('connectInstance should provide unique instance Id', (t) => {
+  const { WrappedComponentSpy } = t.context;
+  let instance1: string | null = null;
+  let instance2: string | null = null;
+  const HOComponent1 = connectInstance(WrappedComponentSpy, (msg) => {
+    instance1 = msg;
+    return of({ msg });
+  });
+  const HOComponent2 = connectInstance(WrappedComponentSpy, (msg) => {
+    instance2 = msg;
+    return of({ msg });
+  });
+
+  act(() => {
+    create(React.createElement(HOComponent1));
+    create(React.createElement(HOComponent2));
+  });
+
+  t.truthy(instance1);
+  t.truthy(instance2);
+  t.not(instance1, instance2);
+  t.deepEqual(WrappedComponentSpy.firstCall.args[0], { msg: instance1 });
+  t.deepEqual(WrappedComponentSpy.secondCall.args[0], { msg: instance2 });
 });

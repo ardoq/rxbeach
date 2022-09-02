@@ -45,16 +45,53 @@ export const useStream = <T>(
  * provided by the stream. In these cases the values from the stream will
  * override any values passed as props.
  *
- * @param WrappedComponent Component that will recieve props from the stream
+ * @param Component Component that will recieve props from the stream
  * @param stream$ Stream that will provide props to the component
- * @see useStream
+ * @returns A component that renders the original component with props retrieved
+ *  from the stream
+ * @see {@link useStream}
  */
 export const connect =
-  <Props extends {}, Observed extends Partial<Props>>( // eslint-disable-line @typescript-eslint/ban-types
+  <Props extends Record<string, unknown>, Observed extends Partial<Props>>(
     Component: ComponentType<Props>,
     stream$: ObservableInput<Observed>
   ) =>
   (props: Omit<Props, keyof Observed>) => {
+    const value = useStream(stream$);
+
+    if (value === NOT_YET_EMITTED) return null;
+
+    // Typescript doesn't recognize this as Observed & Props for some reason
+    // Question on StackOverflow: https://stackoverflow.com/q/60758084/1104307
+    const newProps = { ...props, ...value } as Props & Observed;
+
+    return React.createElement(Component, newProps);
+  };
+
+let instanceCount = 0;
+const nextInstanceName = () => `view-${instanceCount++}`;
+
+/**
+ * Higher order component for connecting a component to a stream
+ *
+ * This is the same as {@link connect }, but takes a factory for the stream. A
+ * new stream will be retrieved from the factory for every new mount of the
+ * component.
+ *
+ * @param Component Component that will receive props from the stream
+ * @param createInstanceStream Function to create the stream for each instance
+ *  of the component
+ * @returns A component that renders the original component with props retrieved
+ *  from the stream
+ * @see {@link connect}
+ */
+export const connectInstance =
+  <Props extends Record<string, unknown>, Observed extends Partial<Props>>(
+    Component: ComponentType<Props>,
+    createInstanceStream: (instance: string) => ObservableInput<Observed>
+  ) =>
+  (props: Omit<Props, keyof Observed>) => {
+    const [stream$] = useState(() => createInstanceStream(nextInstanceName()));
     const value = useStream(stream$);
 
     if (value === NOT_YET_EMITTED) return null;

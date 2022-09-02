@@ -1,1 +1,1 @@
-export { connect, useStream } from './connect';
+export { connect, connectInstance, useStream } from './connect';
