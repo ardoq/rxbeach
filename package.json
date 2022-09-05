@@ -56,7 +56,7 @@
     "@ardoq/shared-configs": "0.1.34",
     "@ava/typescript": "3.0.1",
     "@commitlint/cli": "17.0.3",
-    "@commitlint/config-conventional": "17.0.3",
+    "@commitlint/config-conventional": "17.1.0",
     "@types/react": "18.0.17",
     "@types/react-test-renderer": "18.0.0",
     "@types/sinon": "10.0.13",
