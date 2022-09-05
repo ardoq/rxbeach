@@ -1,7 +1,6 @@
 # State streams
 
-In RxBeach, the application state is contained within multiple state streams that
-emit a subset of the application state over time.
+In RxBeach, the application state is contained within multiple state streams that emit a subset of the application state over time.
 
 All state streams have the following properties:
 
@@ -21,8 +20,7 @@ All state streams have the following properties:
   Reasons: performance, decoupling, reselect
 - Unidirectional data flow
 
-  Although there are multiple state streams, the data flows in one direction
-  in an RxBeach application.
+  Although there are multiple state streams, the data generally flows in one direction in an RxBeach application. This property is broken if you use stream reducers.
 
   Actions --> Base State Streams --> Derived State Streams --> Views -->
   Actions

@@ -50,8 +50,7 @@ const handleShowModule = reducer(showModule, (state: NavigationState, selectedMo
 
 ## Reducing over other streams
 
-Instead of reacting to actions, reducers can react to other streams.
-*TODO*
+Instead of reacting to actions, reducers can react to other streams. This is an advanced pattern and should only be used sparingly. See the documentation of `reducer` for details on how to do this.
 
 ## Assembling reducers to streams
 

@@ -21,9 +21,7 @@ streams differently (i.e. by proper software design).
 
 ## Avoiding glitches in RxBeach
 
-In RxBeach glitches can happen in derived state streams. If we combine two or
-more streams that emit from the same root source, we will encounter a glitch in
-the derived stream (it will emit once for each base stream emission).
+In RxBeach glitches can happen in derived state streams, or views connected to multiple streams. If we combine two or more streams that emit from the same root source, we will encounter a glitch in the derived stream (it will emit once for each base stream emission).
 
 There are two main strategies for avoiding glitches in an RxBeach state
 graph. As a guideline, you should aim to solve all glitches within your
@@ -45,8 +43,6 @@ introducing glitches:
 
 1. Keep your reactive state graph flat. Avoid creating unnecessary layers of derived state streams.
 1. If you need to create a derived state stream, aim to augment the data so that subscribers of the derived state stream don't need to subscribe to the root stream.
-3. Automatically visualize and detect glitches within your state streams so that
-   you can handle them when they are introduced
 
 Although the above principles will help you avoid some glitches, it doesn't
 completely solve the problem. The `viewModel$` pattern suggests that we should

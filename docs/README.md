@@ -6,7 +6,9 @@
 Welcome to the documentation of RxBeach!
 
 RxBeach is a toolbox for creating applications that use streams to manage
-the state. This documentation is a work in progress.
+the state. This documentation gives a starting-place for learning about the
+library, but remember to also read the in-code documentation and the code
+itself.
 
 ## Prerequisite knowledge
 
@@ -69,8 +71,8 @@ const navigation$ = persistentReducedStream(
   defaultNavigationState,
   reducers
 );
-// the stream also must be started, e.g. via:
-stateStreamRegistry.startReducing(navigation$);
+// persistent reduced streams are started by the state stream registry
+stateStreamRegistry.startReducing();
 // (Side-)effects via routines:
 const logModuleChange = routine(
   ofType(showModule), // filter
