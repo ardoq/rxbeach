@@ -52,7 +52,7 @@ export const useStream = <T>(
  * @see {@link useStream}
  */
 export const connect =
-  <Props extends Record<string, unknown>, Observed extends Partial<Props>>(
+  <Props extends object, Observed extends Partial<Props>>(
     Component: ComponentType<Props>,
     stream$: ObservableInput<Observed>
   ) =>
@@ -86,7 +86,7 @@ const nextInstanceName = () => `view-${instanceCount++}`;
  * @see {@link connect}
  */
 export const connectInstance =
-  <Props extends Record<string, unknown>, Observed extends Partial<Props>>(
+  <Props extends object, Observed extends Partial<Props>>(
     Component: ComponentType<Props>,
     createInstanceStream: (instance: string) => ObservableInput<Observed>
   ) =>
