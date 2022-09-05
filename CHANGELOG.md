@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ardoq/rxbeach/compare/v2.0.0...v2.1.0) (2022-09-05)
+
+
+### Features
+
+* **react:** add `connectInstance` function ([dfa81b4](https://github.com/ardoq/rxbeach/commit/dfa81b46de91ad4794ed7c939b8fb7d4433d8e7c))
+
+
+### Bug Fixes
+
+* **react/connect:** correct props generic type ([948ec44](https://github.com/ardoq/rxbeach/commit/948ec44c5cf3409f97ef496752b1fee55cd4c988))
+
 ## [2.0.0](https://github.com/ardoq/rxbeach/compare/v1.0.0...v2.0.0) (2022-08-26)
 
 
