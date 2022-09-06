@@ -37,6 +37,7 @@ export {
 
 export { derivedStream } from './derivedStream';
 
+export { persistentDerivedStream } from './persistentDerivedStream';
 export { persistentReducedStream } from './persistentReducedStream';
 export { ObservableState } from './observableState';
 
