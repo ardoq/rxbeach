@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/ardoq/rxbeach/compare/v2.1.0...v2.2.0) (2022-09-13)
+
+
+### Features
+
+* add tapRoutine ([994f3f4](https://github.com/ardoq/rxbeach/commit/994f3f40f41306d3ac6ea4355dde3b035614b7ad))
+* persistentDerivedStream ([1bff4db](https://github.com/ardoq/rxbeach/commit/1bff4db8a71eb4a8c561ae2c0cc79354f925c597))
+
 ## [2.1.0](https://github.com/ardoq/rxbeach/compare/v2.0.0...v2.1.0) (2022-09-05)
 
 
