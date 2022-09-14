@@ -21,7 +21,7 @@ They can look something like this:
 
 ```typescript
 const action = {
-  type: Symbol("[navigation] show module"),
+  type: "[navigation] show module",
   payload: Module.DASHBOARD,
   meta: {
     dispatchedAt: new Date(),
@@ -66,7 +66,7 @@ Furthermore, "describing events that occurred" can prevent coupling between modu
 
 #### Batch actions
 
-If you find code that calls the same action multiple times right after each other, the payload is badly designed. This is a symptom that the call site tries to use the actions as instructions for how the app should transition its state, rather than telling the app what the change is. In these cases, the payload should be designed so it can contain, for example, changes to multiple entities at once.
+If you find code that calls multiple actions right after each other, the payloads are badly designed. This is a symptom that the call site tries to use the actions as instructions for how the app should transition its state, rather than telling the app what the change is. In these cases, the payload should be designed so it can contain, for example, changes to multiple entities at once.
 
 ### Payloads should be concise, avoid passing unnecessary information
 
@@ -88,10 +88,6 @@ Payloads should not contain methods, instances of classes, or views. You should 
 
 For actions to actually make something happen, the whole app needs to know about them. This is the job of the action stream. Everywhere we need to react to actions in the app, we add subscriptions to the action stream. When we have created an action, we dispatch it to the action stream so all the subscribers will be notified.
 
-The action stream will usually be named `action$`. New actions will usually be dispatched with a function named `dispatchAction`.
-
-> **RxBeach does not have tooling for creating the `action$`**
-> RxBeach does currently not have the tooling to create the `action$` stream and the
-> `dispatchAction` function. This will be added eventually
+The action stream will usually be named `action$`. New actions will usually be dispatched with a function named `dispatchAction`. A default implementation is available through the `rxbeach` import site.
 
 The action stream feeds most other streams in the app by being reduced to a different kind of state, like a ViewModel or a collection.

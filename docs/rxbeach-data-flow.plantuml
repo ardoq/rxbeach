@@ -22,5 +22,7 @@ label="Data flow in RxBeach"
   View1 -> Action [label="an Action Creator"]
   red_str -> derived
   derived -> View2
+  red_str -> red_str
+  derived -> red_str
 }
 @enduml
