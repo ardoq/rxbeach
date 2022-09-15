@@ -22,6 +22,10 @@ respect the setting:
 
     git config blame.ignoreRevsFile .git-blame-ignore-revs
 
+## Dependabot
+We use dependabot to keep dependencies up to date. This is nice, because it shows us exactly where dependencies breaks our build.
+To satisfy Ardoq's review policy, you should merge Dependabot PRs by approving the PR with the message `@dependabot merge`.
+
 ## Publishing a new version of the package
 1. Verify that "it works":  
    `yarn lint && yarn build && yarn test`
