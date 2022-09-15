@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/ardoq/rxbeach/compare/v2.2.0...v2.2.1) (2022-09-15)
+
+
+### Bug Fixes
+
+* correct return type for persistentDerivedStream ([#515](https://github.com/ardoq/rxbeach/issues/515)) ([cc0ab13](https://github.com/ardoq/rxbeach/commit/cc0ab137cb77b6c8de61450c88f749dee3e8fe5a))
+
 ## [2.2.0](https://github.com/ardoq/rxbeach/compare/v2.1.0...v2.2.0) (2022-09-13)
 
 
