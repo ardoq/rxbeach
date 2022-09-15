@@ -12,7 +12,7 @@ export const persistentDerivedStream = <State>(
   name: string,
   source$: ObservableInput<State>,
   initialState: State
-): ObservableState<any> => {
+): ObservableState<State> => {
   const stream = new ObservableState(name, source$, initialState);
   stateStreamRegistry.register(stream);
   return stream;
