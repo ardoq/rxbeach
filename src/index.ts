@@ -36,6 +36,7 @@ export {
 } from './routines';
 
 export { derivedStream } from './derivedStream';
+export { reducedStream } from './reducedStream';
 
 export { persistentDerivedStream } from './persistentDerivedStream';
 export { persistentReducedStream } from './persistentReducedStream';
