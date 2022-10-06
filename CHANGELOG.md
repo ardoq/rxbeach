@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/ardoq/rxbeach/compare/v2.2.1...v2.3.0) (2022-10-06)
+
+
+### Features
+
+* add reduced stream util ([441718a](https://github.com/ardoq/rxbeach/commit/441718aae0cfb622e27b80c2ad2b183093209a0e))
+
 ### [2.2.1](https://github.com/ardoq/rxbeach/compare/v2.2.0...v2.2.1) (2022-09-15)
 
 
