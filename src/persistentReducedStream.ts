@@ -6,6 +6,7 @@ import {
   ReducedStreamOptions,
   reducedStream as reducedStreamInternal,
 } from './internal/reducedStream';
+import { rxBeachConfig } from './config';
 
 /**
  * Creates and registers a persistent reduced state stream
@@ -48,9 +49,31 @@ export const persistentReducedStream = <State>(
     tag(name)
   );
 
-  const stream = new ObservableState(name, source$, initialState);
+  try {
+    const stream = new ObservableState(name, source$, initialState);
+    stateStreamRegistry.register(stream);
+    return stream;
+  } catch (error) {
+    if (
+      rxBeachConfig.getProperty('enableHotModuleReload') &&
+      error instanceof Error &&
+      error.message.startsWith('Duplicate stream name: ')
+    ) {
+      // The following enables Hot Module Reloading (HMR) of persistentReducedStream by
+      // handling the "duplicate stream" error that is thrown when reusing a stream name.
+      console.warn(
+        `[HMR] Replacing stream "${name}", if you see this warning when your ` +
+          `application boots the first time you have used the same name twice!`
+      );
+      const prevState =
+        stateStreamRegistry.streams.get(name)?.state ?? initialState;
+      const newStream = new ObservableState(name, source$, prevState);
 
-  stateStreamRegistry.register(stream);
+      stateStreamRegistry.unregister(name);
+      stateStreamRegistry.register(newStream);
+      return newStream;
+    }
 
-  return stream;
+    throw error;
+  }
 };

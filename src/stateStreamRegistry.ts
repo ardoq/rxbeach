@@ -28,6 +28,22 @@ export class StateStreamRegistry {
   }
 
   /**
+   * Unregister a stream from the registry
+   * 
+   * @param name The name of the stream
+   * @returns void
+   */
+  unregister(name: string) {
+    var stream = this.streams.get(name)
+    if (!stream) {
+        return;
+    }
+
+    this.streams.delete(name)
+    stream.unsubscribe();
+};
+
+  /**
    * Start the registered reduced state streams.
    *
    * This causes the streams to actually start reducing over the action stream.
