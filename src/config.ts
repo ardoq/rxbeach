@@ -5,7 +5,7 @@ type ConfigKeys = keyof ConfigMap;
 
 function createGlobalConfig() {
   const config: ConfigMap = {
-    enableHotModuleReload: true,
+    enableHotModuleReload: false,
   };
 
   return {
