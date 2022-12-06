@@ -61,9 +61,7 @@ const isStreamReducer = <State, Payload>(
 ): reducerFn is RegisteredStreamReducer<State, Payload> =>
   'source$' in reducerFn.trigger;
 
-type ObservableLike<T> = Observable<T> | InteropObservable<T>;
-
-type ReducerCreator = {
+type StreamReducerCreator = {
   /**
    * Define a reducer for a stream
    *
@@ -76,10 +74,12 @@ type ReducerCreator = {
    *          called directly as if it was the `reducer` parameter itself.
    */
   <State, Payload>(
-    source$: ObservableLike<Payload>,
+    source$: ObservableInput<Payload>,
     reducer: Reducer<State, Payload>
   ): RegisteredReducer<State, Payload>;
+};
 
+type ActionReducerCreator = {
   /**
    * Define a reducer for multiple actions with overlapping payload
    *
@@ -161,28 +161,80 @@ type ReducerCreator = {
    * @returns A registered reducer that can be passed into `combineReducers`, or
    *          called directly as if it was the `reducer` parameter itself.
    */
-  <State>(
-    actionCreator: UnknownActionCreator,
-    reducer: Reducer<State, VoidPayload>
-  ): RegisteredReducer<State, VoidPayload>;
+  <State, Payload = VoidPayload>(
+    actionCreator: UnknownActionCreator | UnknownActionCreator[],
+    reducer: Reducer<State, Payload>
+  ): RegisteredReducer<State, Payload>;
 };
 
-export const reducer: ReducerCreator = <State>(
-  trigger: UnknownActionCreator | UnknownActionCreator[] | ObservableInput<any>,
-  reducerFn: Reducer<State, any>
+/**
+ * streamReducer
+ * A stream reducer is a stream operator which updates the state of a given stream with the last
+ * emitted state of another stream, it basically reduces the state of a given stream over another
+ * stream.
+ *
+ * @param trigger The observable that the reducer function should be subscribed to, which act as
+ *                the "action" of the reducer.
+ * @param reducerFn The reducer function with signature:
+ *                  (prevState, observableInput) => nextState
+ * @returns A wrapped reducer function for use with persistedReducedStream, combineReducers etc.
+ */
+export const streamReducer: StreamReducerCreator = <State, Payload>(
+  trigger: ObservableInput<Payload>,
+  reducerFn: Reducer<State, Payload>
 ) => {
-  const wrapper = (state: State, payload: any, namespace?: string) =>
+  const wrapper = (state: State, payload: Payload, namespace?: string) =>
     reducerFn(state, payload, namespace);
-  if (!Array.isArray(trigger) && isObservableInput(trigger)) {
-    wrapper.trigger = {
-      source$: from<ObservableInput<any>>(trigger),
-    };
-  } else {
-    wrapper.trigger = {
-      actions: wrapInArray(trigger),
-    };
-  }
+
+  wrapper.trigger = {
+    source$: from(trigger),
+  };
+
   return wrapper;
+};
+
+/**
+ * actionReducer
+ * A action reducer is a stream operator which allows to update the state of a given stream based
+ * on a given action with the payload of that action.
+ *
+ * @param trigger One or multiple actions that should trigger the reducer
+ * @param reducerFn The reducer function with signature: (prevState, action) => newState
+ * @returns A wrapped reducer function for use with persistedReducedStream, combineReducers etc.
+ */
+export const actionReducer: ActionReducerCreator = <State, Payload = any>(
+  trigger: UnknownActionCreator | UnknownActionCreator[],
+  reducerFn: Reducer<State, Payload>
+) => {
+  const wrapper = (state: State, payload: Payload, namespace?: string) =>
+    reducerFn(state, payload, namespace);
+
+  wrapper.trigger = {
+    actions: wrapInArray(trigger),
+  };
+
+  return wrapper;
+};
+
+/**
+ * @deprecated since version 2.4.0
+ * Use actionReducer or streamReducer instead
+ */
+export const reducer: StreamReducerCreator & ActionReducerCreator = <
+  State,
+  Payload = any
+>(
+  trigger:
+    | UnknownActionCreator
+    | UnknownActionCreator[]
+    | ObservableInput<Payload>,
+  reducerFn: Reducer<State, Payload>
+) => {
+  if (!Array.isArray(trigger) && isObservableInput(trigger)) {
+    return streamReducer(trigger, reducerFn);
+  } else {
+    return actionReducer(trigger, reducerFn);
+  }
 };
 
 const ACTION_ORIGIN = Symbol('Action origin');
