@@ -173,24 +173,27 @@ type ActionReducerCreator = {
  * emitted state of another stream, it basically reduces the state of a given stream over another
  * stream.
  *
- * @param trigger The observable that the reducer function should be subscribed to, which act as
+ * @param source The observable that the reducer function should be subscribed to, which act as
  *                the "action" of the reducer.
  * @param reducerFn The reducer function with signature:
  *                  (prevState, observableInput) => nextState
  * @returns A wrapped reducer function for use with persistedReducedStream, combineReducers etc.
  */
-export const streamReducer: StreamReducerCreator = <State, Payload>(
-  trigger: ObservableInput<Payload>,
-  reducerFn: Reducer<State, Payload>
+export const streamReducer: StreamReducerCreator = <State, EmittedState>(
+  source: ObservableInput<EmittedState>,
+  reducerFn: Reducer<State, EmittedState>
 ) => {
-  const wrapper = (state: State, payload: Payload, namespace?: string) =>
-    reducerFn(state, payload, namespace);
+  const wrappedStreamReducer = (
+    state: State,
+    emittedState: EmittedState,
+    namespace?: string
+  ) => reducerFn(state, emittedState, namespace);
 
-  wrapper.trigger = {
-    source$: from(trigger),
+  wrappedStreamReducer.trigger = {
+    source$: from(source),
   };
 
-  return wrapper;
+  return wrappedStreamReducer;
 };
 
 /**
@@ -198,22 +201,25 @@ export const streamReducer: StreamReducerCreator = <State, Payload>(
  * A action reducer is a stream operator which allows to update the state of a given stream based
  * on a given action with the payload of that action.
  *
- * @param trigger One or multiple actions that should trigger the reducer
+ * @param actionCreator One or multiple actions that should run the reducer
  * @param reducerFn The reducer function with signature: (prevState, action) => newState
  * @returns A wrapped reducer function for use with persistedReducedStream, combineReducers etc.
  */
-export const actionReducer: ActionReducerCreator = <State, Payload = any>(
-  trigger: UnknownActionCreator | UnknownActionCreator[],
-  reducerFn: Reducer<State, Payload>
+export const actionReducer: ActionReducerCreator = <State, ActionPayload = any>(
+  actionCreator: UnknownActionCreator | UnknownActionCreator[],
+  reducerFn: Reducer<State, ActionPayload>
 ) => {
-  const wrapper = (state: State, payload: Payload, namespace?: string) =>
-    reducerFn(state, payload, namespace);
+  const wrappedActionReducer = (
+    state: State,
+    payload: ActionPayload,
+    namespace?: string
+  ) => reducerFn(state, payload, namespace);
 
-  wrapper.trigger = {
-    actions: wrapInArray(trigger),
+  wrappedActionReducer.trigger = {
+    actions: wrapInArray(actionCreator),
   };
 
-  return wrapper;
+  return wrappedActionReducer;
 };
 
 /**
