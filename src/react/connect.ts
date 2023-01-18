@@ -5,6 +5,11 @@ export const NOT_YET_EMITTED = Symbol('Returned from rxbeach/react:useStream');
 // eslint-disable-next-line no-redeclare
 export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
 
+type UseStream = {
+  <T>(source$: ObservableInput<T>, defaultValue: T): T;
+  <T>(source$: ObservableInput<T>, defaultValue?: T): T | NOT_YET_EMITTED;
+};
+
 /**
  * React hook to subscribe to a stream
  *
@@ -16,7 +21,7 @@ export type NOT_YET_EMITTED = typeof NOT_YET_EMITTED;
  * @param source$ Stream that provides the needed values
  * @param defaultValue Default value returned on init until stream emits new value
  */
-export const useStream = <T>(
+export const useStream: UseStream = <T>(
   source$: ObservableInput<T>,
   defaultValue?: T
 ): T | NOT_YET_EMITTED => {
