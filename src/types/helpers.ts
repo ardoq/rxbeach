@@ -5,6 +5,7 @@ import {
 } from './ActionCreator';
 import { UnknownAction } from '../internal/types';
 import { ActionWithPayload } from './Action';
+import { ObservableState } from '../observableState';
 
 export type ActionStream = Observable<UnknownAction>;
 
@@ -41,8 +42,20 @@ export function isActionOfType<T = undefined>(
  * Type helper to infer the payload of an action creator.
  * This should be preferred over exporting the types separately.
  */
-export type PayloadFromActionCreator<Fn> = Fn extends ActionCreatorWithPayload<
-  infer Payload
+export type InferFromActionCreator<TActionCreator> =
+  TActionCreator extends ActionCreatorWithPayload<infer TValueType>
+    ? TValueType
+    : TActionCreator extends ActionCreatorWithoutPayload
+    ? void
+    : never;
+
+/**
+ * Type helper to get the type of the observable "state".
+ */
+export type InferFromObservable<TObservable> = TObservable extends Observable<
+  infer TValueType
 >
-  ? Payload
+  ? TValueType
+  : TObservable extends ObservableState<infer TValueType>
+  ? TValueType
   : never;
