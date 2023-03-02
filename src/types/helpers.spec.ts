@@ -1,6 +1,6 @@
 import test from 'ava';
 import { actionCreator } from '../actionCreator';
-import { isValidRxBeachAction, isActionOfType } from './helpers';
+import { isActionOfType, isValidRxBeachAction } from './helpers';
 
 const actionCreatorWithPayload = actionCreator<string>('[test] with payload');
 const actionCreatorWithoutPayload = actionCreator('[test] no payload');
@@ -23,7 +23,7 @@ test('isValidRxBeachAction - invalid actions', (t) => {
     { meta: {}, payload: {} },
   ];
 
-  for (let action of invalidActions) {
+  for (const action of invalidActions) {
     t.is(isValidRxBeachAction(action), false);
   }
 });
@@ -35,7 +35,7 @@ test('isValidRxBeachAction - valid actions', (t) => {
     actionCreatorWithoutPayload(),
   ];
 
-  for (let action of validActions) {
+  for (const action of validActions) {
     t.is(isValidRxBeachAction(action), true);
   }
 });

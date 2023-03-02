@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   ActionCreator,
-  ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
+  ActionCreatorWithoutPayload,
 } from './ActionCreator';
 import { UnknownAction } from '../internal/types';
 import { Action, VoidPayload } from './Action';
@@ -49,16 +49,16 @@ export const isValidRxBeachAction = (
  * Assert that an action creator is of a specific type, and extract its payload
  * type
  */
-export function isActionOfType<T = VoidPayload>(
+export const isActionOfType = <T = VoidPayload>(
   creatorFn: ActionCreator<T>,
   action: unknown
-): action is Action<T> {
+): action is Action<T> => {
   if (!isValidRxBeachAction(action)) {
     return false;
   }
 
   return action.type === creatorFn.type;
-}
+};
 
 /**
  * Type helper to infer the payload of an action creator.

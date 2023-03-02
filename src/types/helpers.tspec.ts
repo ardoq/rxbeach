@@ -39,6 +39,7 @@ for (const [creatorFn, action] of actionPairs) {
 
 const action = actionCreatorWithoutPayload();
 if (isActionOfType(actionCreatorWithoutPayload, action)) {
-  // @ts-expect-error
+  // @ts-expect-error Assert that ActionWithoutPayload does not have a payload
+  // eslint-disable-next-line no-unused-expressions
   action.payload;
 }
