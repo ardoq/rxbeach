@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/ardoq/rxbeach/compare/v2.3.0...v2.4.0) (2023-03-02)
+
+
+### Features
+
+* action type helpers ([#591](https://github.com/ardoq/rxbeach/issues/591)) ([09c6ebe](https://github.com/ardoq/rxbeach/commit/09c6ebe192176fa11f2a1561efc7878bb1e2889b))
+
+
+### Bug Fixes
+
+* eslint config ([#594](https://github.com/ardoq/rxbeach/issues/594)) ([0897020](https://github.com/ardoq/rxbeach/commit/0897020a47bec9643d0ddd745e45775ade257ae2))
+
 ## [2.3.0](https://github.com/ardoq/rxbeach/compare/v2.2.1...v2.3.0) (2022-10-06)
 
 
