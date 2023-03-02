@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@ardoq/shared-configs@0.1.34":
-  version "0.1.34"
-  resolved "https://npm.pkg.github.com/download/@ardoq/shared-configs/0.1.34/5730fbe2ec93264793c4498303d072ebaa8ffa69#5730fbe2ec93264793c4498303d072ebaa8ffa69"
-  integrity sha512-2fZXHi+R/Zpn/YTuphRfiCdAVVaX8OW62R7brTuBLjFDZRdy7Vd1vj6kNhDWPrFbJI/airyyb8d/YaTBOP815w==
-
 "@ava/typescript@3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@ava/typescript/-/typescript-3.0.1.tgz#b89efbe000b800fa477c9613795b3ca6a53f7112"
