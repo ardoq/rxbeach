@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.1](https://github.com/ardoq/rxbeach/compare/v2.4.0...v2.4.1) (2023-03-09)
+
+
+### Bug Fixes
+
+* helper exports ([#597](https://github.com/ardoq/rxbeach/issues/597)) ([40f67a0](https://github.com/ardoq/rxbeach/commit/40f67a046c11a18690c25365bee8eae18edccd24))
+
 ## [2.4.0](https://github.com/ardoq/rxbeach/compare/v2.3.0...v2.4.0) (2023-03-02)
 
 
