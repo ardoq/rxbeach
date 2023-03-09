@@ -1,19 +1,21 @@
 export { action$, dispatchAction } from './action$';
 
-export {
+export type {
   ActionWithoutPayload,
   ActionWithPayload,
   Action,
 } from './types/Action';
-export {
+export type {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
   ActionCreator,
 } from './types/ActionCreator';
-export {
+export type {
   ActionStream,
   ActionDispatcher,
   ExtractPayload,
+  InferValueFromObservable,
+  InferPayloadFromActionCreator,
 } from './types/helpers';
 
 export { actionCreator } from './actionCreator';
