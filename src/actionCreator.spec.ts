@@ -1,5 +1,9 @@
 import test from 'ava';
-import { actionCreator } from './actionCreator';
+import {
+  actionCreator,
+  isActionOfType,
+  isValidRxBeachAction,
+} from './actionCreator';
 
 type Payload = { num: number };
 const myAction = actionCreator<Payload>('[test] three');
@@ -52,5 +56,54 @@ test('actionCreator should create action objects with protected namespace', (t) 
       action.meta.namespace = 'shim';
     },
     { instanceOf: TypeError }
+  );
+});
+
+const actionCreatorWithPayload = actionCreator<string>('[test] with payload');
+const actionCreatorWithoutPayload = actionCreator('[test] no payload');
+
+test('isValidRxBeachAction - invalid actions', (t) => {
+  const invalidActions = [
+    undefined,
+    null,
+    123,
+    '[test] action type',
+    () => {
+      /* noop */
+    },
+    actionCreatorWithPayload,
+    actionCreatorWithoutPayload,
+    {},
+    { type: '[test] action type' },
+    { type: '[test] action type', meta: {} },
+    { type: '[test] action type', payload: {} },
+    { meta: {}, payload: {} },
+  ];
+
+  for (const invalidAction of invalidActions) {
+    t.is(isValidRxBeachAction(invalidAction), false);
+  }
+});
+
+test('isValidRxBeachAction - valid actions', (t) => {
+  const validActions = [
+    { type: '[test] action type', meta: {}, payload: undefined },
+    actionCreatorWithPayload('asd'),
+    actionCreatorWithoutPayload(),
+  ];
+
+  for (const validAction of validActions) {
+    t.is(isValidRxBeachAction(validAction), true);
+  }
+});
+
+test('isActionOfType', (t) => {
+  t.is(
+    isActionOfType(actionCreatorWithPayload, actionCreatorWithPayload('asd')),
+    true
+  );
+  t.is(
+    isActionOfType(actionCreatorWithoutPayload, actionCreatorWithoutPayload()),
+    true
   );
 });
