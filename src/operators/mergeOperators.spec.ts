@@ -1,4 +1,3 @@
-import test from 'ava';
 import { map } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
 import { coldMergeOperators, mergeOperators } from './mergeOperators';

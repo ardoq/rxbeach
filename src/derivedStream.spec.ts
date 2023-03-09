@@ -1,4 +1,3 @@
-import test from 'ava';
 import { derivedStream } from './derivedStream';
 import { marbles } from 'rxjs-marbles/ava';
 

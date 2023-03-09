@@ -1,4 +1,3 @@
-import test from 'ava';
 import { persistentReducedStream } from './persistentReducedStream';
 import { Subject, from, map, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
@@ -12,17 +11,17 @@ const reducerArray = Object.values(reducers);
 let counter = 1;
 const nextStreamName = () => `testStream-${counter++}`;
 
-test('persistentReducedStream should expose its state immediately', (t) => {
+test('persistentReducedStream should expose its state immediately', () => {
   const state = 'hello';
   const state$ = persistentReducedStream(nextStreamName(), state, []);
 
-  t.deepEqual(state$.state, state);
+  expect(state$.state).toEqual(state);
 });
 
-test('persistentReducedStream should not initially be destoryed', (t) => {
+test('persistentReducedStream should not initially be destoryed', () => {
   const state$ = persistentReducedStream(nextStreamName(), null, []);
 
-  t.false(state$.destroyed);
+  expect(state$.destroyed).toBe(false);
 });
 
 test(
@@ -45,7 +44,7 @@ test(
     m.expect(from(state$)).toBeObservable(expected$);
 
     m.flush();
-    t.deepEqual(state$.state, numbers[2]);
+    expect(state$.state).toEqual(numbers[2]);
   })
 );
 
@@ -65,7 +64,7 @@ test(
   })
 );
 
-test('persistentReducedStream should call reducer once when there are multiple subs', (t) => {
+test('persistentReducedStream should call reducer once when there are multiple subs', () => {
   const initialState = 1;
   handlers.incrementOne.resetHistory();
   const action$ = of(actionCreators.incrementOne());
@@ -167,7 +166,7 @@ test(
         state$.unsubscribe();
         try {
           state$.connect();
-          t.fail('connect should throw an error');
+          done.fail('connect should throw an error');
           // eslint-disable-next-line no-empty
         } catch {}
       },
@@ -214,11 +213,11 @@ test(
   })
 );
 
-test('persistentReducedStream should throw exception when accessing state after stopped reducing', (t) => {
+test('persistentReducedStream should throw exception when accessing state after stopped reducing', () => {
   const state$ = persistentReducedStream(nextStreamName(), 1, reducerArray);
   state$.unsubscribe();
 
-  t.throws(() => state$.state);
+  expect(() => state$.state).toThrow();
 });
 
 test(

@@ -1,5 +1,4 @@
 import sinon from 'sinon';
-import testUntyped, { TestFn } from 'ava';
 import { StateStreamRegistry } from './stateStreamRegistry';
 import { ObservableState } from './observableState';
 import { EMPTY } from 'rxjs';
@@ -18,7 +17,7 @@ test('stateStreamRegistry.register should throw error for duplicate names', (t) 
   const { registry, stream } = t.context;
 
   registry.register(stream);
-  t.throws(() => registry.register(stream));
+  expect(() => registry.register(stream)).toThrow();
 });
 
 test('stateStreamRegistry.register should throw error for duplicate name after start', (t) => {
@@ -27,7 +26,7 @@ test('stateStreamRegistry.register should throw error for duplicate name after s
   registry.register(stream);
   registry.startReducing();
 
-  t.throws(() => registry.register(stream));
+  expect(() => registry.register(stream)).toThrow();
 });
 
 test('stateStreamRegistry.register should not start streams before startReducing', (t) => {
@@ -55,7 +54,7 @@ test('stateStreamRegistry.startReducing should error on double call', (t) => {
   const { registry } = t.context;
 
   registry.startReducing();
-  t.throws(() => registry.startReducing());
+  expect(() => registry.startReducing()).toThrow();
 });
 
 test('stateStreamRegistry.register should start streams after startReducing', (t) => {

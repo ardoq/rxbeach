@@ -1,4 +1,3 @@
-import testUntyped, { TestFn } from 'ava';
 import { ReactTestRenderer, act, create } from 'react-test-renderer';
 import React from 'react';
 import { BehaviorSubject, EMPTY, Observable, Subject, of } from 'rxjs';
@@ -35,13 +34,13 @@ test.afterEach((t) => t.context.WrappedComponentSpy.resetHistory());
 test('useStream return initial value right away', (t) => {
   const { result } = renderHook(() => useStream(EMPTY));
 
-  t.deepEqual(result.current, NOT_YET_EMITTED);
+  expect(result.current).toEqual(NOT_YET_EMITTED);
 });
 
 test('useStream return default value (if defined) right away', (t) => {
   const { result } = renderHook(() => useStream(EMPTY, 'default value'));
 
-  t.deepEqual(result.current, 'default value');
+  expect(result.current).toEqual('default value');
 });
 
 test('useStream return value from stream', (t) => {
@@ -50,7 +49,7 @@ test('useStream return value from stream', (t) => {
 
   source$.next(initialProps);
 
-  t.deepEqual(result.current, initialProps);
+  expect(result.current).toEqual(initialProps);
 });
 
 test('useStream unsubscribes on unmount', (t) => {
@@ -59,7 +58,7 @@ test('useStream unsubscribes on unmount', (t) => {
 
   unmount();
 
-  t.false(source$.observed);
+  expect(source$.observed).toBe(false);
 });
 
 test('useStream does not resubscribe on rerender', (t) => {
@@ -72,7 +71,7 @@ test('useStream does not resubscribe on rerender', (t) => {
   const { rerender } = renderHook(() => useStream(source$));
   rerender();
 
-  t.deepEqual(subscriptions, 1);
+  expect(subscriptions).toEqual(1);
 });
 
 test('useStream unsubscribes, keeps latest value and subscribes new stream', (t) => {
@@ -86,8 +85,8 @@ test('useStream unsubscribes, keeps latest value and subscribes new stream', (t)
   alpha.next(initialProps);
   rerender({ source$: bravo });
 
-  t.deepEqual(result.current, initialProps);
-  t.false(alpha.observed);
+  expect(result.current).toEqual(initialProps);
+  expect(alpha.observed).toBe(false);
   t.assert(bravo.observed);
 });
 
@@ -101,7 +100,7 @@ test('connect should render null on first render', (t) => {
   });
 
   t.assert(WrappedComponentSpy.notCalled);
-  t.deepEqual(component!.toJSON(), null);
+  expect(component!.toJSON()).toEqual(null);
 });
 
 test('connect should immediately send props to wrapped component', (t) => {
@@ -112,7 +111,7 @@ test('connect should immediately send props to wrapped component', (t) => {
     create(React.createElement(HOComponent));
   });
 
-  t.deepEqual(WrappedComponentSpy.firstCall.args[0], initialProps);
+  expect(WrappedComponentSpy.firstCall.args[0]).toEqual(initialProps);
 });
 
 test('connect should re-render wrapped component on emitted props', (t) => {
@@ -123,12 +122,12 @@ test('connect should re-render wrapped component on emitted props', (t) => {
   act(() => {
     create(React.createElement(HOComponent));
   });
-  t.deepEqual(WrappedComponentSpy.firstCall.args[0], initialProps);
+  expect(WrappedComponentSpy.firstCall.args[0]).toEqual(initialProps);
 
   act(() => {
     props$.next(secondProps);
   });
-  t.deepEqual(WrappedComponentSpy.secondCall.args[0], secondProps);
+  expect(WrappedComponentSpy.secondCall.args[0]).toEqual(secondProps);
 });
 
 test('connect should unsubscribe stream when unmounted', async (t) => {
@@ -146,7 +145,7 @@ test('connect should unsubscribe stream when unmounted', async (t) => {
     component.unmount();
   });
 
-  t.false(props$.observed);
+  expect(props$.observed).toBe(false);
 });
 
 test('connect should forward props', async (t) => {
@@ -157,7 +156,7 @@ test('connect should forward props', async (t) => {
     create(React.createElement(HOComponent, additionalProps));
   });
 
-  t.deepEqual(WrappedComponentSpy.firstCall?.args[0], {
+  expect(WrappedComponentSpy.firstCall?.args[0]).toEqual({
     ...additionalProps,
     ...initialProps,
   });
@@ -176,7 +175,7 @@ test('connect give streamed props precedence over forwarded props', (t) => {
     );
   });
 
-  t.deepEqual(WrappedComponentSpy.firstCall?.args[0], {
+  expect(WrappedComponentSpy.firstCall?.args[0]).toEqual({
     ...additionalProps,
     ...initialProps,
   });
@@ -194,11 +193,11 @@ test('connect should propagate changes to forwarded props', async (t) => {
     component.update(React.createElement(HOComponent, secondAdditionalProps));
   });
 
-  t.deepEqual(WrappedComponentSpy.firstCall?.args[0], {
+  expect(WrappedComponentSpy.firstCall?.args[0]).toEqual({
     ...additionalProps,
     ...initialProps,
   });
-  t.deepEqual(WrappedComponentSpy.secondCall?.args[0], {
+  expect(WrappedComponentSpy.secondCall?.args[0]).toEqual({
     ...secondAdditionalProps,
     ...initialProps,
   });
@@ -222,9 +221,9 @@ test('connectInstance should provide unique instance Id', (t) => {
     create(React.createElement(HOComponent2));
   });
 
-  t.truthy(instance1);
-  t.truthy(instance2);
-  t.not(instance1, instance2);
-  t.deepEqual(WrappedComponentSpy.firstCall.args[0], { msg: instance1 });
-  t.deepEqual(WrappedComponentSpy.secondCall.args[0], { msg: instance2 });
+  expect(instance1).toBeTruthy();
+  expect(instance2).toBeTruthy();
+  expect(instance1).not.toBe(instance2);
+  expect(WrappedComponentSpy.firstCall.args[0]).toEqual({ msg: instance1 });
+  expect(WrappedComponentSpy.secondCall.args[0]).toEqual({ msg: instance2 });
 });

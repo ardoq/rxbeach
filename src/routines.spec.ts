@@ -1,4 +1,3 @@
-import untypedTest from 'ava';
 import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { marbles } from 'rxjs-marbles/ava';
@@ -123,9 +122,9 @@ test(
   marbles((m, t) => {
     const action$ = m.hot(singleActionMarble, actions);
     const action = actionCreator<{ letter: string }>('[Mock] action');
-    t.plan(2);
+    expect.assertions(2);
     const routineToSubscribe = tapRoutine(action, (payload) =>
-      t.is(payload.letter, 'F')
+      expect(payload.letter).toBe('F')
     );
     subscribeRoutine(action$, routineToSubscribe);
   })

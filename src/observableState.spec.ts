@@ -1,4 +1,3 @@
-import test from 'ava';
 import { EMPTY, Observable, from, map, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { ObservableState } from './observableState';
@@ -34,39 +33,38 @@ test(
   })
 );
 
-test('ObservableState exposes the latest state', (t) => {
+test('ObservableState exposes the latest state', () => {
   const initial = Symbol('initial');
   const emitted = Symbol('emitted');
 
   const os = new ObservableState<symbol>('name', of(emitted), initial);
 
-  t.deepEqual(os.state, initial);
+  expect(os.state).toEqual(initial);
   os.connect();
-  t.deepEqual(os.state, emitted);
+  expect(os.state).toEqual(emitted);
 });
 
-test('ObservableState throws error when accessing state after unsubscribe', (t) => {
+test('ObservableState throws error when accessing state after unsubscribe', () => {
   const os = new ObservableState('name', EMPTY, 1);
   os.connect();
   os.unsubscribe();
-  t.throws(() => os.state);
+  expect(() => os.state).toThrow();
 });
 
-test('ObservableState throws error when subscribing after unsubscribe', (t) => {
+test('ObservableState throws error when subscribing after unsubscribe', done => {
   const os = new ObservableState('name', EMPTY, 1);
   os.connect();
   os.unsubscribe();
-  t.throws(() =>
-    os.subscribe({ complete: () => t.fail(), error: () => t.fail() })
-  );
+  expect(() =>
+    os.subscribe({ complete: () => done.fail(), error: () => done.fail() })).toThrow();
 });
 
-test('ObservableState can be subscribed', (t) => {
+test('ObservableState can be subscribed', done => {
   const os = new ObservableState('name', of(1), 0);
   let completed = false;
   os.subscribe({
     complete: () => (completed = true),
-    error: () => t.fail(),
+    error: () => done.fail(),
   });
 
   os.connect();

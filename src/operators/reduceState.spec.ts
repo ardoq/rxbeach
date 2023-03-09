@@ -1,5 +1,4 @@
 import { reducer } from '../reducer';
-import untypedTest from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import { reduceState } from '../operators/reduceState';
 import { Subject, of } from 'rxjs';

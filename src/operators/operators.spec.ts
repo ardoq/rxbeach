@@ -1,4 +1,3 @@
-import test, { Macro } from 'ava';
 import { marbles } from 'rxjs-marbles/ava';
 import { ActionWithPayload } from '../types/Action';
 import { actionCreator } from '../actionCreator';

@@ -1,4 +1,3 @@
-import test from 'ava';
 import { combineLatest, from, map } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
 import { incrementMocks } from './internal/testing/mock';
@@ -61,6 +60,6 @@ test(
     );
     derivedState$.connect();
     m.flush();
-    t.deepEqual(derivedState$.state, [7, 5]);
+    expect(derivedState$.state).toEqual([7, 5]);
   })
 );

@@ -1,4 +1,3 @@
-import untypedTest, { TestFn } from 'ava';
 import sinon from 'sinon';
 import { rethrowErrorGlobally } from '../internal/rethrowErrorGlobally';
 
@@ -15,5 +14,5 @@ test('rethrows error globally', (t) => {
 
   rethrowErrorGlobally(error);
 
-  t.throws(() => t.context.clock.tick(1), { is: error });
+  expect(() => t.context.clock.tick(1)).toThrowError({ is: error });
 });

@@ -1,4 +1,3 @@
-import test from 'ava';
 import { reducedStream } from './reducedStream';
 import { Subject, from, map, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles/ava';
@@ -12,13 +11,13 @@ const reducerArray = Object.values(reducers);
 let counter = 1;
 const nextStreamName = () => `testStream-${counter++}`;
 
-test('reducedStream should expose initial state immediately after subscribtion', (t) => {
+test('reducedStream should expose initial state immediately after subscribtion', () => {
   const state = 'hello';
   const state$ = reducedStream(nextStreamName(), state, []);
   state$.subscribe((emittedState) => {
-    t.is(emittedState, state);
+    expect(emittedState).toBe(state);
   });
-  t.plan(1);
+  expect.assertions(1);
 });
 
 test(
@@ -51,7 +50,7 @@ test(
   })
 );
 
-test('reducedStream should call reducer once when there are multiple subs', (t) => {
+test('reducedStream should call reducer once when there are multiple subs', () => {
   const initialState = 1;
   handlers.incrementOne.resetHistory();
   const action$ = of(actionCreators.incrementOne());
@@ -76,7 +75,7 @@ test(
       initialState,
       [
         reducer(actionCreators.incrementOne, (previous) => {
-          t.fail();
+          done.fail();
           return previous + 1;
         }),
       ],
@@ -84,7 +83,7 @@ test(
         action$,
       }
     );
-    t.plan(0);
+    expect.assertions(0);
   })
 );
 

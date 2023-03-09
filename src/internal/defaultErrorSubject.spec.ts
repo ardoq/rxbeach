@@ -1,4 +1,3 @@
-import untypedTest from 'ava';
 import { defaultErrorSubject } from './defaultErrorSubject';
 import { stubRethrowErrorGlobally } from './testing/utils';
 

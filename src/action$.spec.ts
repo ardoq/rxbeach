@@ -1,4 +1,3 @@
-import test from 'ava';
 import { incrementMocks } from './internal/testing/mock';
 import { action$, dispatchAction } from './action$';
 import { take } from 'rxjs/operators';
@@ -7,30 +6,30 @@ import { ActionWithoutPayload } from './types/Action';
 
 const actions = incrementMocks.marbles.actions;
 
-test('dispatchAction makes action$ emit', (t) => {
+test('dispatchAction makes action$ emit', () => {
   let lastAction: ActionWithoutPayload | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   t.teardown(() => sub.unsubscribe());
 
   dispatchAction(actions[1]);
-  t.is(lastAction, actions[1]);
+  expect(lastAction).toBe(actions[1]);
 });
 
-test('dispatchAction does not remove existing namespace', (t) => {
+test('dispatchAction does not remove existing namespace', () => {
   let lastAction: ActionWithoutPayload | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   t.teardown(() => sub.unsubscribe());
 
   dispatchAction(actions.n);
-  t.is(lastAction, actions.n);
+  expect(lastAction).toBe(actions.n);
 });
 
-test('dispatchAction replaces namespace', (t) => {
+test('dispatchAction replaces namespace', () => {
   let lastAction;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   t.teardown(() => sub.unsubscribe());
 
   dispatchAction(actions.n, 'foo');
-  t.notDeepEqual(lastAction, actions.n);
-  t.deepEqual(lastAction, _namespaceAction('foo', actions.n));
+  expect(lastAction).not.toEqual(actions.n);
+  expect(lastAction).toEqual(_namespaceAction('foo', actions.n));
 });

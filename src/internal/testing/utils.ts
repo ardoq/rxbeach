@@ -2,7 +2,6 @@ import { Action } from '../../types/Action';
 import { VoidPayload } from '../types';
 import * as rethrowErrorGloballyModule from '../rethrowErrorGlobally';
 import sinon, { SinonStub } from 'sinon';
-import { TestFn } from 'ava';
 
 export const mockAction = <P = VoidPayload>(
   type: string,
