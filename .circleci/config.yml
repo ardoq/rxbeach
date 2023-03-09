@@ -40,8 +40,8 @@ jobs:
       - run:
           name: Test
           command: |
-            mkdir -p ~/reports/ava
-            yarn test --tap | ./node_modules/.bin/tap-xunit > ~/reports/ava/report.xml
+            mkdir -p ~/reports/jest
+            yarn test --coverage=true --coverageDirectory=~/reports/jest
 
       - run:
           name: Line coverage
