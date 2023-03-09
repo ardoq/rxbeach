@@ -1,4 +1,8 @@
-import { actionCreator } from './actionCreator';
+import {
+  actionCreator,
+  isActionOfType,
+  isValidRxBeachAction,
+} from './actionCreator';
 
 const booleanAction = actionCreator<boolean>('[test] boolean');
 booleanAction(true);
@@ -51,3 +55,53 @@ const optionalPayloadAction = actionCreator<string | void>(
 
 optionalPayloadAction();
 optionalPayloadAction('payload');
+
+const actionCreatorWithPayload = actionCreator<string>('[test] with payload');
+const actionCreatorWithoutPayload = actionCreator('[test] no payload');
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const typeChecks = [
+  // accepts results from action creators
+  isValidRxBeachAction(actionCreatorWithoutPayload()),
+  isValidRxBeachAction(actionCreatorWithPayload('test')),
+
+  // should accept any value as argument
+  isValidRxBeachAction(undefined),
+  isValidRxBeachAction(null),
+  isValidRxBeachAction({}),
+
+  // @ts-expect-error: first argument of isActionOfType should be an action creator
+  isActionOfType({}, actionCreatorWithoutPayload()),
+  // @ts-expect-error: first argument of isActionOfType should be an action creator
+  isActionOfType(1, actionCreatorWithoutPayload()),
+  // @ts-expect-error: first argument of isActionOfType should be an action creator
+  isActionOfType(null, actionCreatorWithoutPayload()),
+  // @ts-expect-error: first argument of isActionOfType should be an action creator
+  isActionOfType(undefined, actionCreatorWithoutPayload()),
+
+  // second argument of isActionOfType accepts anything
+  isActionOfType(actionCreatorWithoutPayload, actionCreatorWithoutPayload()),
+  isActionOfType(actionCreatorWithoutPayload, actionCreatorWithPayload('test')),
+  isActionOfType(actionCreatorWithPayload, actionCreatorWithoutPayload()),
+  isActionOfType(actionCreatorWithPayload, actionCreatorWithPayload('test')),
+  isActionOfType(actionCreatorWithPayload, undefined),
+  isActionOfType(actionCreatorWithPayload, null),
+  isActionOfType(actionCreatorWithPayload, {}),
+];
+
+const actionPairs = [
+  [actionCreatorWithPayload, actionCreatorWithPayload('asd')] as const,
+  [actionCreatorWithoutPayload, actionCreatorWithoutPayload()] as const,
+];
+
+for (const [creatorFn, anAction] of actionPairs) {
+  // @ts-expect-error Don't know how to fix this case...
+  isActionOfType(creatorFn, anAction);
+}
+
+const action1 = actionCreatorWithoutPayload();
+if (isActionOfType(actionCreatorWithoutPayload, action1)) {
+  // @ts-expect-error Assert that ActionWithoutPayload does not have a payload
+  // eslint-disable-next-line no-unused-expressions
+  action1.payload;
+}
