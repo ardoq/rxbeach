@@ -1,5 +1,5 @@
 import { derivedStream } from './derivedStream';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 
 test(
   'derivedStream emits on emit from either source',

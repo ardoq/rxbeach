@@ -6,10 +6,16 @@ import { ActionWithoutPayload } from './types/Action';
 
 const actions = incrementMocks.marbles.actions;
 
+let cleanupFns: VoidFunction[] = [];
+afterEach(() => {
+  cleanupFns.forEach((cleanupFn) => cleanupFn());
+  cleanupFns = [];
+});
+
 test('dispatchAction makes action$ emit', () => {
   let lastAction: ActionWithoutPayload | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
-  t.teardown(() => sub.unsubscribe());
+  cleanupFns.push(() => sub.unsubscribe());
 
   dispatchAction(actions[1]);
   expect(lastAction).toBe(actions[1]);
@@ -18,7 +24,7 @@ test('dispatchAction makes action$ emit', () => {
 test('dispatchAction does not remove existing namespace', () => {
   let lastAction: ActionWithoutPayload | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
-  t.teardown(() => sub.unsubscribe());
+  cleanupFns.push(() => sub.unsubscribe());
 
   dispatchAction(actions.n);
   expect(lastAction).toBe(actions.n);
@@ -27,7 +33,7 @@ test('dispatchAction does not remove existing namespace', () => {
 test('dispatchAction replaces namespace', () => {
   let lastAction;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
-  t.teardown(() => sub.unsubscribe());
+  cleanupFns.push(() => sub.unsubscribe());
 
   dispatchAction(actions.n, 'foo');
   expect(lastAction).not.toEqual(actions.n);

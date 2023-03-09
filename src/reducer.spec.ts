@@ -1,5 +1,5 @@
 import { combineReducers, reducer } from './reducer';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { Subject } from 'rxjs';
 import { incrementMocks } from './internal/testing/mock';
 
@@ -15,10 +15,13 @@ const alwaysReset = reducer(
   () => 5
 );
 
+afterEach(() => {
+  handlers.incrementOne.mockClear();
+});
+
 test('reducer should store reducer function', () => {
-  handlers.incrementOne.resetHistory();
   reducers.handleOne(1);
-  t.assert(handlers.incrementOne.called);
+  expect(handlers.incrementOne).toHaveBeenCalledTimes(1);
 });
 
 test(

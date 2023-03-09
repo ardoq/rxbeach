@@ -1,5 +1,5 @@
 import { combineLatest, from, map } from 'rxjs';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { incrementMocks } from './internal/testing/mock';
 import { persistentDerivedStream } from './persistentDerivedStream';
 import { persistentReducedStream } from './persistentReducedStream';
@@ -46,7 +46,7 @@ test(
 
 test(
   'persistentDerivedStream should expose the state of its source.',
-  marbles((m, t) => {
+  marbles((m) => {
     const action$ = m.hot('  --1---2-----1', actions);
     const number$ = m.hot('  -1-------7---', numbers);
 

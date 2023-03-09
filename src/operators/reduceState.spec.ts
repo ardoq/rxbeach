@@ -1,16 +1,18 @@
-import { reducer } from '../reducer';
-import { marbles } from 'rxjs-marbles/ava';
-import { reduceState } from '../operators/reduceState';
 import { Subject, of } from 'rxjs';
-import { stubRethrowErrorGlobally } from '../internal/testing/utils';
-import { incrementMocks } from '../internal/testing/mock';
 import { map, withLatestFrom } from 'rxjs/operators';
+import { marbles } from 'rxjs-marbles/jest';
+import { reducer } from '../reducer';
+import { reduceState } from '../operators/reduceState';
+import { incrementMocks } from '../internal/testing/mock';
 import { ofType } from './operators';
 
 const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, words, numbers, errors } = incrementMocks.marbles;
 const reducerArray = Object.values(reducers);
-const test = stubRethrowErrorGlobally(untypedTest);
+
+afterEach(() => {
+  handlers.incrementOne.mockClear();
+});
 
 test(
   'reduceState should subscribe to action$ and emit initial state synchronously upon subscription',
@@ -46,16 +48,15 @@ test(
   })
 );
 
-test('reduceState should call reducer once when there are multiple subs', (t) => {
+test('reduceState should call reducer once when there are multiple subs', () => {
   const defaultState = 1;
-  handlers.incrementOne.resetHistory();
   const action$ = of(actionCreators.incrementOne());
   const state$ = action$.pipe(
     reduceState('testStream', defaultState, reducerArray)
   );
   const sub1 = state$.subscribe();
   const sub2 = state$.subscribe();
-  t.assert(handlers.incrementOne.calledOnce);
+  expect(handlers.incrementOne).toHaveBeenCalledTimes(1);
   sub1.unsubscribe();
   sub2.unsubscribe();
 });

@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { ActionWithPayload } from './types/Action';
 import {
   Routine,
@@ -10,11 +10,13 @@ import {
   subscribeRoutine,
   tapRoutine,
 } from './routines';
-import { mockAction, stubRethrowErrorGlobally } from './internal/testing/utils';
+import { mockAction } from './internal/testing/utils';
 import { extractPayload } from './operators/operators';
 import { actionCreator } from './actionCreator';
 
-const test = stubRethrowErrorGlobally(untypedTest);
+beforeAll(() => {
+  jest.useFakeTimers();
+});
 
 const actions = {
   a: mockAction('alpha', undefined, { letter: 'A' }),
@@ -100,6 +102,7 @@ test(
     const action$ = m.hot(actionMarbles2, actions);
 
     subscribeRoutine(action$, errorRoutine);
+    jest.advanceTimersByTime(1000);
 
     m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
   })
@@ -119,7 +122,7 @@ test(
 
 test(
   'tapRoutine register a routine',
-  marbles((m, t) => {
+  marbles((m) => {
     const action$ = m.hot(singleActionMarble, actions);
     const action = actionCreator<{ letter: string }>('[Mock] action');
     expect.assertions(2);
@@ -130,7 +133,7 @@ test(
   })
 );
 
-test('ensureArray return an Array', (t) => {
-  t.assert(Array.isArray(ensureArray('a')));
-  t.assert(Array.isArray(ensureArray(['a'])));
+test('ensureArray return an Array', () => {
+  expect(Array.isArray(ensureArray('a'))).toBe(true);
+  expect(Array.isArray(ensureArray(['a']))).toBe(true);
 });

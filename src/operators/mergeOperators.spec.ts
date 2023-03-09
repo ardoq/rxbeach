@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { coldMergeOperators, mergeOperators } from './mergeOperators';
 
 const double = map<number, number>((n) => n * 2);

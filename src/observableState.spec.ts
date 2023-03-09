@@ -1,6 +1,13 @@
 import { EMPTY, Observable, from, map, of } from 'rxjs';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { ObservableState } from './observableState';
+
+beforeAll(() => {
+  jest.useFakeTimers();
+});
+afterEach(() => {
+  jest.clearAllTimers();
+});
 
 test(
   'ObservableState acts as an Observable',
@@ -51,24 +58,33 @@ test('ObservableState throws error when accessing state after unsubscribe', () =
   expect(() => os.state).toThrow();
 });
 
-test('ObservableState throws error when subscribing after unsubscribe', done => {
+test('ObservableState throws error when subscribing after unsubscribe', () => {
   const os = new ObservableState('name', EMPTY, 1);
   os.connect();
   os.unsubscribe();
+
+  const completeSpy = jest.fn();
+  const errorSpy = jest.fn();
   expect(() =>
-    os.subscribe({ complete: () => done.fail(), error: () => done.fail() })).toThrow();
+    os.subscribe({
+      complete: completeSpy,
+      error: errorSpy,
+    })
+  ).toThrow();
 });
 
-test('ObservableState can be subscribed', done => {
+test('ObservableState can be subscribed', () => {
   const os = new ObservableState('name', of(1), 0);
-  let completed = false;
+  const completeSpy = jest.fn();
+
   os.subscribe({
-    complete: () => (completed = true),
-    error: () => done.fail(),
+    complete: completeSpy,
+    error: () => fail(),
   });
 
   os.connect();
-  t.assert(completed);
+  jest.runAllTimers();
+  expect(completeSpy).toHaveBeenCalled();
 });
 
 test(

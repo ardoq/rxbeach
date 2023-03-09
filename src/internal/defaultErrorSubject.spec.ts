@@ -1,12 +1,12 @@
 import { defaultErrorSubject } from './defaultErrorSubject';
-import { stubRethrowErrorGlobally } from './testing/utils';
 
-const test = stubRethrowErrorGlobally(untypedTest);
+beforeAll(() => {
+  jest.useFakeTimers();
+});
 
-test('defaultErrorSubject rethrows errors globally', (t) => {
+test('defaultErrorSubject rethrows errors globally', () => {
   const error = new Error('Hello errors');
   defaultErrorSubject.next(error);
 
-  t.context.rethrowErrorGlobally.calledOnceWithExactly(error);
-  t.pass();
+  expect(jest.runAllTimers).toThrow(error);
 });

@@ -1,6 +1,6 @@
 import { reducedStream } from './reducedStream';
 import { Subject, from, map, of } from 'rxjs';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { incrementMocks } from './internal/testing/mock';
 import { reducer } from './reducer';
 
@@ -10,6 +10,10 @@ const reducerArray = Object.values(reducers);
 
 let counter = 1;
 const nextStreamName = () => `testStream-${counter++}`;
+
+afterEach(() => {
+  handlers.incrementOne.mockClear();
+});
 
 test('reducedStream should expose initial state immediately after subscribtion', () => {
   const state = 'hello';
@@ -52,7 +56,6 @@ test(
 
 test('reducedStream should call reducer once when there are multiple subs', () => {
   const initialState = 1;
-  handlers.incrementOne.resetHistory();
   const action$ = of(actionCreators.incrementOne());
   const state$ = reducedStream(nextStreamName(), initialState, reducerArray, {
     action$,
@@ -60,14 +63,14 @@ test('reducedStream should call reducer once when there are multiple subs', () =
 
   const sub1 = state$.subscribe();
   const sub2 = state$.subscribe();
-  t.assert(handlers.incrementOne.calledOnce);
+  expect(handlers.incrementOne).toHaveBeenCalledTimes(1);
   sub1.unsubscribe();
   sub2.unsubscribe();
 });
 
 test(
   'reducedStream do not reduce when it has no subscribers',
-  marbles((m, t) => {
+  marbles((m) => {
     const initialState = 5;
     const action$ = m.hot('-1-2-1-', actions);
     reducedStream(
@@ -75,7 +78,7 @@ test(
       initialState,
       [
         reducer(actionCreators.incrementOne, (previous) => {
-          done.fail();
+          fail();
           return previous + 1;
         }),
       ],

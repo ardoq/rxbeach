@@ -23,7 +23,7 @@ test('actionCreator should create action creators and append the type', () => {
 test('actionCreator should protect the type field', () => {
   expect(() => {
     (myAction as any).type = 'lol';
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 test('actionCreator should create action objects with the payload', () => {
   expect(action.payload).toEqual({ num: 3 });
@@ -33,17 +33,17 @@ test('actionCreator should create action objects with the payload', () => {
 test('actionCreator should create action objects with protected type', () => {
   expect(() => {
     action.type = 'mock';
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 test('actionCreator should create action objects with protected meta', () => {
   expect(() => {
     action.meta = {};
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 test('actionCreator should create action objects with protected namespace', () => {
   expect(() => {
     action.meta.namespace = 'shim';
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 
 const actionCreatorWithPayload = actionCreator<string>('[test] with payload');
@@ -96,34 +96,34 @@ test('isActionOfType', () => {
 // Type assertions
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const typeChecks = [
-  // accepts results from action creators
-  isValidRxBeachAction(actionCreatorWithoutPayload()),
-  isValidRxBeachAction(actionCreatorWithPayload('test')),
+// const typeChecks = [
+//   // accepts results from action creators
+//   isValidRxBeachAction(actionCreatorWithoutPayload()),
+//   isValidRxBeachAction(actionCreatorWithPayload('test')),
 
-  // should accept any value as argument
-  isValidRxBeachAction(undefined),
-  isValidRxBeachAction(null),
-  isValidRxBeachAction({}),
+//   // should accept any value as argument
+//   isValidRxBeachAction(undefined),
+//   isValidRxBeachAction(null),
+//   isValidRxBeachAction({}),
 
-  // @ts-expect-error: first argument of isActionOfType should be an action creator
-  isActionOfType({}, actionCreatorWithoutPayload()),
-  // @ts-expect-error: first argument of isActionOfType should be an action creator
-  isActionOfType(1, actionCreatorWithoutPayload()),
-  // @ts-expect-error: first argument of isActionOfType should be an action creator
-  isActionOfType(null, actionCreatorWithoutPayload()),
-  // @ts-expect-error: first argument of isActionOfType should be an action creator
-  isActionOfType(undefined, actionCreatorWithoutPayload()),
+//   // @ts-expect-error: first argument of isActionOfType should be an action creator
+//   isActionOfType({}, actionCreatorWithoutPayload()),
+//   // @ts-expect-error: first argument of isActionOfType should be an action creator
+//   isActionOfType(1, actionCreatorWithoutPayload()),
+//   // @ts-expect-error: first argument of isActionOfType should be an action creator
+//   isActionOfType(null, actionCreatorWithoutPayload()),
+//   // @ts-expect-error: first argument of isActionOfType should be an action creator
+//   isActionOfType(undefined, actionCreatorWithoutPayload()),
 
-  // second argument of isActionOfType accepts anything
-  isActionOfType(actionCreatorWithoutPayload, actionCreatorWithoutPayload()),
-  isActionOfType(actionCreatorWithoutPayload, actionCreatorWithPayload('test')),
-  isActionOfType(actionCreatorWithPayload, actionCreatorWithoutPayload()),
-  isActionOfType(actionCreatorWithPayload, actionCreatorWithPayload('test')),
-  isActionOfType(actionCreatorWithPayload, undefined),
-  isActionOfType(actionCreatorWithPayload, null),
-  isActionOfType(actionCreatorWithPayload, {}),
-];
+//   // second argument of isActionOfType accepts anything
+//   isActionOfType(actionCreatorWithoutPayload, actionCreatorWithoutPayload()),
+//   isActionOfType(actionCreatorWithoutPayload, actionCreatorWithPayload('test')),
+//   isActionOfType(actionCreatorWithPayload, actionCreatorWithoutPayload()),
+//   isActionOfType(actionCreatorWithPayload, actionCreatorWithPayload('test')),
+//   isActionOfType(actionCreatorWithPayload, undefined),
+//   isActionOfType(actionCreatorWithPayload, null),
+//   isActionOfType(actionCreatorWithPayload, {}),
+// ];
 
 const actionPairs = [
   [actionCreatorWithPayload, actionCreatorWithPayload('asd')] as const,

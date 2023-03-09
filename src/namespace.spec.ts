@@ -13,19 +13,19 @@ const namespaced = _namespaceAction('namespace', mockAction('type')) as {
 test('_namespaceAction has unwritable type', () => {
   expect(() => {
     namespaced.type = 'foo';
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 
 test('_namespaceAction has unwritable meta', () => {
   expect(() => {
     namespaced.meta = { namespace: 'bar' };
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 
 test('_namespaceAction has unwritable namespace', () => {
   expect(() => {
     namespaced.meta.namespace = 'baz';
-  }).toThrowError({ instanceOf: TypeError });
+  }).toThrow(TypeError);
 });
 
 test('namespaceActionCreator should create actions with namespace', () => {
