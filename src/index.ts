@@ -14,7 +14,7 @@ export type {
   ActionStream,
   ActionDispatcher,
   ExtractPayload,
-  InferValueFromObservable,
+  Observed,
   InferPayloadFromActionCreator,
 } from './types/helpers';
 

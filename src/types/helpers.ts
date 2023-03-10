@@ -37,9 +37,10 @@ export type InferPayloadFromActionCreator<TActionCreator> =
 /**
  * Type helper to get the type of the value contained in the observable
  */
-export type InferValueFromObservable<TObservable> =
-  TObservable extends Observable<infer TValueType>
-    ? TValueType
-    : TObservable extends ObservableState<infer TValueType>
-    ? TValueType
-    : never;
+export type Observed<TObservable> = TObservable extends Observable<
+  infer TValueType
+>
+  ? TValueType
+  : TObservable extends ObservableState<infer TValueType>
+  ? TValueType
+  : never;
