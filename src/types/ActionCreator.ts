@@ -21,3 +21,26 @@ export interface ActionCreatorWithPayload<Payload> extends ActionCreatorCommon {
 export type ActionCreator<Payload = VoidPayload> = Payload extends VoidPayload
   ? ActionCreatorWithoutPayload
   : ActionCreatorWithPayload<Payload>;
+
+type ActionName = `[${string}] ${string}`;
+
+export interface ActionCreatorFunc {
+  /**
+   * Create an action creator without a payload
+   *
+   * @param type A name for debugging purposes
+   * @returns An action creator function that creates complete action objects with
+   *          a type unique to this action creator
+   */
+  (type: ActionName): ActionCreatorWithoutPayload;
+  /**
+   * Create an action creator with a given payload type
+   *
+   * @param type A name for debugging purposes
+   * @template `Payload` - The payload type for the action
+   * @returns An action creator function that accepts a payload as input, and
+   *          returns a complete action object with that payload and a type unique
+   *          to this action creator
+   */
+  <Payload>(type: ActionName): ActionCreatorWithPayload<Payload>;
+}

@@ -1,7 +1,7 @@
 import { OperatorFunction, Subject, pipe } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { ActionStream } from './types/helpers';
-import { Routine, RoutineFunc } from './internal/routineFunc';
+import type { Routine, RoutineFunc } from './internal/types';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { mergeOperators } from './operators/mergeOperators';
 import {
@@ -10,7 +10,7 @@ import {
 } from './internal';
 import { extractPayload, ofType } from './operators';
 
-export { Routine } from './internal/routineFunc';
+export type { Routine } from './internal/types';
 
 /**
  * See collectRoutines for documentation
