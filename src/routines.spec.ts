@@ -102,7 +102,6 @@ test(
     const action$ = m.hot(actionMarbles2, actions);
 
     subscribeRoutine(action$, errorRoutine);
-    jest.advanceTimersByTime(1000);
 
     m.expect(action$).toHaveSubscriptions([errorSub1, errorSub2]);
   })

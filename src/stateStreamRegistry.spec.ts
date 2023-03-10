@@ -1,4 +1,3 @@
-// import sinon from 'sinon';
 import { StateStreamRegistry } from './stateStreamRegistry';
 import { ObservableState } from './observableState';
 import { EMPTY } from 'rxjs';

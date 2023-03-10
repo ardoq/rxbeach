@@ -40,9 +40,6 @@ test.each`
     })();
   }
 );
-// test('primitive', extractsPayload, 'Hello World');
-// test('array', extractsPayload, ['Hello', { what: 'World' }]);
-// test('object', extractsPayload, { foo: true });
 
 type FooPayload = {
   foo: number;

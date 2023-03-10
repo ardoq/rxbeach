@@ -42,10 +42,10 @@
   ],
   "scripts": {
     "check-types": "yarn tsc --noEmit",
-    "test": "yarn unit-test",
+    "test": "yarn test:unit-test",
     "test:unit-test": "yarn jest",
     "test:coverage": "yarn jest --config jest-coverage.config.mjs --rootDir .",
-    "test:watch": "yarn test --watch",
+    "test:watch": "yarn test:unit-test --watch",
     "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
