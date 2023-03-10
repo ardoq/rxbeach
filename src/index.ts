@@ -14,11 +14,15 @@ export type {
   ActionStream,
   ActionDispatcher,
   ExtractPayload,
-  InferValueFromObservable,
+  Observed,
   InferPayloadFromActionCreator,
 } from './types/helpers';
 
-export { actionCreator } from './actionCreator';
+export {
+  actionCreator,
+  isValidRxBeachAction,
+  isActionOfType,
+} from './actionCreator';
 
 export {
   reducer,

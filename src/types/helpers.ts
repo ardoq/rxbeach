@@ -35,11 +35,13 @@ export type InferPayloadFromActionCreator<TActionCreator> =
     : never;
 
 /**
- * Type helper to get the type of the value contained in the observable
+ * The equivalent of TypeScript's built-in `Awaited` but for observables.
+ * Infer the type of the value wrapped inside an Observable.
  */
-export type InferValueFromObservable<TObservable> =
-  TObservable extends Observable<infer TValueType>
-    ? TValueType
-    : TObservable extends ObservableState<infer TValueType>
-    ? TValueType
-    : never;
+export type Observed<TObservable> = TObservable extends Observable<
+  infer TValueType
+>
+  ? TValueType
+  : TObservable extends ObservableState<infer TValueType>
+  ? TValueType
+  : never;
