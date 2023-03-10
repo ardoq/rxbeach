@@ -18,7 +18,11 @@ export type {
   InferPayloadFromActionCreator,
 } from './types/helpers';
 
-export { actionCreator } from './actionCreator';
+export {
+  actionCreator,
+  isValidRxBeachAction,
+  isActionOfType,
+} from './actionCreator';
 
 export {
   reducer,
