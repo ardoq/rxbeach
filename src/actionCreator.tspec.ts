@@ -105,3 +105,23 @@ if (isActionOfType(actionCreatorWithoutPayload, action1)) {
   // eslint-disable-next-line no-unused-expressions
   action1.payload;
 }
+
+const noop = (x: unknown) => {
+  /* no-op */
+};
+const testIsActionOfType = (action: any) => {
+  if (!isValidRxBeachAction(action)) {
+    return;
+  }
+
+  if (isActionOfType(actionCreatorWithPayload, action)) {
+    return noop(action.payload);
+  }
+
+  if (isActionOfType(actionCreatorWithoutPayload, action)) {
+    // @ts-expect-error should not have payload
+    return noop(action.payload);
+  }
+
+  noop(action.type);
+};
