@@ -1,13 +1,12 @@
 import { actionCreator } from '../../actionCreator';
 import { reducer } from '../../reducer';
-import sinon from 'sinon';
 import { _namespaceAction } from '../../namespace';
 
 const incrementOne = actionCreator('[increment] one');
 const incrementMany = actionCreator<number>('[increment] many');
 const decrement = actionCreator('[increment] decrement');
 
-const incrementOneHandler = sinon.spy((accumulator: number) => accumulator + 1);
+const incrementOneHandler = jest.fn((accumulator: number) => accumulator + 1);
 const throwErrorFn = (): number => {
   throw ERROR;
 };

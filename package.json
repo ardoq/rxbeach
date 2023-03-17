@@ -41,9 +41,11 @@
     "./dist"
   ],
   "scripts": {
-    "pretest": "yarn tsc",
-    "test": "yarn c8 ava",
-    "test:watch": "yarn ava --watch",
+    "check-types": "yarn tsc --noEmit",
+    "test": "yarn test:unit-test",
+    "test:unit-test": "yarn jest",
+    "test:coverage": "yarn jest --config jest-coverage.config.mjs --rootDir .",
+    "test:watch": "yarn test:unit-test --watch",
     "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
@@ -53,16 +55,18 @@
     "postpublish": "pinst --enable"
   },
   "devDependencies": {
-    "@ava/typescript": "3.0.1",
+    "@babel/plugin-transform-runtime": "7.18.0",
+    "@babel/preset-env": "7.16.5",
+    "@babel/preset-react": "7.16.5",
+    "@babel/preset-typescript": "7.16.5",
     "@commitlint/cli": "17.1.2",
     "@commitlint/config-conventional": "17.1.0",
+    "@types/jest": "28.1.8",
     "@types/react": "18.0.20",
     "@types/react-test-renderer": "18.0.0",
-    "@types/sinon": "10.0.13",
     "@typescript-eslint/eslint-plugin": "5.38.0",
     "@typescript-eslint/parser": "5.38.0",
-    "ava": "4.3.3",
-    "c8": "7.12.0",
+    "babel-jest": "28.1.3",
     "conditional-type-checks": "1.0.6",
     "eslint": "8.24.0",
     "eslint-config-prettier": "8.5.0",
@@ -72,6 +76,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-sort-class-members": "1.15.2",
     "husky": "8.0.1",
+    "jest": "28.1.3",
     "pinst": "3.0.0",
     "prettier": "2.7.1",
     "react": "18.2.0",
@@ -79,9 +84,7 @@
     "rimraf": "3.0.2",
     "rxjs": "7.5.7",
     "rxjs-marbles": "7.0.1",
-    "sinon": "14.0.0",
     "standard-version": "9.5.0",
-    "tap-xunit": "2.4.1",
     "typescript": "4.9.3"
   },
   "dependencies": {
@@ -91,17 +94,6 @@
   "peerDependencies": {
     "react": "^18.2.0 || ^17.0.2",
     "rxjs": "^7.5.6"
-  },
-  "ava": {
-    "files": [
-      "src/**/*.spec.ts"
-    ],
-    "typescript": {
-      "rewritePaths": {
-        "src/": "dist/"
-      },
-      "compile": false
-    }
   },
   "prettier": {
     "singleQuote": true,

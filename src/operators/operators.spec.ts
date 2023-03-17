@@ -1,5 +1,4 @@
-import test, { Macro } from 'ava';
-import { marbles } from 'rxjs-marbles/ava';
+import { marbles } from 'rxjs-marbles/jest';
 import { ActionWithPayload } from '../types/Action';
 import { actionCreator } from '../actionCreator';
 import { namespaceActionCreator } from '../namespace';
@@ -21,8 +20,14 @@ const {
   marbles: { actions },
 } = incrementMocks;
 
-const extractsPayload: Macro<[any]> = {
-  exec: (t, payload) =>
+test.each`
+  name           | payload
+  ${'primitive'} | ${'Hello World'}
+  ${'array'}     | ${['Hello', { what: 'World' }]}
+  ${'object'}    | ${{ foo: true }}
+`(
+  `extractPayload should extract {name} payload`,
+  ({ payload }: { name: string; payload: unknown }) => {
     marbles((m) => {
       const source = m.hot<ActionWithPayload<any>>('aa', {
         a: mockAction('', '', payload) as ActionWithPayload<any>,
@@ -32,12 +37,9 @@ const extractsPayload: Macro<[any]> = {
       });
 
       m.expect(source.pipe(extractPayload())).toBeObservable(expected);
-    })(t),
-  title: (name) => `extractPayload should extract ${name} payload`,
-};
-test('primitive', extractsPayload, 'Hello World');
-test('array', extractsPayload, ['Hello', { what: 'World' }]);
-test('object', extractsPayload, { foo: true });
+    })();
+  }
+);
 
 type FooPayload = {
   foo: number;

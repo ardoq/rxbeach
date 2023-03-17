@@ -1,94 +1,85 @@
-import sinon from 'sinon';
-import testUntyped, { TestFn } from 'ava';
 import { StateStreamRegistry } from './stateStreamRegistry';
 import { ObservableState } from './observableState';
 import { EMPTY } from 'rxjs';
 
-const test = testUntyped as TestFn<{
-  registry: StateStreamRegistry;
-  stream: ObservableState<number>;
-}>;
-
-test.beforeEach((t) => {
-  t.context.registry = new StateStreamRegistry();
-  t.context.stream = new ObservableState<number>('spiedStream', EMPTY, 1);
+let cleanupFns: VoidFunction[] = [];
+afterEach(() => {
+  cleanupFns.forEach((cleanupFn) => cleanupFn());
+  cleanupFns = [];
 });
 
-test('stateStreamRegistry.register should throw error for duplicate names', (t) => {
-  const { registry, stream } = t.context;
+let registry = new StateStreamRegistry();
+let stream = new ObservableState<number>('spiedStream', EMPTY, 1);
+
+beforeEach(() => {
+  registry = new StateStreamRegistry();
+  stream = new ObservableState<number>('spiedStream', EMPTY, 1);
+});
+
+test('stateStreamRegistry.register should throw error for duplicate names', () => {
+  registry.register(stream);
+  expect(() => registry.register(stream)).toThrow();
+});
+
+test('stateStreamRegistry.register should throw error for duplicate name after start', () => {
+  registry.register(stream);
+  registry.startReducing();
+
+  expect(() => registry.register(stream)).toThrow();
+});
+
+test('stateStreamRegistry.register should not start streams before startReducing', () => {
+  const spy = jest.spyOn(stream, 'connect');
+  cleanupFns.push(() => spy.mockReset());
 
   registry.register(stream);
-  t.throws(() => registry.register(stream));
+
+  expect(spy).not.toHaveBeenCalled();
 });
 
-test('stateStreamRegistry.register should throw error for duplicate name after start', (t) => {
-  const { registry, stream } = t.context;
+test('stateStreamRegistry.startReducing should call connect', () => {
+  const spy = jest.spyOn(stream, 'connect');
+  cleanupFns.push(() => spy.mockReset());
 
   registry.register(stream);
   registry.startReducing();
 
-  t.throws(() => registry.register(stream));
+  expect(spy).toHaveBeenCalled();
 });
 
-test('stateStreamRegistry.register should not start streams before startReducing', (t) => {
-  const { registry, stream } = t.context;
-  const spy = sinon.spy(stream, 'connect');
-  t.teardown(() => spy.restore());
-
-  registry.register(stream);
-
-  t.assert(spy.notCalled);
-});
-
-test('stateStreamRegistry.startReducing should call connect', (t) => {
-  const { registry, stream } = t.context;
-  const spy = sinon.spy(stream, 'connect');
-  t.teardown(() => spy.restore());
-
-  registry.register(stream);
+test('stateStreamRegistry.startReducing should error on double call', () => {
   registry.startReducing();
-
-  t.assert(spy.called);
+  expect(() => registry.startReducing()).toThrow();
 });
 
-test('stateStreamRegistry.startReducing should error on double call', (t) => {
-  const { registry } = t.context;
-
-  registry.startReducing();
-  t.throws(() => registry.startReducing());
-});
-
-test('stateStreamRegistry.register should start streams after startReducing', (t) => {
-  const { registry, stream } = t.context;
-  const spy = sinon.spy(stream, 'connect');
-  t.teardown(() => spy.restore());
+test('stateStreamRegistry.register should start streams after startReducing', () => {
+  const spy = jest.spyOn(stream, 'connect');
+  cleanupFns.push(() => spy.mockReset());
 
   registry.startReducing();
   registry.register(stream);
 
-  t.assert(spy.called);
+  expect(spy).toHaveBeenCalled();
 });
 
-test('stateStreamRegistry.register should not start streams after stopReducing', (t) => {
-  const { registry, stream } = t.context;
-  const spy = sinon.spy(stream, 'connect');
-  t.teardown(() => spy.restore());
+test('stateStreamRegistry.register should not start streams after stopReducing', () => {
+  const spy = jest.spyOn(stream, 'connect');
+  cleanupFns.push(() => spy.mockReset());
 
   registry.startReducing();
   registry.stopReducing();
   registry.register(stream);
 
-  t.assert(spy.notCalled);
+  expect(spy).not.toHaveBeenCalled();
 });
 
-test('stateStreamRegistry.stopReducing should call unsubscribe', (t) => {
-  const { registry, stream } = t.context;
-  const spy = sinon.spy(stream, 'unsubscribe');
-  t.teardown(() => spy.restore());
+test('stateStreamRegistry.stopReducing should call unsubscribe', () => {
+  const spy = jest.spyOn(stream, 'unsubscribe');
+  cleanupFns.push(() => spy.mockReset());
 
   registry.register(stream);
   registry.startReducing();
   registry.stopReducing();
 
-  t.assert(spy.called);
+  expect(spy).toHaveBeenCalled();
 });

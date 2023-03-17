@@ -1,4 +1,3 @@
-import test from 'ava';
 import {
   actionCreator,
   isActionOfType,
@@ -17,52 +16,40 @@ const unionAction = actionCreator<Payload | AlternativePayload>('[test] union');
 const union1 = unionAction({ num: 4 });
 const union2 = unionAction({ text: 'hi' });
 
-test('actionCreator should create action creators and append the type', (t) => {
-  t.is(action.type, myAction.type);
-  t.deepEqual(action.payload, { num: 3 });
+test('actionCreator should create action creators and append the type', () => {
+  expect(action.type).toBe(myAction.type);
+  expect(action.payload).toEqual({ num: 3 });
 });
-test('actionCreator should protect the type field', (t) => {
-  t.throws(
-    () => {
-      (myAction as any).type = 'lol';
-    },
-    { instanceOf: TypeError }
-  );
+test('actionCreator should protect the type field', () => {
+  expect(() => {
+    (myAction as any).type = 'lol';
+  }).toThrow(TypeError);
 });
-test('actionCreator should create action objects with the payload', (t) => {
-  t.deepEqual(action.payload, { num: 3 });
-  t.deepEqual(union1.payload, { num: 4 });
-  t.deepEqual(union2.payload, { text: 'hi' });
+test('actionCreator should create action objects with the payload', () => {
+  expect(action.payload).toEqual({ num: 3 });
+  expect(union1.payload).toEqual({ num: 4 });
+  expect(union2.payload).toEqual({ text: 'hi' });
 });
-test('actionCreator should create action objects with protected type', (t) => {
-  t.throws(
-    () => {
-      action.type = 'mock';
-    },
-    { instanceOf: TypeError }
-  );
+test('actionCreator should create action objects with protected type', () => {
+  expect(() => {
+    action.type = 'mock';
+  }).toThrow(TypeError);
 });
-test('actionCreator should create action objects with protected meta', (t) => {
-  t.throws(
-    () => {
-      action.meta = {};
-    },
-    { instanceOf: TypeError }
-  );
+test('actionCreator should create action objects with protected meta', () => {
+  expect(() => {
+    action.meta = {};
+  }).toThrow(TypeError);
 });
-test('actionCreator should create action objects with protected namespace', (t) => {
-  t.throws(
-    () => {
-      action.meta.namespace = 'shim';
-    },
-    { instanceOf: TypeError }
-  );
+test('actionCreator should create action objects with protected namespace', () => {
+  expect(() => {
+    action.meta.namespace = 'shim';
+  }).toThrow(TypeError);
 });
 
 const actionCreatorWithPayload = actionCreator<string>('[test] with payload');
 const actionCreatorWithoutPayload = actionCreator('[test] no payload');
 
-test('isValidRxBeachAction - invalid actions', (t) => {
+test('isValidRxBeachAction - invalid actions', () => {
   const invalidActions = [
     undefined,
     null,
@@ -81,11 +68,11 @@ test('isValidRxBeachAction - invalid actions', (t) => {
   ];
 
   for (const invalidAction of invalidActions) {
-    t.is(isValidRxBeachAction(invalidAction), false);
+    expect(isValidRxBeachAction(invalidAction)).toBe(false);
   }
 });
 
-test('isValidRxBeachAction - valid actions', (t) => {
+test('isValidRxBeachAction - valid actions', () => {
   const validActions = [
     { type: '[test] action type', meta: {}, payload: undefined },
     actionCreatorWithPayload('asd'),
@@ -93,17 +80,15 @@ test('isValidRxBeachAction - valid actions', (t) => {
   ];
 
   for (const validAction of validActions) {
-    t.is(isValidRxBeachAction(validAction), true);
+    expect(isValidRxBeachAction(validAction)).toBe(true);
   }
 });
 
-test('isActionOfType', (t) => {
-  t.is(
-    isActionOfType(actionCreatorWithPayload, actionCreatorWithPayload('asd')),
-    true
-  );
-  t.is(
-    isActionOfType(actionCreatorWithoutPayload, actionCreatorWithoutPayload()),
-    true
-  );
+test('isActionOfType', () => {
+  expect(
+    isActionOfType(actionCreatorWithPayload, actionCreatorWithPayload('asd'))
+  ).toBe(true);
+  expect(
+    isActionOfType(actionCreatorWithoutPayload, actionCreatorWithoutPayload())
+  ).toBe(true);
 });

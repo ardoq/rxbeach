@@ -1,4 +1,3 @@
-import test from 'ava';
 import { namespaceActionCreator, namespaceActionDispatcher } from './namespace';
 import { ActionDispatcher } from './types/helpers';
 import { UnknownAction } from './internal/types';
@@ -11,34 +10,25 @@ const namespaced = _namespaceAction('namespace', mockAction('type')) as {
     namespace: string;
   };
 };
-test('_namespaceAction has unwritable type', (t) => {
-  t.throws(
-    () => {
-      namespaced.type = 'foo';
-    },
-    { instanceOf: TypeError }
-  );
+test('_namespaceAction has unwritable type', () => {
+  expect(() => {
+    namespaced.type = 'foo';
+  }).toThrow(TypeError);
 });
 
-test('_namespaceAction has unwritable meta', (t) => {
-  t.throws(
-    () => {
-      namespaced.meta = { namespace: 'bar' };
-    },
-    { instanceOf: TypeError }
-  );
+test('_namespaceAction has unwritable meta', () => {
+  expect(() => {
+    namespaced.meta = { namespace: 'bar' };
+  }).toThrow(TypeError);
 });
 
-test('_namespaceAction has unwritable namespace', (t) => {
-  t.throws(
-    () => {
-      namespaced.meta.namespace = 'baz';
-    },
-    { instanceOf: TypeError }
-  );
+test('_namespaceAction has unwritable namespace', () => {
+  expect(() => {
+    namespaced.meta.namespace = 'baz';
+  }).toThrow(TypeError);
 });
 
-test('namespaceActionCreator should create actions with namespace', (t) => {
+test('namespaceActionCreator should create actions with namespace', () => {
   const type = 'action type';
   const namespace = 'new namespace';
   const actionCreator = (payload: number) =>
@@ -51,10 +41,10 @@ test('namespaceActionCreator should create actions with namespace', (t) => {
   );
 
   const actionObject = namespacedActionCreator(12);
-  t.deepEqual(actionObject, mockAction(type, namespace, 12));
+  expect(actionObject).toEqual(mockAction(type, namespace, 12));
 });
 
-test('namespaceActionDispatcher should invoke the parent dispatcher with namespaced actions', (t) => {
+test('namespaceActionDispatcher should invoke the parent dispatcher with namespaced actions', () => {
   let dispatchedAction: UnknownAction | undefined;
   const parentDispatcher: ActionDispatcher = (action) =>
     (dispatchedAction = action);
@@ -69,7 +59,7 @@ test('namespaceActionDispatcher should invoke the parent dispatcher with namespa
 
   childDispatcher(actionObject);
 
-  t.deepEqual(dispatchedAction, {
+  expect(dispatchedAction).toEqual({
     ...mockAction(actionObject.type, namespace),
   });
 });

@@ -1,32 +1,5 @@
-import { Action, VoidPayload } from './types/Action';
-import {
-  ActionCreator,
-  ActionCreatorWithPayload,
-  ActionCreatorWithoutPayload,
-} from './types/ActionCreator';
-
-type ActionName = `[${string}] ${string}`;
-
-interface ActionCreatorFunc {
-  /**
-   * Create an action creator without a payload
-   *
-   * @param type A name for debugging purposes
-   * @returns An action creator function that creates complete action objects with
-   *          a type unique to this action creator
-   */
-  (type: ActionName): ActionCreatorWithoutPayload;
-  /**
-   * Create an action creator with a given payload type
-   *
-   * @param type A name for debugging purposes
-   * @template `Payload` - The payload type for the action
-   * @returns An action creator function that accepts a payload as input, and
-   *          returns a complete action object with that payload and a type unique
-   *          to this action creator
-   */
-  <Payload>(type: ActionName): ActionCreatorWithPayload<Payload>;
-}
+import type { Action, VoidPayload } from './types/Action';
+import type { ActionCreator, ActionCreatorFunc } from './types/ActionCreator';
 
 /**
  * Untyped `actionCreator`

@@ -38,14 +38,10 @@ jobs:
       - run: yarn build
 
       - run:
-          name: Test
+          name: Run tests and collect coverage
           command: |
-            mkdir -p ~/reports/ava
-            yarn test --tap | ./node_modules/.bin/tap-xunit > ~/reports/ava/report.xml
-
-      - run:
-          name: Line coverage
-          command: yarn c8 report --reporter=text-lcov | npx coveralls
+            mkdir -p ~/reports/jest
+            yarn test:coverage --coverageDirectory=~/reports/jest
 
       - store_test_results:
           path: ~/reports

@@ -1,19 +1,15 @@
-import untypedTest, { TestFn } from 'ava';
-import sinon from 'sinon';
 import { rethrowErrorGlobally } from '../internal/rethrowErrorGlobally';
 
-const test = untypedTest as TestFn<{ clock: sinon.SinonFakeTimers }>;
-
-test.before((t) => {
-  t.context.clock = sinon.useFakeTimers();
+beforeAll(() => {
+  jest.useFakeTimers();
 });
-test.beforeEach((t) => t.context.clock.reset());
-test.after((t) => t.context.clock.restore());
+beforeEach(() => {
+  jest.clearAllTimers();
+});
 
-test('rethrows error globally', (t) => {
+test('rethrows error globally', () => {
   const error = new Error('Hello errors!');
 
   rethrowErrorGlobally(error);
-
-  t.throws(() => t.context.clock.tick(1), { is: error });
+  expect(jest.runAllTimers).toThrowError();
 });
