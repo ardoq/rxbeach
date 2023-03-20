@@ -19,10 +19,10 @@ beforeAll(() => {
 });
 
 const actions = {
-  a: mockAction('alpha', undefined, { letter: 'A' }),
-  b: mockAction('bravo', undefined, { letter: 'B' }),
-  c: mockAction('charlie', undefined, { letter: 'C' }),
-  e: mockAction('error'),
+  a: mockAction('[Mock] alpha', undefined, { letter: 'A' }),
+  b: mockAction('[Mock] bravo', undefined, { letter: 'B' }),
+  c: mockAction('[Mock] charlie', undefined, { letter: 'C' }),
+  e: mockAction('[Mock] error'),
   f: mockAction('[Mock] action', undefined, { letter: 'F' }),
 };
 const letters = {
@@ -49,7 +49,7 @@ const errorSub2 = '      ------^--------';
 const singleActionMarble = '  -f---f';
 
 const errorRoutine: Routine<string> = map((a) => {
-  if (a.type === 'error') throw 'error';
+  if (a.type === '[Mock] error') throw 'error';
   return 'passed';
 });
 const lettersRoutine = routine(

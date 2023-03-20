@@ -2,7 +2,7 @@ import { incrementMocks } from './internal/testing/mock';
 import { action$, dispatchAction } from './action$';
 import { take } from 'rxjs/operators';
 import { _namespaceAction } from './namespace';
-import { ActionWithoutPayload } from './types/Action';
+import { UnknownAction } from './internal';
 
 const actions = incrementMocks.marbles.actions;
 
@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 test('dispatchAction makes action$ emit', () => {
-  let lastAction: ActionWithoutPayload | undefined;
+  let lastAction: UnknownAction | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   cleanupFns.push(() => sub.unsubscribe());
 
@@ -22,7 +22,7 @@ test('dispatchAction makes action$ emit', () => {
 });
 
 test('dispatchAction does not remove existing namespace', () => {
-  let lastAction: ActionWithoutPayload | undefined;
+  let lastAction: UnknownAction | undefined;
   const sub = action$.pipe(take(1)).subscribe((a) => (lastAction = a));
   cleanupFns.push(() => sub.unsubscribe());
 

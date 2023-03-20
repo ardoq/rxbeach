@@ -1,4 +1,3 @@
-import { AssertFalse, Has } from 'conditional-type-checks';
 import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
 import {
   ActionCreatorWithPayload,
@@ -23,11 +22,6 @@ let unknownActionCreator: UnknownActionCreator;
 // ActionWithPayload and ActionWithoutPayload is assignable to UnknownAction
 unknownAction = actionWithoutPayload;
 unknownAction = actionWithPayload;
-
-type ActionCreatorWithoutPayload_is_not_assibleable_to_UnknownActionCreatorWithPayload =
-  AssertFalse<
-    Has<ActionCreatorWithoutPayload, UnknownActionCreatorWithPayload<unknown>>
-  >;
 
 // ActionCreatorWithPayload and UnkownActionCreatorWithPayload is assignable to each other
 unknownActionCreatorWithPayload = actionCreatorWithPayload;

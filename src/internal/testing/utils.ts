@@ -1,8 +1,8 @@
-import { Action } from '../../types/Action';
+import type { Action, ActionName } from '../../types/Action';
 import { VoidPayload } from '../types';
 
 export const mockAction = <P = VoidPayload>(
-  type: string,
+  type: ActionName,
   namespace?: string,
   payload?: P
 ): Action<P> =>

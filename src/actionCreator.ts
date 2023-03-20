@@ -1,15 +1,17 @@
-import type { Action, VoidPayload } from './types/Action';
-import type { ActionCreator, ActionCreatorFunc } from './types/ActionCreator';
+import type { Action, ActionName, VoidPayload } from './types/Action';
+import type { ActionCreator } from './types/ActionCreator';
 
 /**
- * Untyped `actionCreator`
+ * Create an action creator
  *
- * **You code should not hit this untyped overload**
- * If you see this message in your IDE, you should investigate why TS did not
- * recognize the generic, typed overload of this function.
+ * @param type A name for debugging purposes
+ * @template `Payload` - The payload type for the action
+ * @returns An action creator function that accepts a payload as input, and
+ *          returns a complete action object with that payload and a type unique
+ *          to this action creator
  */
-export const actionCreator: ActionCreatorFunc = (type: string) => {
-  const actionCreatorFn = (payload?: any) =>
+export const actionCreator = <Payload = void>(type: ActionName) => {
+  const actionCreatorFn = (payload: Payload) =>
     Object.freeze({
       type,
       payload,

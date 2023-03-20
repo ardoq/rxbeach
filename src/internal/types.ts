@@ -1,5 +1,5 @@
 import { OperatorFunction } from 'rxjs';
-import { ActionWithPayload, ActionWithoutPayload } from '../types/Action';
+import { Action, ActionName, ActionWithPayload } from '../types/Action';
 
 export { VoidPayload } from '../types/Action';
 
@@ -10,10 +10,10 @@ export { VoidPayload } from '../types/Action';
  * want to extract a possible `payload` from an action you don't know anything
  * about.
  */
-export type UnknownAction = ActionWithoutPayload & { payload?: unknown };
+export type UnknownAction = Action<unknown>;
 
 export interface ActionCreatorCommon {
-  readonly type: string;
+  readonly type: ActionName;
 }
 
 /**

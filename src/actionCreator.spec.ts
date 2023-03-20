@@ -3,11 +3,12 @@ import {
   isActionOfType,
   isValidRxBeachAction,
 } from './actionCreator';
+import { ActionName } from './types/Action';
 
 type Payload = { num: number };
 const myAction = actionCreator<Payload>('[test] three');
 const action = myAction({ num: 3 }) as {
-  type: string;
+  type: ActionName;
   payload: Payload;
   meta: { namespace?: string };
 };
@@ -32,7 +33,7 @@ test('actionCreator should create action objects with the payload', () => {
 });
 test('actionCreator should create action objects with protected type', () => {
   expect(() => {
-    action.type = 'mock';
+    action.type = '[test] mock';
   }).toThrow(TypeError);
 });
 test('actionCreator should create action objects with protected meta', () => {
