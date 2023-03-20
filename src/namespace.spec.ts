@@ -29,7 +29,7 @@ test('_namespaceAction has unwritable namespace', () => {
   }).toThrow(TypeError);
 });
 
-test('namespaceActionCreator should create actions with namespace', (t) => {
+test('namespaceActionCreator should create actions with namespace', () => {
   const type: ActionName = '[Mock] action type';
   const namespace = 'new namespace';
   const actionCreator = (payload: number) =>
