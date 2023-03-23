@@ -10,7 +10,9 @@ import type { ActionCreator } from './types/ActionCreator';
  *          returns a complete action object with that payload and a type unique
  *          to this action creator
  */
-export const actionCreator = <Payload = void>(type: ActionName) => {
+export const actionCreator = <Payload = void>(
+  type: ActionName
+): ActionCreator<Payload> => {
   const actionCreatorFn = (payload: Payload) =>
     Object.freeze({
       type,
