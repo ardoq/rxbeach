@@ -1,5 +1,5 @@
-import { OperatorFunction } from 'rxjs';
-import { Action, ActionName, ActionWithPayload } from '../types/Action';
+import type { OperatorFunction } from 'rxjs';
+import type { Action, ActionName, ActionWithPayload } from '../types/Action';
 
 export { VoidPayload } from '../types/Action';
 
