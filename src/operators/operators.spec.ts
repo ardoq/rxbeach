@@ -30,7 +30,7 @@ test.each`
   ({ payload }: { name: string; payload: unknown }) => {
     marbles((m) => {
       const source = m.hot<ActionWithPayload<any>>('aa', {
-        a: mockAction('', '', payload) as ActionWithPayload<any>,
+        a: mockAction('[Mock] a', '', payload),
       });
       const expected = m.hot('pp', {
         p: payload,

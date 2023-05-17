@@ -2,7 +2,7 @@ import { AssertFalse, AssertTrue, Has, IsExact } from 'conditional-type-checks';
 import { Action, ActionWithPayload, ActionWithoutPayload } from './Action';
 
 type ActionWithPayload_extends_ActionWithoutPayload = AssertTrue<
-  Has<ActionWithPayload<unknown>, ActionWithoutPayload>
+  Has<ActionWithPayload<any>, ActionWithoutPayload>
 >;
 
 type Action_dispatches_to_ActionWithPayload = AssertTrue<

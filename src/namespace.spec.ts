@@ -3,16 +3,17 @@ import { ActionDispatcher } from './types/helpers';
 import { UnknownAction } from './internal/types';
 import { _namespaceAction } from './namespace';
 import { mockAction } from './internal/testing/utils';
+import { ActionName } from './types/Action';
 
-const namespaced = _namespaceAction('namespace', mockAction('type')) as {
-  type: string;
+const namespaced = _namespaceAction('namespace', mockAction('[Mock] type')) as {
+  type: ActionName;
   meta: {
     namespace: string;
   };
 };
 test('_namespaceAction has unwritable type', () => {
   expect(() => {
-    namespaced.type = 'foo';
+    namespaced.type = '[Mock] foo';
   }).toThrow(TypeError);
 });
 
@@ -29,7 +30,7 @@ test('_namespaceAction has unwritable namespace', () => {
 });
 
 test('namespaceActionCreator should create actions with namespace', () => {
-  const type = 'action type';
+  const type: ActionName = '[Mock] action type';
   const namespace = 'new namespace';
   const actionCreator = (payload: number) =>
     mockAction(type, 'old namespace', payload);
@@ -55,7 +56,7 @@ test('namespaceActionDispatcher should invoke the parent dispatcher with namespa
     parentDispatcher
   );
 
-  const actionObject = mockAction('action', 'old namespace');
+  const actionObject = mockAction('[Mock] action', 'old namespace');
 
   childDispatcher(actionObject);
 

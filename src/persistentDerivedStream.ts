@@ -1,4 +1,4 @@
-import { ObservableInput } from 'rxjs';
+import type { ObservableInput } from 'rxjs';
 import { ObservableState } from './observableState';
 import { stateStreamRegistry } from './stateStreamRegistry';
 

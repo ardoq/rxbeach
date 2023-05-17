@@ -102,6 +102,27 @@ for (const [creatorFn, anAction] of actionPairs) {
 const action1 = actionCreatorWithoutPayload();
 if (isActionOfType(actionCreatorWithoutPayload, action1)) {
   // @ts-expect-error Assert that ActionWithoutPayload does not have a payload
-  // eslint-disable-next-line no-unused-expressions
-  action1.payload;
+  isNonNullish(action1.payload);
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+const isNonNullish = (x: {}) => {
+  /* no-op */
+};
+
+const testIsActionOfType = (action: any) => {
+  if (!isValidRxBeachAction(action)) {
+    return;
+  }
+
+  if (isActionOfType(actionCreatorWithPayload, action)) {
+    return isNonNullish(action.payload);
+  }
+
+  if (isActionOfType(actionCreatorWithoutPayload, action)) {
+    // @ts-expect-error should not have payload
+    return isNonNullish(action.payload);
+  }
+
+  isNonNullish(action.type);
+};
