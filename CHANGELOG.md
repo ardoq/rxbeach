@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/ardoq/rxbeach/compare/v2.4.2...v2.5.0) (2023-05-17)
+
+
+### Features
+
+* Migrate to Jest ([#598](https://github.com/ardoq/rxbeach/issues/598)) ([d13dbe1](https://github.com/ardoq/rxbeach/commit/d13dbe1bd7d376f3b34365a652ccbbebb8210719))
+* Refactor Action types to be uniform ([#605](https://github.com/ardoq/rxbeach/issues/605)) ([05c138a](https://github.com/ardoq/rxbeach/commit/05c138af13ad3fe3344c91d48335033e44e91253))
+
 ### [2.4.2](https://github.com/ardoq/rxbeach/compare/v2.4.1...v2.4.2) (2023-03-10)
 
 
