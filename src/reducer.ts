@@ -1,4 +1,5 @@
 import {
+  InteropObservable,
   Observable,
   ObservableInput,
   OperatorFunction,
@@ -7,7 +8,12 @@ import {
   pipe,
 } from 'rxjs';
 import { filter, map, mergeWith, scan } from 'rxjs/operators';
-import type { UnknownAction, VoidPayload } from './internal/types';
+import type {
+  UnknownAction,
+  UnknownActionCreator,
+  UnknownActionCreatorWithPayload,
+  VoidPayload,
+} from './internal/types';
 import type { ActionCreator } from './types/ActionCreator';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { ofType } from './operators/operators';
@@ -104,9 +110,14 @@ export const streamReducer = <State, EmittedState>(
 };
 
 /**
- * actionReducer
  * A action reducer is a stream operator which triggers its reducer when a
  * relevant action is dispatched to the action$
+ *
+ * Typing your reducer:
+ * - The _preferred_ way to type this is to let Typescript infer both State and
+ *   Payload from your reducerFn and actionCreator respectively.
+ * - Alternatively you can provide both type arguments explicitly
+ * We do not default the payload to void in order to encourage inference.
  *
  * @param actionCreator The actionCreator that creates the action that should run the reducer
  * @param reducerFn The reducer function with signature: (prevState, action) => newState
@@ -129,33 +140,133 @@ export const actionReducer = <State, Payload>(
   return wrappedActionReducer;
 };
 
+type DeprecatedReducerCreator = {
+  /**
+   * Define a reducer for a stream
+   *
+   * @see combineReducers
+   * @param source$ The stream which will trigger this reducer
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @template `Payload` - The type of values `source$` emits
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+  <State, Payload>(
+    source$: Observable<Payload> | InteropObservable<Payload>,
+    reducer: Reducer<State, Payload>
+  ): RegisteredReducer<State, Payload>;
+
+  /**
+   * Define a reducer for multiple actions with overlapping payload
+   *
+   * @see combineReducers
+   * @param actionCreator The action creator to assign this reducer to and
+   *                      extract payload type from
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @template `Payload` - The payload of the action, fed to the reducer together
+   *                       with the state. Should be automatically extracted from
+   *                       the `actionCreator` parameter
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+
+  <State, Payload>(
+    actionCreator: UnknownActionCreatorWithPayload<Payload>[],
+    reducer: Reducer<State, Payload>
+  ): RegisteredReducer<State, Payload>;
+
+  /**
+   * Define a reducer for multiple actions without overlapping payload
+   *
+   * @see combineReducers
+   * @param actionCreator The action creator to assign this reducer to and
+   *                      extract payload type from
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+  <State>(
+    actionCreator: UnknownActionCreatorWithPayload<unknown>[],
+    reducer: Reducer<State, unknown>
+  ): RegisteredReducer<State, unknown>;
+
+  /**
+   * Define a reducer for multiple actions without payloads
+   *
+   * @see combineReducers
+   * @param actionCreator The action creator to assign this reducer to and
+   *                      extract payload type from
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+  <State>(
+    actionCreator: UnknownActionCreator[],
+    reducer: Reducer<State, VoidPayload>
+  ): RegisteredReducer<State, VoidPayload>;
+
+  /**
+   * Define a reducer for an action with payload
+   *
+   * @see combineReducers
+   * @param actionCreator The action creator to assign this reducer to and
+   *                      extract payload type from
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @template `Payload` - The payload of the action, fed to the reducer together
+   *                       with the state. Should be automatically extracted from
+   *                       the `actionCreator` parameter
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+  <State, Payload>(
+    actionCreator: UnknownActionCreatorWithPayload<Payload>,
+    reducer: Reducer<State, Payload>
+  ): RegisteredReducer<State, Payload>;
+
+  /**
+   * Define a reducer for an action without payload
+   *
+   * @see combineReducers
+   * @param actionCreator The action creator to assign this reducer to and
+   *                      extract payload type from
+   * @param reducer The reducer function
+   * @template `State` - The state the reducer reduces to
+   * @returns A registered reducer that can be passed into `combineReducers`, or
+   *          called directly as if it was the `reducer` parameter itself.
+   */
+  <State>(
+    actionCreator: UnknownActionCreator,
+    reducer: Reducer<State, VoidPayload>
+  ): RegisteredReducer<State, VoidPayload>;
+};
+
 /**
  * @deprecated
  * v2.6.0, use actionReducer or streamReducer instead.
  * If using multi-action reducers you have to split them into individual reducers
  */
-export const reducer = <State, Payload>(
-  trigger:
-    | ActionCreator<Payload>
-    | ActionCreator<Payload>[]
-    | ObservableInput<Payload>,
-  reducerFn: Reducer<State, Payload>
-): RegisteredReducer<State, Payload> => {
+export const reducer: DeprecatedReducerCreator = <State>(
+  trigger: UnknownActionCreator | UnknownActionCreator[] | ObservableInput<any>,
+  reducerFn: Reducer<State, any>
+) => {
+  const wrapper = (state: State, payload: any, namespace?: string) =>
+    reducerFn(state, payload, namespace);
+
   if (!Array.isArray(trigger) && isObservableInput(trigger)) {
-    return streamReducer(trigger, reducerFn);
+    wrapper.trigger = {
+      source$: from<ObservableInput<any>>(trigger),
+    };
+  } else {
+    wrapper.trigger = {
+      actions: wrapInArray(trigger),
+    };
   }
-
-  const wrappedActionReducer = (
-    state: State,
-    payload: Payload,
-    namespace?: string
-  ) => reducerFn(state, payload, namespace);
-
-  wrappedActionReducer.trigger = {
-    actions: wrapInArray(trigger),
-  };
-
-  return wrappedActionReducer;
+  return wrapper;
 };
 
 const ACTION_ORIGIN = Symbol('Action origin');

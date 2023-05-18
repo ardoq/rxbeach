@@ -1,5 +1,5 @@
 import { actionCreator } from '../../actionCreator';
-import { reducer } from '../../reducer';
+import { actionReducer } from '../../reducer';
 import { _namespaceAction } from '../../namespace';
 
 const incrementOne = actionCreator('[increment] one');
@@ -14,12 +14,17 @@ const throwErrorFn = (): number => {
 const ERROR = 'error';
 const namespace = 'namespace';
 
-const handleOne = reducer(incrementOne, incrementOneHandler);
-const handleMany = reducer(
+const handleOne = actionReducer(incrementOne, incrementOneHandler);
+const handleMany = actionReducer(
   incrementMany,
   (accumulator: number, increment) => accumulator + increment
 );
-const handleDecrementWithError = reducer(decrement, throwErrorFn);
+const handleManyExplicitTypes = actionReducer<number, number>(
+  incrementMany,
+  (accumulator: number, increment) => accumulator + increment
+);
+
+const handleDecrementWithError = actionReducer(decrement, throwErrorFn);
 
 export const incrementMocks = {
   error: ERROR,
@@ -32,7 +37,12 @@ export const incrementMocks = {
   handlers: {
     incrementOne: incrementOneHandler,
   },
-  reducers: { handleOne, handleMany, handleDecrementWithError },
+  reducers: {
+    handleOne,
+    handleMany,
+    handleManyExplicitTypes,
+    handleDecrementWithError,
+  },
   marbles: {
     errors: {
       e: ERROR,
