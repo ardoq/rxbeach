@@ -6,7 +6,7 @@ import { incrementMocks } from './internal/testing/mock';
 const { reducers, actionCreators, handlers } = incrementMocks;
 const { actions, words, numbers, errors } = incrementMocks.marbles;
 const reducerArray = Object.values(reducers);
-const alwaysReset = reducer(
+const alwaysReset = reducer<number, any>(
   [
     actionCreators.incrementOne,
     actionCreators.incrementMany,

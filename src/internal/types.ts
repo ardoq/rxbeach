@@ -21,6 +21,9 @@ export interface ActionCreatorCommon {
  *
  * This type allows for inferring overlap of the payload type between multiple
  * action creators with different payloads.
+ *
+ * @deprecated
+ * v2.6.0 Use ActionCreator type instead
  */
 export interface UnknownActionCreatorWithPayload<Payload>
   extends ActionCreatorCommon {
@@ -34,6 +37,9 @@ export interface UnknownActionCreatorWithPayload<Payload>
  * This type has payload as an optional argument to the action creator function
  * and has return type `UnknownAction`. It's useful when you need to define a
  * generic action creator that might create actions with or without actions.
+ *
+ * @deprecated
+ * v2.6.0 Use ActionCreator type instead
  */
 export interface UnknownActionCreator extends ActionCreatorCommon {
   (payload?: any): UnknownAction;
