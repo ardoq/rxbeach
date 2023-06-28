@@ -85,7 +85,7 @@
     "rxjs": "7.8.0",
     "rxjs-marbles": "7.0.1",
     "standard-version": "9.5.0",
-    "typescript": "4.9.3"
+    "typescript": "5.1.5"
   },
   "dependencies": {
     "rxjs-interop": "2.0.0",
