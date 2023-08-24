@@ -21,7 +21,7 @@ you should have a good understanding of the following:
 
 We recommend these articles to get a refresher on those subjects:
 
-1. [In-Depth Overview of Flux](https://facebook.github.io/flux/docs/in-depth-overview/)
+1. [In-Depth Overview of Flux](https://facebookarchive.github.io/flux/docs/in-depth-overview/)
 2. [Idiomatic Redux](https://blog.isquaredsoftware.com/series/idiomatic-redux/)
    (article series)
 
