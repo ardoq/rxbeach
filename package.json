@@ -9,6 +9,7 @@
     "beach",
     "rx"
   ],
+  "type": "module",
   "company": "Ardoq AS",
   "homepage": "https://ardoq.github.io/rxbeach/",
   "bugs": "https://github.com/ardoq/rxbeach/issues",
@@ -46,7 +47,7 @@
     "test:unit-test": "yarn jest",
     "test:coverage": "yarn jest --config jest-coverage.config.mjs --rootDir .",
     "test:watch": "yarn test:unit-test --watch",
-    "lint": "yarn eslint --ext .ts src -c .eslintrc.js",
+    "lint": "yarn eslint --ext .ts src -c .eslintrc.cjs",
     "build": "rimraf dist && yarn tsc",
     "watch": "yarn tsc -w",
     "prepack": "yarn build -p tsconfig-publish.json",
