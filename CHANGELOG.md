@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ardoq/rxbeach/compare/v2.5.1...v3.0.0) (2023-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* The package is now distributed as an ESM module
+
+* migrate package to ESM ([#675](https://github.com/ardoq/rxbeach/issues/675)) ([87e42ad](https://github.com/ardoq/rxbeach/commit/87e42ad78e44dbc22b5cf583175ac6ccea664493))
+
 ### [2.5.1](https://github.com/ardoq/rxbeach/compare/v2.5.0...v2.5.1) (2023-09-13)
 
 ## [2.5.0](https://github.com/ardoq/rxbeach/compare/v2.4.2...v2.5.0) (2023-05-17)
