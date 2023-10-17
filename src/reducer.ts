@@ -8,12 +8,13 @@ import {
   pipe,
 } from 'rxjs';
 import { filter, map, mergeWith, scan } from 'rxjs/operators';
-import {
+import type {
   UnknownAction,
   UnknownActionCreator,
   UnknownActionCreatorWithPayload,
   VoidPayload,
 } from './internal/types';
+import type { ActionCreator } from './types/ActionCreator';
 import { defaultErrorSubject } from './internal/defaultErrorSubject';
 import { ofType } from './operators/operators';
 import { isObservableInput } from './isObservableInput';
@@ -29,7 +30,7 @@ export type Reducer<State, Payload = VoidPayload> = (
 
 type RegisteredActionReducer<State, Payload = any> = Reducer<State, Payload> & {
   trigger: {
-    actions: UnknownActionCreator[];
+    actions: ActionCreator<Payload>[];
   };
 };
 type RegisteredStreamReducer<State, Payload = any> = Reducer<State, Payload> & {
@@ -43,12 +44,8 @@ export type RegisteredReducer<State, Payload = any> = Reducer<
   Payload
 > & {
   trigger:
-    | {
-        actions: UnknownActionCreator[];
-      }
-    | {
-        source$: Observable<Payload>;
-      };
+    | { actions: ActionCreator<Payload>[] }
+    | { source$: Observable<Payload> };
 };
 
 const isActionReducer = <State, Payload>(
@@ -61,9 +58,89 @@ const isStreamReducer = <State, Payload>(
 ): reducerFn is RegisteredStreamReducer<State, Payload> =>
   'source$' in reducerFn.trigger;
 
-type ObservableLike<T> = Observable<T> | InteropObservable<T>;
+/**
+ * A stream reducer is a stream operator which updates the state of a given stream with the last
+ * emitted state of another stream, meaning it reduces the state of a given stream over another
+ * stream.
+ *
+ * Another way of looking at it is in terms of an action reducer this avoids creating a new action
+ * and dispatching it manually on every emit from the source observable. This treats the observable
+ * state as the action.
+ *
+ * ```ts
+ * // Listen for changes on context$
+ * streamReducer(
+ *   context$,
+ *   (state, context) => {
+ *     // context changed!
+ * })
+ *
+ * // Listen for specific changes on context$
+ * streamReducer(
+ *   context$.pipe(
+ *     map(context => ({ id })),
+ *     distinctUntilChanged()
+ *   ),
+ *   (state, contextId) => {
+ *     // contextId changed!
+ * })
+ * ```
+ *
+ * @param source The observable that the reducer function should be subscribed to, which act as
+ *                the "action" of the reducer.
+ * @param reducerFn The reducer function with signature:
+ *                  (prevState, observableInput) => nextState
+ * @returns A wrapped reducer function for use with persistedReducedStream, combineReducers etc.
+ */
+export const streamReducer = <State, EmittedState>(
+  source: ObservableInput<EmittedState>,
+  reducerFn: Reducer<State, EmittedState>
+): RegisteredReducer<State, EmittedState> => {
+  const wrappedStreamReducer = (
+    state: State,
+    emittedState: EmittedState,
+    namespace?: string
+  ) => reducerFn(state, emittedState, namespace);
 
-type ReducerCreator = {
+  wrappedStreamReducer.trigger = {
+    source$: from(source),
+  };
+
+  return wrappedStreamReducer;
+};
+
+/**
+ * A action reducer is a stream operator which triggers its reducer when a
+ * relevant action is dispatched to the action$
+ *
+ * Typing your reducer:
+ * - The _preferred_ way to type this is to let Typescript infer both State and
+ *   Payload from your reducerFn and actionCreator respectively.
+ * - Alternatively you can provide both type arguments explicitly
+ * We do not default the payload to void in order to encourage inference.
+ *
+ * @param actionCreator The actionCreator that creates the action that should run the reducer
+ * @param reducerFn The reducer function with signature: (prevState, action) => newState
+ * @returns A wrapped reducer function for use with persistedReducedStream, combineReducers etc.
+ */
+export const actionReducer = <State, Payload>(
+  actionCreator: ActionCreator<Payload>,
+  reducerFn: Reducer<State, Payload>
+): RegisteredReducer<State, Payload> => {
+  const wrappedActionReducer = (
+    state: State,
+    payload: Payload,
+    namespace?: string
+  ) => reducerFn(state, payload, namespace);
+
+  wrappedActionReducer.trigger = {
+    actions: [actionCreator],
+  };
+
+  return wrappedActionReducer;
+};
+
+type DeprecatedReducerCreator = {
   /**
    * Define a reducer for a stream
    *
@@ -76,7 +153,7 @@ type ReducerCreator = {
    *          called directly as if it was the `reducer` parameter itself.
    */
   <State, Payload>(
-    source$: ObservableLike<Payload>,
+    source$: Observable<Payload> | InteropObservable<Payload>,
     reducer: Reducer<State, Payload>
   ): RegisteredReducer<State, Payload>;
 
@@ -94,6 +171,7 @@ type ReducerCreator = {
    * @returns A registered reducer that can be passed into `combineReducers`, or
    *          called directly as if it was the `reducer` parameter itself.
    */
+
   <State, Payload>(
     actionCreator: UnknownActionCreatorWithPayload<Payload>[],
     reducer: Reducer<State, Payload>
@@ -167,12 +245,18 @@ type ReducerCreator = {
   ): RegisteredReducer<State, VoidPayload>;
 };
 
-export const reducer: ReducerCreator = <State>(
+/**
+ * @deprecated
+ * v2.6.0, use actionReducer or streamReducer instead.
+ * If using multi-action reducers you have to split them into individual reducers
+ */
+export const reducer: DeprecatedReducerCreator = <State>(
   trigger: UnknownActionCreator | UnknownActionCreator[] | ObservableInput<any>,
   reducerFn: Reducer<State, any>
 ) => {
   const wrapper = (state: State, payload: any, namespace?: string) =>
     reducerFn(state, payload, namespace);
+
   if (!Array.isArray(trigger) && isObservableInput(trigger)) {
     wrapper.trigger = {
       source$: from<ObservableInput<any>>(trigger),

@@ -26,6 +26,8 @@ export {
 
 export {
   reducer,
+  actionReducer,
+  streamReducer,
   combineReducers,
   Reducer,
   RegisteredReducer,
